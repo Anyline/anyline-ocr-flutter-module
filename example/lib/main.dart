@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
+import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter/services.dart';
 import 'package:anyline_plugin/anyline_plugin.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
+        ResultList.routeName: (context) => ResultList(),
         ResultDisplay.routeName: (context) => ResultDisplay(),
         FullScreenImage.routeName: (context) => FullScreenImage(),
       },
@@ -34,8 +36,8 @@ class _AnylineDemoState extends State<AnylineDemo> {
   AnylinePlugin anylinePlugin;
 
   String _sdkVersion = 'Unknown';
-  String _result = 'Empty';
-  String _configJson = 'Loading...';
+  String _configJson;
+  List<Map<String, dynamic>> _results = [];
 
   @override
   void initState() {
@@ -57,17 +59,20 @@ class _AnylineDemoState extends State<AnylineDemo> {
     });
   }
 
-  Future<void> startAnyline(String config) async {
+  Future<void> startAnyline(String config, String scanMode) async {
     try {
       await _loadJsonConfigFromFile(config);
       String result = await anylinePlugin.startScanning(_configJson);
-      Navigator.pushNamed(context, ResultDisplay.routeName, arguments: result);
 
+      Map<String, dynamic> jsonResult = jsonDecode(result);
+      jsonResult['useCase'] = scanMode;
+      jsonResult['timestamp'] = DateTime.now().toString();
+
+      Navigator.pushNamed(context, ResultDisplay.routeName,
+          arguments: jsonResult);
       setState(() {
-        _result = result;
+        _results.add(jsonResult);
       });
-
-      print(result);
     } catch (e) {
       // TODO: Exception Handling
     }
@@ -88,13 +93,13 @@ class _AnylineDemoState extends State<AnylineDemo> {
     return Text(text, style: Theme.of(context).textTheme.headline6);
   }
 
-  Widget _scanButton(String label, String configPath) {
+  Widget _scanButton(String scanMode, String configPath) {
     return Container(
       child: MaterialButton(
         onPressed: () {
-          startAnyline(configPath);
+          startAnyline(configPath, scanMode);
         },
-        child: Text(label),
+        child: Text(scanMode),
         color: Colors.black87,
         textColor: Colors.white,
       ),
@@ -111,8 +116,8 @@ class _AnylineDemoState extends State<AnylineDemo> {
           IconButton(
               icon: Icon(Icons.folder_special),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ResultDisplay()));
+                Navigator.pushNamed(
+                    context, ResultList.routeName, arguments: _results);
               })
         ],
       ),
@@ -162,9 +167,10 @@ class ResultDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String data = ModalRoute.of(context).settings.arguments;
-    print(data);
-    Map<String, dynamic> json = jsonDecode(data);
+    final Map<String, dynamic> json = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
 
     return Scaffold(
       appBar: AppBar(
@@ -202,12 +208,55 @@ class ResultDisplay extends StatelessWidget {
   }
 }
 
+class ResultList extends StatelessWidget {
+  static const routeName = '/resultList';
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> results = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+        title: Text("History"),
+      ),
+      body: ListView.builder(
+          itemCount: results.length,
+          itemBuilder: (BuildContext ctx, int index) {
+            return new Card(
+              child: InkWell(
+                  splashColor: Colors.black87.withAlpha(30),
+                  onTap: () {
+                    Navigator.pushNamed(context, ResultDisplay.routeName,
+                        arguments: results[index]);
+                  },
+                  child: Column(
+                    children: [
+                      Image.file(File(results[index]['imagePath'])),
+                      ListTile(
+                        title: Text(results[index]['useCase']),
+                        subtitle: Text(results[index]['timestamp']),
+                      ),
+                    ],
+                  )),
+            );
+          }),
+    );
+  }
+}
+
 class FullScreenImage extends StatelessWidget {
   static const routeName = '/resultDisplay/fullImage';
 
   @override
   Widget build(BuildContext context) {
-    final String fullImagePath = ModalRoute.of(context).settings.arguments;
+    final String fullImagePath = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
 
     return GestureDetector(
       child: Container(
