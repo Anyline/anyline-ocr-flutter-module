@@ -1,0 +1,23 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.anyline.anyline_plugin">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application android:allowBackup="true">
+        <activity
+            android:name=".AnylineBaseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat"></activity>
+        <activity
+            android:name=".Anyline4Activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".Document4Activity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation" />
+    </application>
+</manifest>
