@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
-import 'package:transparent_image/transparent_image.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:flutter/services.dart';
 import 'package:anyline_plugin/anyline_plugin.dart';
 
@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         ResultDisplay.routeName: (context) => ResultDisplay(),
+        FullScreenImage.routeName: (context) => FullScreenImage(),
       },
       home: AnylineDemo(),
     );
@@ -170,21 +171,53 @@ class ResultDisplay extends StatelessWidget {
         backgroundColor: Colors.black87,
         title: Text("Result"),
       ),
-      body: Column(
+      body: ListView(
         children: [
           Image.file(File(json['imagePath'])),
-          Expanded(
-            child: ListView.builder(
-                itemCount: json.length,
-                itemBuilder: (BuildContext ctx, int index) {
-                  return new ListTile(
-                    title: Text(json.values.toList()[index].toString()),
-                    subtitle: Text(json.keys.toList()[index].toString()),
-                  );
-                }),
-          ),
+          ListView.builder(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              itemCount: json.length,
+              itemBuilder: (BuildContext ctx, int index) {
+                return new ListTile(
+                  title: Text(json.values.toList()[index].toString()),
+                  subtitle: Text(json.keys.toList()[index].toString()),
+                );
+              }),
+          Container(
+            padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+            child: RaisedButton(
+              child: Text('Show Full Image'),
+              onPressed: () {
+                Navigator.pushNamed(context, FullScreenImage.routeName,
+                    arguments: json['fullImagePath']);
+              },
+              color: Colors.black87,
+              textColor: Colors.white,
+            ),
+          )
         ],
       ),
+    );
+  }
+}
+
+class FullScreenImage extends StatelessWidget {
+  static const routeName = '/resultDisplay/fullImage';
+
+  @override
+  Widget build(BuildContext context) {
+    final String fullImagePath = ModalRoute.of(context).settings.arguments;
+
+    return GestureDetector(
+      child: Container(
+        child: PhotoView(
+          imageProvider: FileImage(File(fullImagePath)),
+        ),
+      ),
+      onTap: () {
+        Navigator.pop(context);
+      },
     );
   }
 }
