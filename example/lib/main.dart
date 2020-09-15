@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:anyline_plugin_example/result.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -7,6 +8,7 @@ import 'package:anyline_plugin/anyline_plugin.dart';
 
 import 'result_display.dart';
 import 'result_list.dart';
+import 'scan_modes.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
         ResultList.routeName: (context) => ResultList(),
         ResultDisplay.routeName: (context) => ResultDisplay(),
         FullScreenImage.routeName: (context) => FullScreenImage(),
+        CompositeResultDisplay.routeName: (context) => CompositeResultDisplay(),
       },
       home: AnylineDemo(),
     );
@@ -36,7 +39,7 @@ class _AnylineDemoState extends State<AnylineDemo> {
 
   String _sdkVersion = 'Unknown';
   String _configJson;
-  List<Map<String, dynamic>> _results = [];
+  List<Result> _results = [];
 
   @override
   void initState() {
@@ -58,19 +61,24 @@ class _AnylineDemoState extends State<AnylineDemo> {
     });
   }
 
-  Future<void> startAnyline(String config, String scanMode) async {
+  Future<void> startAnyline(ScanMode mode) async {
     try {
-      await _loadJsonConfigFromFile(config);
-      String result = await anylinePlugin.startScanning(_configJson);
+      await _loadJsonConfigFromFile(mode.key);
+      String stringResult = await anylinePlugin.startScanning(_configJson);
 
-      Map<String, dynamic> jsonResult = jsonDecode(result);
-      jsonResult['useCase'] = scanMode;
-      jsonResult['timestamp'] = DateTime.now();
+      Map<String, dynamic> jsonResult = jsonDecode(stringResult);
 
-      Navigator.pushNamed(context, ResultDisplay.routeName,
-          arguments: jsonResult);
+      Result result = Result(jsonResult, mode, DateTime.now());
+
+      Navigator.pushNamed(
+          context,
+          mode.isCompositeScan()
+              ? CompositeResultDisplay.routeName
+              : ResultDisplay.routeName,
+          arguments: result);
+
       setState(() {
-        _results.insert(0, jsonResult);
+        _results.insert(0, result);
       });
     } catch (e) {
       // TODO: Exception Handling
@@ -108,33 +116,33 @@ class _AnylineDemoState extends State<AnylineDemo> {
           padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
           children: [
             _heading6('METER READING'),
-            _scanButton('Analog Meter', 'AnalogMeter'),
-            _scanButton('Digital Meter', 'DigitalMeter'),
-            _scanButton('Serial Number', 'SerialNumber'),
-            _scanButton('Dial Meter', 'DialMeter'),
-            _scanButton('Dot Matrix', 'DotMatrix'),
+            _scanButton(ScanMode.AnalogMeter),
+            _scanButton(ScanMode.DigitalMeter),
+            _scanButton(ScanMode.SerialNumber),
+            _scanButton(ScanMode.DialMeter),
+            _scanButton(ScanMode.DotMatrix),
             _heading6('ID'),
-            _scanButton('Driving License', 'DrivingLicense'),
-            _scanButton('MRZ', 'MRZ'),
-            _scanButton('German ID Front', 'GermanIDFront'),
-            _scanButton('Barcode PDF417', 'Barcode_PDF417'),
-            _scanButton('Universal ID', 'UniversalId'),
+            _scanButton(ScanMode.DrivingLicense),
+            _scanButton(ScanMode.MRZ),
+            _scanButton(ScanMode.GermanIDFront),
+            _scanButton(ScanMode.Barcode_PDF417),
+            _scanButton(ScanMode.UniversalId),
             _heading6('VEHICLE'),
-            _scanButton('License Plate', 'LicensePlate'),
-            _scanButton('TIN', 'TIN'),
+            _scanButton(ScanMode.LicensePlate),
+            _scanButton(ScanMode.TIN),
             _heading6('OCR'),
-            _scanButton('IBAN', 'Iban'),
-            _scanButton('Voucher Code', 'Voucher'),
+            _scanButton(ScanMode.Iban),
+            _scanButton(ScanMode.Voucher),
             _heading6('MRO'),
-            _scanButton('Vehicle Identification Number', 'VIN'),
-            _scanButton('Universal Serial Number', 'USNR'),
-            _scanButton('Container', 'ContainerShip'),
+            _scanButton(ScanMode.VIN),
+            _scanButton(ScanMode.USNR),
+            _scanButton(ScanMode.ContainerShip),
             _heading6('OTHER'),
-            _scanButton('Barcode', 'Barcode'),
-            _scanButton('Document', 'Document'),
-            _scanButton('Cattle Tag', 'CattleTag'),
-            _scanButton('Serial Scanning (LP>DL>VIN)', 'SerialScanning'),
-            _scanButton('Parallel Scanning (Meter/USRN)', 'ParallelScanning'),
+            _scanButton(ScanMode.Barcode),
+            _scanButton(ScanMode.Document),
+            _scanButton(ScanMode.CattleTag),
+            _scanButton(ScanMode.SerialScanning),
+            _scanButton(ScanMode.ParallelScanning),
             Divider(),
             Text('Running on Anyline SDK Version $_sdkVersion\n'),
           ],
@@ -147,17 +155,16 @@ class _AnylineDemoState extends State<AnylineDemo> {
     return Text(text, style: Theme.of(context).textTheme.headline6);
   }
 
-  Widget _scanButton(String scanMode, String configPath) {
+  Widget _scanButton(ScanMode mode) {
     return Container(
       child: MaterialButton(
         onPressed: () {
-          startAnyline(configPath, scanMode);
+          startAnyline(mode);
         },
-        child: Text(scanMode),
+        child: Text(mode.label),
         color: Colors.black87,
         textColor: Colors.white,
       ),
     );
   }
 }
-
