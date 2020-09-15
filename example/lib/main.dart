@@ -48,7 +48,7 @@ class _AnylineDemoState extends State<AnylineDemo> {
     String sdkVersion;
     try {
       sdkVersion = await AnylinePlugin.sdkVersion;
-      anylinePlugin = await AnylinePlugin.createInstance();
+      anylinePlugin = AnylinePlugin();
     } on PlatformException {
       sdkVersion = 'Failed to get platform version.';
     }

@@ -45,15 +45,15 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
         onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
     }
 
+    public static void registerWith(Registrar registrar) {
+        final AnylinePlugin instance = new AnylinePlugin(registrar.activity());
+        instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+    }
+
     private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
         this.applicationContext = applicationContext;
         channel = new MethodChannel(messenger, "anyline_plugin");
         channel.setMethodCallHandler(this);
-    }
-
-    public static void registerWith(Registrar registrar) {
-        final AnylinePlugin instance = new AnylinePlugin(registrar.activity());
-        instance.onAttachedToEngine(registrar.context(), registrar.messenger());
     }
 
     private AnylinePlugin(Activity activity) {
@@ -67,13 +67,8 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         this.result = result;
-        if (call.method.equals("getPlatformVersion")) {
-            result.success("Android " + android.os.Build.VERSION.RELEASE);
-        } else if (call.method.equals(Constants.METHOD_GET_SDK_VERSION)) {
+        if (call.method.equals(Constants.METHOD_GET_SDK_VERSION)) {
             result.success(at.nineyards.anyline.BuildConfig.VERSION_NAME);
-        } else if (call.method.equals(Constants.METHOD_SET_LICENSE_KEY)) {
-            this.licenseKey = call.argument(Constants.EXTRA_LICENSE_KEY);
-            result.success(null);
         } else if (call.method.equals(Constants.METHOD_START_ANYLINE)) {
             this.configJson = call.argument(Constants.EXTRA_CONFIG_JSON);
             scanAnyline4();
@@ -81,18 +76,6 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
             result.notImplemented();
         }
     }
-
-    /*private void startScanActivity() {
-
-        if(activity != null) {
-            Intent i = new Intent(activity, AnylineBaseActivity.class);
-            i.putExtra(Constants.EXTRA_LICENSE_KEY, licenseKey);
-            i.putExtra(Constants.EXTRA_CONFIG_JSON, jsonConfig);
-            activity.startActivityForResult(i, Constants.SCAN_ACTIVITY_REQUEST_CODE);
-        } else {
-            // TODO: Maybe throw an Exception?
-        }
-    }*/
 
     private void scanAnyline4() {
         try {
