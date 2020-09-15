@@ -9,6 +9,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:flutter/services.dart';
 import 'package:anyline_plugin/anyline_plugin.dart';
 
+import 'date_helpers.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -66,12 +68,12 @@ class _AnylineDemoState extends State<AnylineDemo> {
 
       Map<String, dynamic> jsonResult = jsonDecode(result);
       jsonResult['useCase'] = scanMode;
-      jsonResult['timestamp'] = DateTime.now().toString();
+      jsonResult['timestamp'] = DateTime.now();
 
       Navigator.pushNamed(context, ResultDisplay.routeName,
           arguments: jsonResult);
       setState(() {
-        _results.add(jsonResult);
+        _results.insert(0, jsonResult);
       });
     } catch (e) {
       // TODO: Exception Handling
@@ -116,8 +118,8 @@ class _AnylineDemoState extends State<AnylineDemo> {
           IconButton(
               icon: Icon(Icons.folder_special),
               onPressed: () {
-                Navigator.pushNamed(
-                    context, ResultList.routeName, arguments: _results);
+                Navigator.pushNamed(context, ResultList.routeName,
+                    arguments: _results);
               })
         ],
       ),
@@ -167,15 +169,12 @@ class ResultDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> json = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
+    final Map<String, dynamic> json = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
-        title: Text("Result"),
+        title: Text("${json['useCase']} Result"),
       ),
       body: ListView(
         children: [
@@ -210,23 +209,34 @@ class ResultDisplay extends StatelessWidget {
 
 class ResultList extends StatelessWidget {
   static const routeName = '/resultList';
+  var fullDate = DateFormat('d/M/y, HH:mm');
+  var time = DateFormat('HH:mm');
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> results = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
+    final List<Map<String, dynamic>> results =
+        ModalRoute
+            .of(context)
+            .settings
+            .arguments;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: Text("History"),
       ),
-      body: ListView.builder(
+      body: results.length > 0
+          ? ListView.builder(
           itemCount: results.length,
           itemBuilder: (BuildContext ctx, int index) {
-            return new Card(
+            DateTime timestamp = results[index]['timestamp'];
+            String timestampString =
+            timestamp.isToday() ? 'Today, ${time.format(timestamp)}'
+                : timestamp.isYesterday() ? 'Yesterday, ${time.format(
+                timestamp)}'
+                : fullDate.format(timestamp);
+
+            return Card(
               child: InkWell(
                   splashColor: Colors.black87.withAlpha(30),
                   onTap: () {
@@ -238,12 +248,17 @@ class ResultList extends StatelessWidget {
                       Image.file(File(results[index]['imagePath'])),
                       ListTile(
                         title: Text(results[index]['useCase']),
-                        subtitle: Text(results[index]['timestamp']),
+                        subtitle: Text(timestampString),
                       ),
                     ],
                   )),
             );
-          }),
+          })
+          : Container(
+        alignment: Alignment.topCenter,
+        padding: EdgeInsets.only(top: 35),
+        child: Text('Empty history', style: TextStyle(color: Colors.grey),),
+      ),
     );
   }
 }
@@ -270,3 +285,4 @@ class FullScreenImage extends StatelessWidget {
     );
   }
 }
+
