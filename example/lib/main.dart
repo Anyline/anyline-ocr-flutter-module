@@ -1,15 +1,12 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:io';
 
-import 'package:intl/intl.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:flutter/services.dart';
 import 'package:anyline_plugin/anyline_plugin.dart';
 
-import 'date_helpers.dart';
+import 'result_display.dart';
+import 'result_list.dart';
 
 void main() {
   runApp(MyApp());
@@ -91,23 +88,6 @@ class _AnylineDemoState extends State<AnylineDemo> {
 
   // LAYOUT PART
 
-  Widget _heading6(String text) {
-    return Text(text, style: Theme.of(context).textTheme.headline6);
-  }
-
-  Widget _scanButton(String scanMode, String configPath) {
-    return Container(
-      child: MaterialButton(
-        onPressed: () {
-          startAnyline(configPath, scanMode);
-        },
-        child: Text(scanMode),
-        color: Colors.black87,
-        textColor: Colors.white,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,126 +142,21 @@ class _AnylineDemoState extends State<AnylineDemo> {
       ),
     );
   }
-}
 
-class ResultDisplay extends StatelessWidget {
-  static const routeName = '/resultDisplay';
-
-  @override
-  Widget build(BuildContext context) {
-    final Map<String, dynamic> json = ModalRoute.of(context).settings.arguments;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        title: Text("${json['useCase']} Result"),
-      ),
-      body: ListView(
-        children: [
-          Image.file(File(json['imagePath'])),
-          ListView.builder(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              itemCount: json.length,
-              itemBuilder: (BuildContext ctx, int index) {
-                return new ListTile(
-                  title: Text(json.values.toList()[index].toString()),
-                  subtitle: Text(json.keys.toList()[index].toString()),
-                );
-              }),
-          Container(
-            padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
-            child: RaisedButton(
-              child: Text('Show Full Image'),
-              onPressed: () {
-                Navigator.pushNamed(context, FullScreenImage.routeName,
-                    arguments: json['fullImagePath']);
-              },
-              color: Colors.black87,
-              textColor: Colors.white,
-            ),
-          )
-        ],
-      ),
-    );
+  Widget _heading6(String text) {
+    return Text(text, style: Theme.of(context).textTheme.headline6);
   }
-}
 
-class ResultList extends StatelessWidget {
-  static const routeName = '/resultList';
-  var fullDate = DateFormat('d/M/y, HH:mm');
-  var time = DateFormat('HH:mm');
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> results =
-        ModalRoute
-            .of(context)
-            .settings
-            .arguments;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        title: Text("History"),
+  Widget _scanButton(String scanMode, String configPath) {
+    return Container(
+      child: MaterialButton(
+        onPressed: () {
+          startAnyline(configPath, scanMode);
+        },
+        child: Text(scanMode),
+        color: Colors.black87,
+        textColor: Colors.white,
       ),
-      body: results.length > 0
-          ? ListView.builder(
-          itemCount: results.length,
-          itemBuilder: (BuildContext ctx, int index) {
-            DateTime timestamp = results[index]['timestamp'];
-            String timestampString =
-            timestamp.isToday() ? 'Today, ${time.format(timestamp)}'
-                : timestamp.isYesterday() ? 'Yesterday, ${time.format(
-                timestamp)}'
-                : fullDate.format(timestamp);
-
-            return Card(
-              child: InkWell(
-                  splashColor: Colors.black87.withAlpha(30),
-                  onTap: () {
-                    Navigator.pushNamed(context, ResultDisplay.routeName,
-                        arguments: results[index]);
-                  },
-                  child: Column(
-                    children: [
-                      Image.file(File(results[index]['imagePath'])),
-                      ListTile(
-                        title: Text(results[index]['useCase']),
-                        subtitle: Text(timestampString),
-                      ),
-                    ],
-                  )),
-            );
-          })
-          : Container(
-        alignment: Alignment.topCenter,
-        padding: EdgeInsets.only(top: 35),
-        child: Text('Empty history', style: TextStyle(color: Colors.grey),),
-      ),
-    );
-  }
-}
-
-class FullScreenImage extends StatelessWidget {
-  static const routeName = '/resultDisplay/fullImage';
-
-  @override
-  Widget build(BuildContext context) {
-    final String fullImagePath = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
-
-    return GestureDetector(
-      child: Container(
-        child: PhotoView(
-          imageProvider: FileImage(File(fullImagePath)),
-        ),
-      ),
-      onTap: () {
-        Navigator.pop(context);
-      },
     );
   }
 }
