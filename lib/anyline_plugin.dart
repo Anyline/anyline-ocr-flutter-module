@@ -16,19 +16,25 @@ class AnylinePlugin {
   AnylinePlugin();
 
   Future<String> startScanning(String configJson) async {
-    final Map<String, String> config = {
-      Constants.EXTRA_CONFIG_JSON: configJson
-    };
-    try {
-      final String result =
-          await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
-      return result;
-    } catch (exception) {
-      // TODO: Exception Handling
-      // Camera Permission
-      // Invalid Json
-      // Core Exceptions
+    if (await Permission.camera.isPermanentlyDenied) {
+      openAppSettings();
+    } else if (await Permission.camera.request().isGranted) {
+      final Map<String, String> config = {
+        Constants.EXTRA_CONFIG_JSON: configJson
+      };
+      try {
+        final String result =
+            await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
+        return result;
+      } catch (exception) {
+        // TODO: Exception Handling
+        // Camera Permission
+        // Invalid Json
+        // Core Exceptions
+      }
+      return '';
+    } else {
+      throw Constants.EXCEPTION_NO_CAMERA_PERMISSION;
     }
-    return '';
   }
 }

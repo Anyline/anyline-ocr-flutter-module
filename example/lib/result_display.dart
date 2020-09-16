@@ -43,6 +43,7 @@ class CompositeResultDisplay extends StatelessWidget {
           backgroundColor: Colors.black87,
           bottom: TabBar(
             tabs: createResultTabs(results),
+            indicatorColor: Colors.white,
           ),
           title: Text(result.scanMode.label),
         ),
