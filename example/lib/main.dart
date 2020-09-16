@@ -25,6 +25,10 @@ class MyApp extends StatelessWidget {
         CompositeResultDisplay.routeName: (context) => CompositeResultDisplay(),
       },
       home: AnylineDemo(),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        accentColor: Colors.black87,
+      ),
     );
   }
 }
@@ -115,34 +119,58 @@ class _AnylineDemoState extends State<AnylineDemo> {
         child: ListView(
           padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
           children: [
-            _heading6('METER READING'),
-            _scanButton(ScanMode.AnalogMeter),
-            _scanButton(ScanMode.DigitalMeter),
-            _scanButton(ScanMode.SerialNumber),
-            _scanButton(ScanMode.DialMeter),
-            _scanButton(ScanMode.DotMatrix),
-            _heading6('ID'),
-            _scanButton(ScanMode.DrivingLicense),
-            _scanButton(ScanMode.MRZ),
-            _scanButton(ScanMode.GermanIDFront),
-            _scanButton(ScanMode.Barcode_PDF417),
-            _scanButton(ScanMode.UniversalId),
-            _heading6('VEHICLE'),
-            _scanButton(ScanMode.LicensePlate),
-            _scanButton(ScanMode.TIN),
-            _heading6('OCR'),
-            _scanButton(ScanMode.Iban),
-            _scanButton(ScanMode.Voucher),
-            _heading6('MRO'),
-            _scanButton(ScanMode.VIN),
-            _scanButton(ScanMode.USNR),
-            _scanButton(ScanMode.ContainerShip),
-            _heading6('OTHER'),
-            _scanButton(ScanMode.Barcode),
-            _scanButton(ScanMode.Document),
-            _scanButton(ScanMode.CattleTag),
-            _scanButton(ScanMode.SerialScanning),
-            _scanButton(ScanMode.ParallelScanning),
+            _useCase(
+              'METER READING',
+              [
+                _scanButton(ScanMode.AnalogMeter),
+                _scanButton(ScanMode.DigitalMeter),
+                _scanButton(ScanMode.SerialNumber),
+                _scanButton(ScanMode.DialMeter),
+                _scanButton(ScanMode.DotMatrix),
+              ],
+            ),
+            _useCase(
+              'ID',
+              [
+                _scanButton(ScanMode.DrivingLicense),
+                _scanButton(ScanMode.MRZ),
+                _scanButton(ScanMode.GermanIDFront),
+                _scanButton(ScanMode.Barcode_PDF417),
+                _scanButton(ScanMode.UniversalId),
+              ],
+            ),
+            _useCase(
+              'VEHICLE',
+              [
+                _scanButton(ScanMode.LicensePlate),
+                _scanButton(ScanMode.TIN),
+              ],
+            ),
+            _useCase(
+              'OCR',
+              [
+                _scanButton(ScanMode.Iban),
+                _scanButton(ScanMode.Voucher),
+              ],
+            ),
+            _useCase(
+              'MRO',
+              [
+                _scanButton(ScanMode.VIN),
+                _scanButton(ScanMode.USNR),
+                _scanButton(ScanMode.ContainerShip),
+              ],
+            ),
+            _useCase(
+              'OTHER',
+              [
+                _scanButton(ScanMode.Barcode),
+                _scanButton(ScanMode.Document),
+                _scanButton(ScanMode.CattleTag),
+                _scanButton(ScanMode.SerialScanning),
+                _scanButton(ScanMode.ParallelScanning),
+              ],
+            ),
             Divider(),
             Text('Running on Anyline SDK Version $_sdkVersion\n'),
           ],
@@ -151,12 +179,30 @@ class _AnylineDemoState extends State<AnylineDemo> {
     );
   }
 
+  Widget _useCase(String label, List<Widget> children) {
+    return Card(
+        color: Colors.white,
+        margin: EdgeInsets.only(top: 15),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _heading6(label),
+              SizedBox(height: 10),
+              Column(children: children)
+            ],
+          ),
+        ));
+  }
+
   Widget _heading6(String text) {
     return Text(text, style: Theme.of(context).textTheme.headline6);
   }
 
   Widget _scanButton(ScanMode mode) {
     return Container(
+      width: double.infinity,
       child: MaterialButton(
         onPressed: () {
           startAnyline(mode);

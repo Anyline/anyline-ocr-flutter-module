@@ -27,24 +27,26 @@ class ResultList extends StatelessWidget {
           itemCount: results.length,
           itemBuilder: (BuildContext ctx, int index) {
             DateTime timestamp = results[index].timestamp;
-            String timestampString = timestamp.isToday()
-                ? 'Today, ${time.format(timestamp)}'
-                : timestamp.isYesterday()
-                ? 'Yesterday, ${time.format(timestamp)}'
-                : fullDate.format(timestamp);
+                String timestampString = timestamp.isToday()
+                    ? 'Today, ${time.format(timestamp)}'
+                    : timestamp.isYesterday()
+                        ? 'Yesterday, ${time.format(timestamp)}'
+                        : fullDate.format(timestamp);
 
-            return results[index].scanMode.isCompositeScan() ?
-            CompositeResultListItem(results[index], timestampString) :
-            ResultListItem(results[index], timestampString);
-          })
-          : Container(
-        alignment: Alignment.topCenter,
-        padding: EdgeInsets.only(top: 35),
-        child: Text(
-          'Empty history',
-          style: TextStyle(color: Colors.grey),
-        ),
-      ),
+                return results[index].scanMode.isCompositeScan()
+                    ? CompositeResultListItem(results[index], timestampString)
+                    : ResultListItem(results[index], timestampString);
+              })
+          : ListView(children: [
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(top: 35),
+                child: Text(
+                  'Empty history',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ]),
     );
   }
 }
