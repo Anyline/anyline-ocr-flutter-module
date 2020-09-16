@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:anyline_plugin/anyline_plugin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'result_display.dart';
 import 'result_list.dart';
@@ -42,16 +43,16 @@ class _AnylineDemoState extends State<AnylineDemo> {
   AnylinePlugin anylinePlugin;
 
   String _sdkVersion = 'Unknown';
-  String _configJson;
   List<Result> _results = [];
 
   @override
   void initState() {
     super.initState();
-    initSdkState();
+    _initAnylinePlugin();
+    _initResultListFromSharedPreferences();
   }
 
-  Future<void> initSdkState() async {
+  _initAnylinePlugin() async {
     String sdkVersion;
     try {
       sdkVersion = await AnylinePlugin.sdkVersion;
@@ -65,40 +66,68 @@ class _AnylineDemoState extends State<AnylineDemo> {
     });
   }
 
-  Future<void> startAnyline(ScanMode mode) async {
+  _initResultListFromSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> list = prefs.getStringList('results') ?? [];
+    List<Result> results = [
+      for (String result in list) Result.fromJson(json.decode(result))
+    ];
+    setState(() {
+      _results = results;
+    });
+  }
+
+  startAnyline(ScanMode mode) async {
     try {
-      await _loadJsonConfigFromFile(mode.key);
-      String stringResult = await anylinePlugin.startScanning(_configJson);
-
-      Map<String, dynamic> jsonResult = jsonDecode(stringResult);
-
-      Result result = Result(jsonResult, mode, DateTime.now());
-
-      Navigator.pushNamed(
-          context,
-          mode.isCompositeScan()
-              ? CompositeResultDisplay.routeName
-              : ResultDisplay.routeName,
-          arguments: result);
-
-      setState(() {
-        _results.insert(0, result);
-      });
+      Result result = await _scan(mode);
+      _openResultDisplay(result);
+      _saveResultToResultList(result);
     } catch (e) {
+      throw (e);
       // TODO: Exception Handling
     }
   }
 
-  Future<void> _loadJsonConfigFromFile(String config) async {
-    String configJson =
-        await rootBundle.loadString("config/${config}Config.json");
+  Future<Result> _scan(ScanMode mode) async {
+    String configJson = await _loadJsonConfigFromFile(mode.key);
 
-    setState(() {
-      _configJson = configJson;
-    });
+    String stringResult = await anylinePlugin.startScanning(configJson);
+    Map<String, dynamic> jsonResult = jsonDecode(stringResult);
+
+    return Result(jsonResult, mode, DateTime.now());
   }
 
-  // LAYOUT PART
+  Future<String> _loadJsonConfigFromFile(String config) async {
+    return await rootBundle.loadString("config/${config}Config.json");
+  }
+
+  _openResultDisplay(Result result) {
+    Navigator.pushNamed(
+        context,
+        result.scanMode.isCompositeScan()
+            ? CompositeResultDisplay.routeName
+            : ResultDisplay.routeName,
+        arguments: result);
+  }
+
+  _saveResultToResultList(Result result) {
+    setState(() {
+      _results.insert(0, result);
+    });
+
+    _saveResultListToSharedPreferences(_results);
+  }
+
+  _saveResultListToSharedPreferences(List<Result> results) async {
+    List<String> results = [
+      for (Result result in _results) json.encode(result.toJson())
+    ];
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('results', results);
+  }
+
+// LAYOUT PART
 
   @override
   Widget build(BuildContext context) {

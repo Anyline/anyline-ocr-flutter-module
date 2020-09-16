@@ -18,6 +18,17 @@ class Result {
   get keys {
     return jsonMap.keys.toList();
   }
+
+  Map<String, dynamic> toJson() => {
+        'timestamp': timestamp.millisecondsSinceEpoch,
+        'scanMode': scanMode.key,
+        'jsonMap': jsonMap,
+      };
+
+  Result.fromJson(Map<String, dynamic> json)
+      : timestamp = DateTime.fromMicrosecondsSinceEpoch(json['timestamp']),
+        scanMode = ScanMode.values
+            .firstWhere((element) => element.key == json['scanMode']),
+        jsonMap = json['jsonMap'];
 }
 
-class CompositeResult {}
