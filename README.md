@@ -77,7 +77,7 @@ If you want to get detailed information about the config JSON, check out the off
 #### Instantiate the Plugin
 
 ```dart
-anylinePlugin = AnylinePlugin();
+var anylinePlugin = AnylinePlugin();
 ```
 
 #### Load config from file
@@ -89,7 +89,7 @@ var config = await rootBundle.loadString("your/Config/Path.json");
 #### Start scanning and parse result
 
 ```dart
-String resultString = await anylinePlugin.startScanning(config);
+var resultString = await anylinePlugin.startScanning(config);
 ```
 
 Currently the plugin does not provide seperate result classes, but this may be added in the future. For now feel free to create your own result class which fits your use case best. Alternatively, Flutter/Dart also supports [serializing JSON using code generation libraries](https://flutter.dev/docs/development/data-and-backend/json). To serialize the JSON string manually and convert it to a Map use `jsonDecode()` from `dart:convert`:
@@ -105,7 +105,7 @@ For detailed information about the result structure, check out the platform-spec
 
 ### 7. Add TrainData to the OCR Module (optional) 
 If you are using the `ANYLINE_OCR` module, you'll have to add some `traineddata`. There are some predefined `traineddata` which
-you can find in the example app. Also the OCR Config has to reflect the path. Check the VoucherConfig.js in the [example/RNExampleApp/config](https://github.com/Anyline/anyline-ocr-react-native-module/tree/master/example/RNExampleApp/config) folder.
+you can find in the example app. Also the OCR Config has to reflect the path. Check the VoucherConfig.json in the [example/config](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/config) folder.
 
 > __IMPORTANT:__ The trainedFiles have to be directly in the Asset folder in Android.
 
