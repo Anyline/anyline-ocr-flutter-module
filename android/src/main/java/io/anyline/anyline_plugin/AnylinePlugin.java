@@ -147,7 +147,9 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
 
     @Override
     public void onResult(Object result, boolean isFinalResult) {
-        returnSuccess(result.toString());
+        if (isFinalResult) {
+            returnSuccess(result.toString());
+        }
     }
 
     @Override

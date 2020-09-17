@@ -13,6 +13,11 @@ public class Constants {
     public static final String EXTRA_OCR_CONFIG_JSON = "EXTRA_OCR_CONFIG_JSON";
     public static final String EXTRA_ENABLE_BARCODE_SCANNING = "EXTRA_ENABLE_BARCODE_SCANNING";
 
+    public static final String EXCEPTION_DEFAULT = "AnylineException";
+    public static final String EXCEPTION_CONFIG = "AnylineConfigException";
+    public static final String EXCEPTION_NO_CAMERA_PERMISSION = "AnylineCameraPermissionException";
+    public static final String EXCEPTION_CORE = "AnylineCoreException";
+
     public static final int SCAN_ACTIVITY_REQUEST_CODE = 999;
 
     public static final int RESULT_CANCELLED = 0;
