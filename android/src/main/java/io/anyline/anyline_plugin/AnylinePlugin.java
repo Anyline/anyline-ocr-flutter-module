@@ -91,15 +91,16 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
                         scan(Anyline4Activity.class, null, REQUEST_ANYLINE_4);
                     }
                 } else {
-                    returnError("No Plugin in config. Please check your configuration.");
+                    returnError(Constants.EXCEPTION_CONFIG, "No Plugin in config. Please check your configuration.");
                 }
             } else if (options.has("serialViewPluginComposite") || options.has("parallelViewPluginComposite")) {
                 scan(Anyline4Activity.class, null, REQUEST_ANYLINE_4);
             } else {
-                returnError("No ViewPlugin in config. Please check your configuration.");
+                returnError(Constants.EXCEPTION_CONFIG, "No ViewPlugin in config. Please check your configuration.");
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            returnError(Constants.EXCEPTION_CONFIG);
         }
     }
 
@@ -120,7 +121,7 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
             }
 
         } catch (JSONException e) {
-            returnError("JSON ERROR: " + e.getMessage());
+            returnError(Constants.EXCEPTION_CONFIG, "JSON ERROR: " + e.getMessage());
         }
 
         intent.putExtra(Constants.EXTRA_LICENSE_KEY, licenseKey);
@@ -131,7 +132,7 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
             try {
                 intent.putExtra(Constants.EXTRA_OCR_CONFIG_JSON, configObject.get("ocr").toString());
             } catch (JSONException e) {
-                returnError(e.getMessage());
+                returnError(Constants.EXCEPTION_CONFIG, e.getMessage());
             }
         }
 
@@ -154,16 +155,24 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
 
     @Override
     public void onError(String error) {
-        returnError(error);
+        returnDefaultError(error);
     }
 
     @Override
     public void onCancel() {
-        returnError("Cancelled");
+        returnDefaultError("Anyline was cancelled");
     }
 
-    private void returnError(String message) {
-        result.error(message, null, null);
+    private void returnError(String errorCode) {
+        result.error(errorCode, null, null);
+    }
+
+    private void returnError(String errorCode, String errorMessage) {
+        result.error(errorCode, errorMessage, null);
+    }
+
+    private void returnDefaultError(String errorMessage) {
+        result.error(Constants.EXCEPTION_DEFAULT, errorMessage, null);
     }
 
     private void returnSuccess(String scanResult) {

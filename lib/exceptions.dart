@@ -7,7 +7,9 @@ class AnylineException implements Exception {
 
     static AnylineException parse(Exception e) {
       if (e is PlatformException) {
-        if (e.code == Constants.EXCEPTION_CONFIG) {
+        if (e.code == Constants.EXCEPTION_LICENSE) {
+          return AnylineLicenseException(e.message);
+        } else if (e.code == Constants.EXCEPTION_CONFIG) {
           return AnylineConfigException(e.message);
         } else if (e.code == Constants.EXCEPTION_NO_CAMERA_PERMISSION) {
           return AnylineCameraPermissionException(e.message);
@@ -19,6 +21,10 @@ class AnylineException implements Exception {
       }
       return AnylineException(e.toString());
     }
+}
+
+class AnylineLicenseException extends AnylineException {
+  AnylineLicenseException(String message) : super(message);
 }
 
 class AnylineConfigException extends AnylineException {

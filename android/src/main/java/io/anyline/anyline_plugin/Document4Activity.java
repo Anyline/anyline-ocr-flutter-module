@@ -545,12 +545,4 @@ public class Document4Activity extends AnylineBaseActivity implements CameraOpen
         //the camera is opened async and this is called when the opening is finished
         Log.d(TAG, "Camera opened successfully. Frame resolution " + width + " x " + height);
     }
-
-    @Override
-    public void onCameraError(Exception e) {
-        //This is called if the camera could not be opened.
-        // (e.g. If there is no camera or the permission is denied)
-        // This is useful to present an alternative way to enter the required data if no camera exists.
-        throw new RuntimeException(e);
-    }
 }
