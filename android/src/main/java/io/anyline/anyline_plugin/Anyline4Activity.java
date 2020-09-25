@@ -4,6 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -37,7 +38,7 @@ import io.anyline.plugin.id.IdScanViewPlugin;
 import io.anyline.plugin.id.Identification;
 import io.anyline.plugin.id.MrzConfig;
 import io.anyline.plugin.id.MrzIdentification;
-import io.anyline.plugin.id.TemplateConfig;
+import io.anyline.plugin.id.UniversalIdConfig;
 import io.anyline.plugin.licenseplate.LicensePlateScanResult;
 import io.anyline.plugin.licenseplate.LicensePlateScanViewPlugin;
 import io.anyline.plugin.meter.MeterScanMode;
@@ -58,10 +59,13 @@ public class Anyline4Activity extends AnylineBaseActivity {
     private RadioGroup radioGroup;
     private AnylineUIConfig anylineUIConfig;
     private String cropAndTransformError;
+    private Boolean isFirstCameraOpen; // only if camera is opened the first time get coordinates of the cutout to avoid flickering when switching between analog and digital
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isFirstCameraOpen = true;
 
         // init the scan view
         anylineScanView = new ScanView(this, null);
@@ -161,8 +165,8 @@ public class Anyline4Activity extends AnylineBaseActivity {
                         scanViewPlugin.addScanResultListener(drivingLicenseResultListener());
                     } else if (((IdScanPlugin) ((IdScanViewPlugin) scanViewPlugin).getScanPlugin()).getIdConfig() instanceof GermanIdFrontConfig) {
                         scanViewPlugin.addScanResultListener(germanIdFrontResultListener());
-                    } else if (((IdScanPlugin) ((IdScanViewPlugin) scanViewPlugin).getScanPlugin()).getIdConfig() instanceof TemplateConfig) {
-                        scanViewPlugin.addScanResultListener(templateResultListener());
+                    } else if (((IdScanPlugin) ((IdScanViewPlugin) scanViewPlugin).getScanPlugin()).getIdConfig() instanceof UniversalIdConfig) {
+                        scanViewPlugin.addScanResultListener(universalIdResultListener());
                     }
                 } else if (scanViewPlugin instanceof OcrScanViewPlugin) {
                     if (json.has("reportingEnabled")) {
@@ -229,18 +233,21 @@ public class Anyline4Activity extends AnylineBaseActivity {
             @Override
             public void run() {
                 if (radioGroup != null) {
-                    //orig: Rect rect = anylineScanView.getScanViewPlugin().getCutoutImageOnSurface(); // =cutoutRect.rectOnVisibleView
-                    Rect rect = ((MeterScanViewPlugin) scanViewPlugin).getCutoutRect().rectOnVisibleView;
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            if (isFirstCameraOpen) {
+                                isFirstCameraOpen = false;
+                                Rect rect = ((MeterScanViewPlugin) scanViewPlugin).getCutoutRect().rectOnVisibleView;
 
-                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) radioGroup.getLayoutParams();
-//                    lp.setMargins(50 + anylineUIConfig.getOffsetX(), anylineUIConfig.getOffsetY(), 0,
-//                            0);
-                    orig:
-                    lp.setMargins(rect.left + anylineUIConfig.getOffsetX(), rect.top + anylineUIConfig.getOffsetY(), 0,
-                            0);
-                    radioGroup.setLayoutParams(lp);
+                                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) radioGroup.getLayoutParams();
+                                lp.setMargins(rect.left + anylineUIConfig.getOffsetX(), rect.top + anylineUIConfig.getOffsetY(), 0, 0);
+                                radioGroup.setLayoutParams(lp);
 
-                    radioGroup.setVisibility(View.VISIBLE);
+                                radioGroup.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }, 1200);
                 }
             }
         });
@@ -296,6 +303,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
                     View button = group.findViewById(checkedId);
                     String mode = modes.get(group.indexOfChild(button));
                     ((MeterScanViewPlugin) scanViewPlugin).setScanMode(MeterScanMode.valueOf(mode));
+                    anylineScanView.releaseCameraInBackground();
                     anylineScanView.stop();
                     try {
                         Thread.sleep(100);
@@ -496,7 +504,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
         };
     }
 
-    private ScanResultListener<ScanResult<ID>> templateResultListener() {
+    private ScanResultListener<ScanResult<ID>> universalIdResultListener() {
         return idScanResult -> {
             Identification identification = (Identification) idScanResult.getResult();
             HashMap<String, String> data = (HashMap<String, String>) identification.getResultData();
