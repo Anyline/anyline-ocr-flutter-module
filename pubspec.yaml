@@ -1,7 +1,9 @@
 name: anyline
-description: Anyline OCR Module
-version: 24.0.0-dev.1
+description: Anyline is a mobile OCR SDK, which can be configured by yourself to scan all kinds of numbers, characters, text and codes. With the Anyline SDK, smartphone cameras can process written characters in real time, even when offline. This is achieved with the help of a neural network. This means data from an ID can be digitized in the blink of an eye and then verified or validated against information in your application’s backend.
+version: 24.0.0-dev.1.1
 homepage: https://anyline.com
+repository: https://github.com/Anyline/anyline-ocr-flutter-module
+documentation: https://documentation.anyline.com
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

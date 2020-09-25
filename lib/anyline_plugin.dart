@@ -5,17 +5,26 @@ import 'package:anyline/exceptions.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Entrypoint for perfoming any scans using the Anyline OCR library.
 class AnylinePlugin {
   static const MethodChannel _channel = const MethodChannel('anyline_plugin');
 
+  AnylinePlugin();
+
+  /// Returns the Anyline SDK version the plugin currently is powered by.
   static Future<String> get sdkVersion async {
     final String version =
         await _channel.invokeMethod(Constants.METHOD_GET_SDK_VERSION);
     return version;
   }
 
-  AnylinePlugin();
-
+  /// Starts the Anyline SDK and invokes the scanning process with the given [configJson].
+  ///
+  /// Returns the result as a JSON string which can be parsed into an object of
+  /// your choice. For more information about the possible forms of the JSON result
+  /// and how to parse it, visit the [Anyline Documentation](https://documentation.anyline.com).
+  ///
+  /// Uses the third-party-package `permission_handler` to request camera permissions.
   Future<String> startScanning(String configJson) async {
     if (await Permission.camera.isPermanentlyDenied) {
       openAppSettings();

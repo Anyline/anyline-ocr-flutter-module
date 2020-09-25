@@ -33,21 +33,19 @@ Take a look into  [example/lib/main.dart](https://github.com/Anyline/anyline-ocr
 Get your [trial license](https://anyline.com/free-demos/) to try Anyline inside your app. 
 Reach out to our sales team to get a [commercial license](https://anyline.com/contact-sales/).
 
-### 2. Get the Anyline react-native plugin
+### 2. Get the Anyline flutter plugin
 
-Via pub.dev:
-
-```bash
-Coming soon!
-``` 
-
-[Follow the instructions given on using unpublished packages](https://flutter.dev/docs/development/packages-and-plugins/using-packages#dependencies-on-unpublished-packages) and add the following lines to your `pubspec.yaml`:
+Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  anyline-ocr-flutter-module:
-    git:
-      url: git://github.com/Anyline/anyline-ocr-flutter-module.git
+  anyline: ^24.0.0-dev.1.1
+```
+
+Install it with Flutter:
+
+```shell
+  $ flutter pub get
 ```
 
 ### 3. Import the plugin into your Dart file
