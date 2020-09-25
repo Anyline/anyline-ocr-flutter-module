@@ -58,7 +58,7 @@ class _AnylineDemoState extends State<AnylineDemo> {
       sdkVersion = await AnylinePlugin.sdkVersion;
       anylinePlugin = AnylinePlugin();
     } on PlatformException {
-      sdkVersion = 'Failed to get platform version.';
+      sdkVersion = 'Failed to get SDK version.';
     }
     if (!mounted) return;
     setState(() {
@@ -92,8 +92,8 @@ class _AnylineDemoState extends State<AnylineDemo> {
     String configJson = await _loadJsonConfigFromFile(mode.key);
 
     String stringResult = await anylinePlugin.startScanning(configJson);
-    Map<String, dynamic> jsonResult = jsonDecode(stringResult);
 
+    Map<String, dynamic> jsonResult = jsonDecode(stringResult);
     return Result(jsonResult, mode, DateTime.now());
   }
 
@@ -173,6 +173,7 @@ class _AnylineDemoState extends State<AnylineDemo> {
               [
                 _scanButton(ScanMode.LicensePlate),
                 _scanButton(ScanMode.TIN),
+                _scanButton(ScanMode.VIN),
               ],
             ),
             _useCase(
@@ -185,7 +186,6 @@ class _AnylineDemoState extends State<AnylineDemo> {
             _useCase(
               'MRO',
               [
-                _scanButton(ScanMode.VIN),
                 _scanButton(ScanMode.USNR),
                 _scanButton(ScanMode.ContainerShip),
               ],
