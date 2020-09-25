@@ -9,9 +9,15 @@ public class Constants {
     public static final String EXTRA_LICENSE_KEY = "EXTRA_LICENSE_KEY";
 
     public static final String EXTRA_SCAN_MODE = "EXTRA_SCAN_MODE";
-    public static final String EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE";
+    public static final String EXTRA_ERROR_CODE = "EXTRA_ERROR_MESSAGE";
     public static final String EXTRA_OCR_CONFIG_JSON = "EXTRA_OCR_CONFIG_JSON";
     public static final String EXTRA_ENABLE_BARCODE_SCANNING = "EXTRA_ENABLE_BARCODE_SCANNING";
+
+    public static final String EXCEPTION_DEFAULT = "AnylineException";
+    public static final String EXCEPTION_LICENSE = "AnylineLicenseException";
+    public static final String EXCEPTION_CONFIG = "AnylineConfigException";
+    public static final String EXCEPTION_NO_CAMERA_PERMISSION = "AnylineCameraPermissionException";
+    public static final String EXCEPTION_CORE = "AnylineCoreException";
 
     public static final int SCAN_ACTIVITY_REQUEST_CODE = 999;
 

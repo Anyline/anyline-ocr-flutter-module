@@ -1,6 +1,6 @@
-# anyline_plugin_example
+# Anyline Flutter Plugin Demo App
 
-Demonstrates how to use the anyline_plugin plugin.
+Demonstrates how to use the Anyline Flutter plugin.
 
 ## Getting Started
 

@@ -24,27 +24,29 @@ class ResultList extends StatelessWidget {
       ),
       body: results.length > 0
           ? ListView.builder(
-          itemCount: results.length,
-          itemBuilder: (BuildContext ctx, int index) {
-            DateTime timestamp = results[index].timestamp;
-            String timestampString = timestamp.isToday()
-                ? 'Today, ${time.format(timestamp)}'
-                : timestamp.isYesterday()
-                ? 'Yesterday, ${time.format(timestamp)}'
-                : fullDate.format(timestamp);
+              itemCount: results.length,
+              itemBuilder: (BuildContext ctx, int index) {
+                DateTime timestamp = results[index].timestamp;
+                String timestampString = timestamp.isToday()
+                    ? 'Today, ${time.format(timestamp)}'
+                    : timestamp.isYesterday()
+                        ? 'Yesterday, ${time.format(timestamp)}'
+                        : fullDate.format(timestamp);
 
-            return results[index].scanMode.isCompositeScan() ?
-            CompositeResultListItem(results[index], timestampString) :
-            ResultListItem(results[index], timestampString);
-          })
-          : Container(
-        alignment: Alignment.topCenter,
-        padding: EdgeInsets.only(top: 35),
-        child: Text(
-          'Empty history',
-          style: TextStyle(color: Colors.grey),
-        ),
-      ),
+                return results[index].scanMode.isCompositeScan()
+                    ? CompositeResultListItem(results[index], timestampString)
+                    : ResultListItem(results[index], timestampString);
+              })
+          : ListView(children: [
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(top: 35),
+                child: Text(
+                  'Empty history',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ]),
     );
   }
 }
@@ -76,7 +78,6 @@ class CompositeResultListItem extends StatelessWidget {
   }
 }
 
-
 class ResultListItem extends StatelessWidget {
   Result result;
   String timestamp;
@@ -86,6 +87,7 @@ class ResultListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
           splashColor: Colors.black87.withAlpha(30),
           onTap: () {
@@ -95,6 +97,7 @@ class ResultListItem extends StatelessWidget {
           child: Column(
             children: [
               Image.file(File(result.jsonMap['imagePath'])),
+
               ListTile(
                 title: Text(result.scanMode.label),
                 subtitle: Text(timestamp),
@@ -104,4 +107,3 @@ class ResultListItem extends StatelessWidget {
     );
   }
 }
-

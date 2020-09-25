@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:anyline_plugin/constants.dart';
+import 'package:anyline_plugin/exceptions.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -16,19 +17,21 @@ class AnylinePlugin {
   AnylinePlugin();
 
   Future<String> startScanning(String configJson) async {
-    final Map<String, String> config = {
-      Constants.EXTRA_CONFIG_JSON: configJson
-    };
-    try {
-      final String result =
-          await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
-      return result;
-    } catch (exception) {
-      // TODO: Exception Handling
-      // Camera Permission
-      // Invalid Json
-      // Core Exceptions
+    if (await Permission.camera.isPermanentlyDenied) {
+      openAppSettings();
+    } else if (await Permission.camera.request().isGranted) {
+      final Map<String, String> config = {
+        Constants.EXTRA_CONFIG_JSON: configJson
+      };
+      try {
+        final String result =
+            await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
+        return result;
+      } on PlatformException catch (e) {
+        throw AnylineException.parse(e);
+      }
+    } else {
+      throw AnylineCameraPermissionException('Camera permission missing.');
     }
-    return '';
   }
 }

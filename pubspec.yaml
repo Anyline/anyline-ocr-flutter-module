@@ -1,8 +1,7 @@
 name: anyline_plugin
 description: Anyline OCR Module
 version: 0.0.1
-author:
-homepage:
+homepage: https://anyline.com
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -13,9 +12,11 @@ dependencies:
     sdk: flutter
   permission_handler: ^5.0.1+1
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

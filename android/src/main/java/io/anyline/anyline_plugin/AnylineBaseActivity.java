@@ -23,8 +23,6 @@ import at.nineyards.anyline.camera.CameraConfig;
 import at.nineyards.anyline.camera.CameraController;
 import at.nineyards.anyline.camera.CameraFeatures;
 import at.nineyards.anyline.camera.CameraOpenListener;
-import io.anyline.anyline_plugin.Constants;
-import io.anyline.anyline_plugin.ResultReporter;
 import io.anyline.plugin.barcode.BarcodeScanViewPlugin;
 import io.anyline.plugin.id.IdScanViewPlugin;
 import io.anyline.plugin.licenseplate.LicensePlateScanViewPlugin;
@@ -56,29 +54,29 @@ public abstract class AnylineBaseActivity extends Activity
      * Always set this like this after the initAnyline: <br/>
      * scanView.getAnylineController().setWorkerThreadUncaughtExceptionHandler(this);<br/>
      * <br/>
-     * This will forward background errors back to the plugin (and back to javascript from there)
+     * This will forward background errors back to the plugin (and back to flutter from there)
      */
     @Override
     public void uncaughtException(Thread thread, Throwable e) {
         String msg = e.getMessage();
-        Log.e(TAG, "Cached uncaught exception", e);
+        Log.e(TAG, "Catched uncaught exception", e);
 
-        String errorMessage;
+        String errorCode;
         if (msg.contains("license") || msg.contains("License")) {
-            errorMessage = "error_licence_invalid";
+            errorCode = Constants.EXCEPTION_LICENSE;
         } else {
-            errorMessage = "error_occured";
+            errorCode = Constants.EXCEPTION_CORE;
         }
 
-        finishWithError(errorMessage);
+        finishWithError(errorCode);
     }
 
-    protected void finishWithError(String errorMessage) {
+    protected void finishWithError(String errorCode) {
 
         Intent data = new Intent();
-        data.putExtra(Constants.EXTRA_ERROR_MESSAGE, errorMessage);
+        data.putExtra(Constants.EXTRA_ERROR_CODE, errorCode);
         setResult(Constants.RESULT_ERROR, data);
-        ResultReporter.onError(errorMessage);
+        ResultReporter.onError(errorCode);
         finish();
     }
 
@@ -89,7 +87,7 @@ public abstract class AnylineBaseActivity extends Activity
 
     @Override
     public void onCameraError(Exception e) {
-        finishWithError("error_accessing_camera");
+        finishWithError(Constants.EXCEPTION_NO_CAMERA_PERMISSION);
     }
 
 
@@ -152,9 +150,10 @@ public abstract class AnylineBaseActivity extends Activity
         return labelView;
     }
 
-    protected ArrayList getArrayListFromJsonArray(JSONArray jsonObject) {
-        ArrayList<Double> listdata = new ArrayList<Double>();
-        JSONArray jArray = jsonObject;
+    protected ArrayList<Double> getArrayListFromJsonArray(JSONArray jsonObject) {
+        ArrayList<Double> listdata = new ArrayList<>();
+        JSONArray jArray;
+        jArray = jsonObject;
         try {
             for (int i = 0; i < jArray.length(); i++) {
                 listdata.add(jArray.getDouble(i));
@@ -164,7 +163,6 @@ public abstract class AnylineBaseActivity extends Activity
         }
         return listdata;
     }
-
 
     protected RelativeLayout.LayoutParams getTextLayoutParams() {
         // Defining the RelativeLayout layout parameters.
@@ -181,7 +179,6 @@ public abstract class AnylineBaseActivity extends Activity
         lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         return lp;
     }
-
 
     protected void setFocusConfig(JSONObject json, CameraConfig camConfig) throws JSONException {
 
