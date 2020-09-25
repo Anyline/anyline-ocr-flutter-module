@@ -31,4 +31,3 @@ class Result {
             .firstWhere((element) => element.key == json['scanMode']),
         jsonMap = json['jsonMap'];
 }
-

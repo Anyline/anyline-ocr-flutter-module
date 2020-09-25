@@ -97,7 +97,6 @@ class ResultListItem extends StatelessWidget {
           child: Column(
             children: [
               Image.file(File(result.jsonMap['imagePath'])),
-
               ListTile(
                 title: Text(result.scanMode.label),
                 subtitle: Text(timestamp),

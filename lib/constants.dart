@@ -1,7 +1,6 @@
 /// Needed for communication with the native SDK.
 abstract class Constants {
   static const String METHOD_GET_SDK_VERSION = "METHOD_GET_SDK_VERSION";
-  static const String METHOD_SET_LICENSE_KEY = "METHOD_SET_LICENSE_KEY";
   static const String METHOD_START_ANYLINE = "METHOD_START_ANYLINE";
 
   static const String EXTRA_CONFIG_JSON = "EXTRA_CONFIG_JSON";
