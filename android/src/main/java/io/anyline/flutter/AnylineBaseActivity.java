@@ -1,4 +1,4 @@
-package io.anyline.anyline_plugin;
+package io.anyline.flutter;
 
 import android.app.Activity;
 import android.content.Context;

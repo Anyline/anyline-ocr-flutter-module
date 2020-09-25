@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:anyline_plugin/constants.dart';
-import 'package:anyline_plugin/exceptions.dart';
+import 'package:anyline/constants.dart';
+import 'package:anyline/exceptions.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 

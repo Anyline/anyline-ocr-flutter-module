@@ -1,4 +1,4 @@
-import 'package:anyline_plugin/constants.dart';
+import 'package:anyline/constants.dart';
 import 'package:flutter/services.dart';
 
 class AnylineException implements Exception {

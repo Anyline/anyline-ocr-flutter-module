@@ -1,4 +1,4 @@
-package io.anyline.anyline_plugin;
+package io.anyline.flutter;
 
 public class Constants {
     public static final String METHOD_GET_SDK_VERSION = "METHOD_GET_SDK_VERSION";

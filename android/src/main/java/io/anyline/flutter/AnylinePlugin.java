@@ -1,4 +1,4 @@
-package io.anyline.anyline_plugin;
+package io.anyline.flutter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +20,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-import static io.anyline.anyline_plugin.Constants.REQUEST_ANYLINE_4;
+import static io.anyline.flutter.Constants.REQUEST_ANYLINE_4;
 
 /**
  * AnylinePlugin

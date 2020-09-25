@@ -1,4 +1,4 @@
-package io.anyline.anyline_plugin;
+package io.anyline.flutter;
 
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
@@ -247,7 +247,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
                                 radioGroup.setVisibility(View.VISIBLE);
                             }
                         }
-                    }, 1200);
+                    }, 2000);
                 }
             }
         });

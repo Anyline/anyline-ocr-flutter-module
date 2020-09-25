@@ -1,6 +1,6 @@
-name: anyline_plugin
+name: anyline
 description: Anyline OCR Module
-version: 0.0.1
+version: 24.0.0-dev.1
 homepage: https://anyline.com
 
 environment:
@@ -30,7 +30,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: io.anyline.anyline_plugin
+        package: io.anyline.flutter
         pluginClass: AnylinePlugin
       ios:
         pluginClass: AnylinePlugin

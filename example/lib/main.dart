@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:anyline_plugin/anyline_plugin.dart';
+import 'package:anyline/anyline_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'result_display.dart';
@@ -133,7 +133,7 @@ class _AnylineDemoState extends State<AnylineDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Anyline Plugin Demo'),
+        title: const Text('Anyline Flutter Demo'),
         backgroundColor: Colors.black87,
         actions: [
           IconButton(

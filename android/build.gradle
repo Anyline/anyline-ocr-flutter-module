@@ -1,4 +1,4 @@
-group 'io.anyline.anyline_plugin'
+group 'io.anyline.flutter'
 version '1.0'
 
 buildscript {
