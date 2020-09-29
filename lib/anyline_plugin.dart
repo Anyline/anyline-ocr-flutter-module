@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:anyline/constants.dart';
 import 'package:anyline/exceptions.dart';
@@ -42,5 +43,26 @@ class AnylinePlugin {
     } else {
       throw AnylineCameraPermissionException('Camera permission missing.');
     }
+  }
+
+  /// Decodes the license and returns the expiration date.
+  ///
+  /// Can be provided with a full configJson string or with just the license string.
+  static String getLicenseExpiryDate(String base64License) {
+    Map<String, dynamic> licenseMap =
+        _decodeBase64LicenseToJsonMap(base64License);
+    return licenseMap['valid'];
+  }
+
+  static Map<String, dynamic> _decodeBase64LicenseToJsonMap(
+      String base64License) {
+    Codec<String, String> base64ToString = ascii.fuse(base64);
+    String licenseString = base64ToString.decode(base64License);
+    String licenseJson = _extractJsonFromLicenseString(licenseString);
+    return jsonDecode(licenseJson);
+  }
+
+  static String _extractJsonFromLicenseString(String licenseJson) {
+    return licenseJson.substring(0, licenseJson.lastIndexOf('}') + 1);
   }
 }

@@ -1,10 +1,6 @@
-	 _____         _ _         
-	|  _  |___ _ _| |_|___ ___ 
-	|     |   | | | | |   | -_|
-	|__|__|_|_|_  |_|_|_|_|___|
-	          |___|            
-	          
-# Anyline Flutter Plugin
+# Anyline OCR Plugin
+
+[![pub package](https://img.shields.io/pub/v/anyline.svg)](https://pub.dev/packages/anyline)
 
 [Anyline](https://www.anyline.io) is a mobile OCR SDK, which can be configured by yourself to scan all kinds of numbers, characters, text and codes. 
 
@@ -15,12 +11,10 @@ The plugin enables the connection to the SDK via Flutter.
 ## Requirements:
 
 ### iOS
-
 not supported yet
 
 
 ### Android 
-
 minSDK >= 19
 
 ## Example
@@ -28,6 +22,8 @@ minSDK >= 19
 Take a look into  [example/lib/main.dart](https://github.com/Anyline/anyline-ocr-flutter-module/blob/058474e8391b35c75e39924ef42236ed773b182e/example/lib/main.dart#L91) to see the implementation.
 	                
 ## Quick Start Guide
+
+For a more in-depth guide, consider checking out the [Anyline Flutter Guide on documentation.anyline.com](https://documentation.anyline.com/toc/platforms/flutter/getting_started.html#anyline-flutter-guide).
 
 ### 1. Get a License
 Get your [trial license](https://anyline.com/free-demos/) to try Anyline inside your app. 
@@ -50,7 +46,7 @@ Install it with Flutter:
 
 ### 3. Import the plugin into your Dart file
 ```dart
-import 'package:anyline-ocr-flutter-module/anyline_plugin.dart';
+import 'package:anyline/anyline_plugin.dart';
 ```
 ### 4. Add the config file to the assets in your `pubspec.yaml`
 ```yaml
@@ -98,8 +94,7 @@ Map<String, dynamic> resultMap = jsonDecode(resultString);
 
 From here you can access e.g. the image path of the cutout image at `resultMap['imagePath']`. 
 
-For detailed information about the result structure, check out the platform-specific documentation for [Android](https://documentation.anyline.com/api/android/index.html) and [iOS](https://documentation.anyline.com/api/ios/index.html).
-
+For detailed information on handling results and the result structure, check out our [Anyline Flutter Guide on documentation.anyline.com](https://documentation.anyline.com/toc/platforms/flutter/getting_started.html#anyline-flutter-guide).
 
 ### 7. Add TrainData to the OCR Module (optional) 
 If you are using the `ANYLINE_OCR` module, you'll have to add some `traineddata`. There are some predefined `traineddata` which
@@ -128,7 +123,7 @@ android
 
 #### getLicenseExpiryDate
 
-> To be implemented
+Get the expiration date of the provided license. Returns a string.
 
 
 ## Images
