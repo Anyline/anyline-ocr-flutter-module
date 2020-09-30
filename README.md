@@ -6,20 +6,35 @@
 
 The plugin enables the connection to the SDK via Flutter.
 
-### **This plugin is still in development, it is currently functional for Android only!**
+> ### **This plugin is still in development, it is currently functional for Android only!**
 
 ## Requirements:
 
-### iOS
-not supported yet
-
-
-### Android 
-minSDK >= 19
+| **iOS**           | **Android**  |
+|-------------------|--------------|
+| not supported yet | minSDK >= 19 |
 
 ## Example
 
-Take a look into  [example/lib/main.dart](https://github.com/Anyline/anyline-ocr-flutter-module/blob/058474e8391b35c75e39924ef42236ed773b182e/example/lib/main.dart#L91) to see the implementation.
+This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [anyline_demo](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/anyline_demo.dart) module.
+```dart
+void scanWithAnyline() async {
+  /// Instantiate the plugin.
+  var anylinePlugin = AnylinePlugin();
+
+  /// Load the config file which also includes the license key (for more info
+  /// visit documentation.anyline.com).
+  var config = await rootBundle.loadString("config/AnalogMeterConfig.json");
+
+  /// Start the scanning process.
+  var stringResult = await anylinePlugin.startScanning(config);
+
+  /// Convert the stringResult to a Map to access the result fields. It is
+  /// recommended to create result classes that fit your use case. For more
+  /// information on that, visit the Flutter Guide on documentation.anyline.com.
+  Map<String, dynamic> result = jsonDecode(stringResult);
+}
+```
 	                
 ## Quick Start Guide
 
@@ -35,7 +50,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  anyline: ^24.0.0-dev.1.1
+  anyline: ^24.0.0-dev.1.2
 ```
 
 Install it with Flutter:
@@ -54,7 +69,7 @@ flutter:
   assets:
     - path-to-your-json-config
 ```
-Add and import a JSON file with the proper structure and elements. The JSON config contains: 
+Add a JSON file with the proper structure and elements. The JSON config contains: 
 
 1. The license key 
 2. Options field with

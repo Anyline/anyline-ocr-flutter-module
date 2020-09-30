@@ -1,6 +1,6 @@
 name: anyline
-description: Scan all kinds of numbers, characters, text and codes with the Anyline OCR SDK, which can be configured by yourself. With it, smartphone cameras can process written characters in real time, even when offline. This is achieved with the help of a neural network.
-version: 24.0.0-dev.1.1
+description: Scan all kinds of numbers, characters, text and codes with the Anyline OCR SDK, which can be configured by yourself. With it, smartphone cameras can process written characters in real time, even when offline.
+version: 24.0.0-dev.1.2
 homepage: https://anyline.com
 repository: https://github.com/Anyline/anyline-ocr-flutter-module
 documentation: https://documentation.anyline.com
