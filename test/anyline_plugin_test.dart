@@ -1,23 +1,17 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:anyline_plugin/anyline_plugin.dart';
+import 'package:anyline/anyline_plugin.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('anyline_plugin');
-
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
-  });
+  setUp(() {});
 
-  tearDown(() {
-    channel.setMockMethodCallHandler(null);
-  });
+  tearDown(() {});
 
-  test('getPlatformVersion', () async {
-    expect(await AnylinePlugin.platformVersion, '42');
+  test('getLicenseExpiryDate should return correct expiry date', () {
+    String license =
+        'ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6IDIsCiAgImRlYnVnUmVwb3J0aW5nIjogIm9uIiwKICAiaW1hZ2VSZXBvcnRDYWNoaW5nIjogdHJ1ZSwKICAibWFqb3JWZXJzaW9uIjogIjQiLAogICJtYXhEYXlzTm90UmVwb3J0ZWQiOiAwLAogICJwaW5nUmVwb3J0aW5nIjogdHJ1ZSwKICAicGxhdGZvcm0iOiBbCiAgICAiaU9TIiwKICAgICJBbmRyb2lkIgogIF0sCiAgInNjb3BlIjogWwogICAgIkFMTCIKICBdLAogICJzaG93UG9wVXBBZnRlckV4cGlyeSI6IHRydWUsCiAgInNob3dXYXRlcm1hcmsiOiB0cnVlLAogICJ0b2xlcmFuY2VEYXlzIjogMywKICAidmFsaWQiOiAiMjAyMS0xMC0zMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlci5leGFtcGxlcyIKICBdCn0KTlQ4S2EzNHJwaTNBQW5oZGdWR1EyTnQ2NHlQMGNtYUkrTWIrMVVEcWg0MGM4RzlxdmlsWDBybWVSOU5CVG9xa2pSV29HK0J3WnhtMnZqck53QnMva29EdldxRG1xV3hTdlkyRzBBeXhGOEt5WHBwSk5SQUlUV1JGbk5ta3ZZUHNhQlo3UzlZMkMvek44dkF3eVNTb2dJbmhPbjkvWUlEMktPTGVXblJVOTF4dWlDT01iZEU4OE0rYjA5L3BXYmVCbmRrdVlRalBRQmM5cmdIQ2FkV0R2clp6TCs2QUlPMU42V2JrQ0ovUHM3ZDRjWGxrVnpjMnZ5WlZTcVo5WitEZytDN25SQnFNKzEvRHBNQ1dBWVNOZHJlS0FvbUN4eFEvb3VNcHpzNXQvQStudkl6MTFhS3dBallSdDJOMC9aTmZBWkFabFI3VkN4aHpuRXpwaTFvSUJBPT0=';
+    expect(AnylinePlugin.getLicenseExpiryDate(license), '2021-10-31');
   });
 }

@@ -2,15 +2,8 @@
 
 Demonstrates how to use the Anyline Flutter plugin.
 
+If you want to just get the plugin working as quickly as possible, see the example in [`main.dart`](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/main.dart) below.
+
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project includes an Anyline Flutter Demo App with configurations for 22+ use cases. You can use the app code located in the [`anyline_demo.dart`](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/anyline_demo.dart) file as orientation for your own implementation, but we strongly advise against using the same result processing approach as we did in our demo app. The reason why we only used `Map<String,dynamic>` and not custom model classes for storing results and therefore went without Dart typesafety is because for our purpose of only displaying results this was not really necessary. Creating classes for every single use would have been an overkill for this project, but we strongly encourage you to read our [Anyline Flutter Guide on documentation.anyline.com](https://documentation.anyline.com/toc/platforms/flutter/getting_started.html#anyline-flutter-guide), where we go into detail about result processing and the form of all different possible results.
