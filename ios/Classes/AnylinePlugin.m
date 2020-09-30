@@ -1,4 +1,5 @@
 #import "AnylinePlugin.h"
+#import <Anyline/Anyline.h>
 
 @implementation AnylinePlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -10,11 +11,16 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+  if ([@"METHOD_GET_SDK_VERSION" isEqualToString:call.method]) {
+      result(ALCoreController.versionNumber);
+  } else if ([@"METHOD_START_ANYLINE" isEqualToString:call.method]) {
+      id config = call.arguments[@"EXTRA_CONFIG_JSON"];
+      //[self scanAnyline:];
   } else {
-    result(FlutterMethodNotImplemented);
+      result(FlutterMethodNotImplemented);
   }
 }
+
+
 
 @end
