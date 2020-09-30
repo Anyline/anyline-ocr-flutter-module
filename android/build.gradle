@@ -38,7 +38,7 @@ android {
         targetCompatibility = 1.8
     }
     dependencies {
-        api 'io.anyline:anylinesdk:24'
+        api 'io.anyline:anylinesdk:24-NoDocUI'
         implementation 'com.google.android.material:material:1.1.0-alpha01'
     }
 }

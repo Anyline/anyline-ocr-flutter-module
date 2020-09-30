@@ -3,10 +3,12 @@ package io.anyline.flutter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -29,7 +31,6 @@ import java.util.List;
 import java.util.UUID;
 
 import androidx.core.content.ContextCompat;
-
 import at.nineyards.anyline.camera.CameraController;
 import at.nineyards.anyline.camera.CameraOpenListener;
 import at.nineyards.anyline.models.AnylineImage;
@@ -214,8 +215,8 @@ public class Document4Activity extends AnylineBaseActivity implements CameraOpen
                     File imageFile = TempFileUtil.createTempFileCheckCache(Document4Activity.this,
                             UUID.randomUUID().toString(), ".jpg");
                     transformedImage.save(imageFile, quality);
-                    showToast(getString(
-                            getResources().getIdentifier("document_image_saved_to", "string", getPackageName())) + " " + imageFile.getAbsolutePath());
+//                    showToast(getString(
+//                            getResources().getIdentifier("document_image_saved_to", "string", getPackageName())) + " " + imageFile.getAbsolutePath());
 
                     jsonResult.put("imagePath", imageFile.getAbsolutePath());
 
@@ -314,11 +315,40 @@ public class Document4Activity extends AnylineBaseActivity implements CameraOpen
             @Override
             public void onTakePictureSuccess() {
                 // this is called after the image has been captured from the camera and is about to be processed
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+
+                // do not display error messages while "processing picture" progress dialog is shown:
+                errorMessageLayout.setVisibility(View.GONE);
+
                 progressDialog = ProgressDialog.show(Document4Activity.this, getString(
                         getResources().getIdentifier("document_processing_picture_header", "string", getPackageName())),
                         getString(
                                 getResources().getIdentifier("document_processing_picture", "string", getPackageName())),
                         true);
+
+                // there is a bug in the sdk that onTakePictureSuccess is called but onResult not.
+                // so implement a workaround: hide the progressDialog after 2 seconds, the phone will continue scanning
+                final Handler handler1 = new Handler();
+                final Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    }
+                };
+
+                progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        handler1.removeCallbacks(runnable);
+                    }
+                });
+
+                handler1.postDelayed(runnable, 2000);
+                // workaround end
 
                 if (errorMessageAnimator != null && errorMessageAnimator.isRunning()) {
 
@@ -544,5 +574,13 @@ public class Document4Activity extends AnylineBaseActivity implements CameraOpen
     public void onCameraOpened(CameraController cameraController, int width, int height) {
         //the camera is opened async and this is called when the opening is finished
         Log.d(TAG, "Camera opened successfully. Frame resolution " + width + " x " + height);
+    }
+
+    @Override
+    public void onCameraError(Exception e) {
+        //This is called if the camera could not be opened.
+        // (e.g. If there is no camera or the permission is denied)
+        // This is useful to present an alternative way to enter the required data if no camera exists.
+        throw new RuntimeException(e);
     }
 }
