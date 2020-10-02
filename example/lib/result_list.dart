@@ -10,19 +10,17 @@ import 'result_display.dart';
 
 class ResultList extends StatelessWidget {
   static const routeName = '/resultList';
-  var fullDate = DateFormat('d/M/y, HH:mm');
-  var time = DateFormat('HH:mm');
+  final fullDate = DateFormat('d/M/y, HH:mm');
+  final time = DateFormat('HH:mm');
+
+  final List<Result> results;
+
+  ResultList(this.results);
 
   @override
   Widget build(BuildContext context) {
-    final List<Result> results = ModalRoute.of(context).settings.arguments;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        title: Text("History"),
-      ),
-      body: results.length > 0
+    return Container(
+      child: results.length > 0
           ? ListView.builder(
               itemCount: results.length,
               itemBuilder: (BuildContext ctx, int index) {

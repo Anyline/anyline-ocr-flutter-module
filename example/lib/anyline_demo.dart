@@ -6,25 +6,28 @@ import 'package:anyline_plugin_example/result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'result_display.dart';
 import 'result_list.dart';
 import 'scan_modes.dart';
+
+const Color anylineBlue = Color(0xFF0099FF);
 
 class AnylineDemoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        ResultList.routeName: (context) => ResultList(),
         ResultDisplay.routeName: (context) => ResultDisplay(),
         FullScreenImage.routeName: (context) => FullScreenImage(),
         CompositeResultDisplay.routeName: (context) => CompositeResultDisplay(),
       },
       home: AnylineDemo(),
-      theme: ThemeData(
-        brightness: Brightness.light,
+      theme: ThemeData.light().copyWith(
         accentColor: Colors.black87,
+        scaffoldBackgroundColor: Colors.black87,
+        textTheme: GoogleFonts.montserratTextTheme(),
       ),
     );
   }
@@ -36,204 +39,372 @@ class AnylineDemo extends StatefulWidget {
 }
 
 class _AnylineDemoState extends State<AnylineDemo> {
-  AnylinePlugin anylinePlugin;
+  int _selectedIndex = 0;
 
-  String _sdkVersion = 'Unknown';
-  List<Result> _results = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _initAnylinePlugin();
-    _initResultListFromSharedPreferences();
-  }
-
-  _initAnylinePlugin() async {
-    String sdkVersion;
-    try {
-      sdkVersion = await AnylinePlugin.sdkVersion;
-      anylinePlugin = AnylinePlugin();
-    } on PlatformException {
-      sdkVersion = 'Failed to get SDK version.';
-    }
-    if (!mounted) return;
+  void _onItemTapped(int index) {
     setState(() {
-      _sdkVersion = sdkVersion;
+      _selectedIndex = index;
     });
   }
 
-  _initResultListFromSharedPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> list = prefs.getStringList('results') ?? [];
-    List<Result> results = [
-      for (String result in list) Result.fromJson(json.decode(result))
-    ];
-    setState(() {
-      _results = results;
-    });
-  }
+  bool _backButton = false;
 
-  startAnyline(ScanMode mode) async {
-    try {
-      Result result = await _scan(mode);
-      _openResultDisplay(result);
-      _saveResultToResultList(result);
-    } catch (e, s) {
-      print('$e, $s');
-    }
-  }
-
-  Future<Result> _scan(ScanMode mode) async {
-    String configJson = await _loadJsonConfigFromFile(mode.key);
-
-    String stringResult = await anylinePlugin.startScanning(configJson);
-
-    Map<String, dynamic> jsonResult = jsonDecode(stringResult);
-    return Result(jsonResult, mode, DateTime.now());
-  }
-
-  Future<String> _loadJsonConfigFromFile(String config) async {
-    return await rootBundle.loadString("config/${config}Config.json");
-  }
-
-  _openResultDisplay(Result result) {
-    Navigator.pushNamed(
-        context,
-        result.scanMode.isCompositeScan()
-            ? CompositeResultDisplay.routeName
-            : ResultDisplay.routeName,
-        arguments: result);
-  }
-
-  _saveResultToResultList(Result result) {
-    setState(() {
-      _results.insert(0, result);
-    });
-
-    _saveResultListToSharedPreferences(_results);
-  }
-
-  _saveResultListToSharedPreferences(List<Result> results) async {
-    List<String> results = [
-      for (Result result in _results) json.encode(result.toJson())
-    ];
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('results', results);
-  }
+  Widget _scanTab;
+  Widget _resultsTab;
 
 // LAYOUT PART
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Anyline Flutter Demo'),
-        backgroundColor: Colors.black87,
-        actions: [
-          IconButton(
-              icon: Icon(Icons.folder_special),
-              onPressed: () {
-                Navigator.pushNamed(context, ResultList.routeName,
-                    arguments: _results);
-              })
-        ],
-      ),
-      body: Center(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
-          children: [
-            _useCase(
-              'METER READING',
-              [
-                _scanButton(ScanMode.AnalogMeter),
-                _scanButton(ScanMode.DigitalMeter),
-                _scanButton(ScanMode.SerialNumber),
-                _scanButton(ScanMode.DialMeter),
-                _scanButton(ScanMode.DotMatrix),
-              ],
-            ),
-            _useCase(
-              'ID',
-              [
-                _scanButton(ScanMode.DrivingLicense),
-                _scanButton(ScanMode.MRZ),
-                _scanButton(ScanMode.GermanIDFront),
-                _scanButton(ScanMode.Barcode_PDF417),
-                _scanButton(ScanMode.UniversalId),
-              ],
-            ),
-            _useCase(
-              'VEHICLE',
-              [
-                _scanButton(ScanMode.LicensePlate),
-                _scanButton(ScanMode.TIN),
-                _scanButton(ScanMode.VIN),
-              ],
-            ),
-            _useCase(
-              'OCR',
-              [
-                _scanButton(ScanMode.Iban),
-                _scanButton(ScanMode.Voucher),
-              ],
-            ),
-            _useCase(
-              'MRO',
-              [
-                _scanButton(ScanMode.USNR),
-                _scanButton(ScanMode.ContainerShip),
-              ],
-            ),
-            _useCase(
-              'OTHER',
-              [
-                _scanButton(ScanMode.Barcode),
-                _scanButton(ScanMode.Document),
-                _scanButton(ScanMode.CattleTag),
-                _scanButton(ScanMode.SerialScanning),
-                _scanButton(ScanMode.ParallelScanning),
-              ],
-            ),
-            Divider(),
-            Text('Running on Anyline SDK Version $_sdkVersion\n'),
-          ],
+      appBar: _buildAppBar(),
+      bottomNavigationBar: _buildNavBar(),
+      body: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
+        child: _buildBody(),
       ),
     );
   }
 
-  Widget _useCase(String label, List<Widget> children) {
-    return Card(
-        color: Colors.white,
-        margin: EdgeInsets.only(top: 15),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _heading6(label),
-              SizedBox(height: 10),
-              Column(children: children)
-            ],
+  Widget _buildAppBar() {
+    return PreferredSize(
+      preferredSize: Size.fromHeight(100),
+      child: AppBar(
+        toolbarHeight: 100,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: Visibility(
+          visible: _backButton,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: IconButton(
+              alignment: Alignment.bottomLeft,
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
           ),
-        ));
+        ),
+        title: Center(
+          child: Image.asset(
+            'assets/anyline_flutter_appbar.png',
+            fit: BoxFit.fitHeight,
+            height: 60,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: IconButton(
+                alignment: Alignment.bottomRight,
+                icon: Icon(
+                  Icons.info_outline,
+                  color: Colors.white,
+                )),
+          )
+        ],
+      ),
+    );
   }
 
-  Widget _heading6(String text) {
-    return Text(text, style: Theme.of(context).textTheme.headline6);
+  Widget _buildNavBar() {
+    return BottomNavigationBar(
+      backgroundColor: Colors.black87,
+      selectedItemColor: anylineBlue,
+      unselectedItemColor: Colors.white,
+      selectedFontSize: 12,
+      unselectedFontSize: 12,
+      items: [
+        BottomNavigationBarItem(
+            icon: Icon(Icons.filter_center_focus), title: Text('Scan')),
+        BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('Results')),
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    );
   }
 
-  Widget _scanButton(ScanMode mode) {
-    return Container(
-      width: double.infinity,
-      child: MaterialButton(
-        onPressed: () {
-          startAnyline(mode);
-        },
-        child: Text(mode.label),
-        color: Colors.black87,
-        textColor: Colors.white,
+  Widget _buildBody() {
+    return _selectedIndex == 0 ? _UseCases : ResultList([]);
+  }
+
+  Widget _UseCases = Center(
+    child: Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                UseCaseButton(
+                  text: 'Meter\nScanning',
+                  image: AssetImage('assets/Meter.png'),
+                ),
+                UseCaseButton(
+                  text: 'Barcode',
+                  image: AssetImage('assets/Barcode.png'),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                UseCaseButton(
+                  text: 'Identity',
+                  image: AssetImage('assets/ID.png'),
+                ),
+                UseCaseButton(
+                  text: 'Vehicle',
+                  image: AssetImage('assets/Vehicle.png'),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                UseCaseButton(
+                  text: 'OCR',
+                  image: AssetImage('assets/OCR.png'),
+                ),
+                UseCaseButton(
+                  text: 'Other',
+                  image: AssetImage('assets/Other.png'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _MeterReading = Center(
+    child: Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(
+        children: [
+          ScanButton(
+            text: 'Analog Meter',
+          ),
+          ScanButton(
+            text: 'Digital Meter',
+          ),
+          ScanButton(
+            text: 'Serial Number',
+          ),
+          ScanButton(
+            text: 'Dial Meter',
+          ),
+          ScanButton(
+            text: 'Dot Matrix',
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _Identity = Center(
+    child: Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(
+        children: [
+          ScanButton(
+            text: 'Universal ID',
+          ),
+          ScanButton(
+            text: 'Driving License',
+          ),
+          ScanButton(
+            text: 'MRZ',
+          ),
+          ScanButton(
+            text: 'German ID Front',
+          ),
+          ScanButton(
+            text: 'PDF 417',
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _Vehicle = Center(
+    child: Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(
+        children: [
+          ScanButton(
+            text: 'License Plate',
+          ),
+          ScanButton(
+            text: 'TIN',
+          ),
+          ScanButton(
+            text: 'VIN',
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _OCR = Center(
+    child: Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(
+        children: [
+          ScanButton(
+            text: 'USNR',
+          ),
+          ScanButton(
+            text: 'Shipping Container',
+          ),
+          ScanButton(
+            text: 'IBAN',
+          ),
+          ScanButton(
+            text: 'Voucher Code',
+          ),
+          ScanButton(
+            text: 'Cattle Tag',
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _Other = Center(
+    child: Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(
+        children: [
+          ScanButton(
+            text: 'Document Scanner',
+          ),
+          ScanButton(
+            text: 'Serial Scanning',
+          ),
+          ScanButton(
+            text: 'Parallel Scanning',
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class ScanButton extends StatelessWidget {
+  ScanButton({@required this.text});
+
+  final String text;
+  final Function onPressed = () {};
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: FlatButton(
+          padding: EdgeInsets.all(0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(0))),
+          textColor: Colors.white,
+          color: anylineBlue,
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Stack(
+              overflow: Overflow.clip,
+              alignment: Alignment.bottomLeft,
+              children: [
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  child: Text(text,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                ),
+                Positioned(
+                  bottom: -15,
+                  left: -5,
+                  child: Opacity(
+                    opacity: 0.25,
+                    child: Text(text,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800, fontSize: 50)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          onPressed: onPressed,
+        ),
+      ),
+    );
+  }
+}
+
+class UseCaseButton extends StatelessWidget {
+  UseCaseButton({this.image, @required this.text});
+
+  final ImageProvider image;
+  final String text;
+  final Function onPressed = () {};
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: FlatButton(
+          padding: EdgeInsets.all(0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(0))),
+          textColor: Colors.white,
+          color: anylineBlue,
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Image(
+                      image: image,
+                      height: 60,
+                    )),
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  child: Text(text,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                ),
+                Positioned(
+                  bottom: -15,
+                  left: -5,
+                  child: Opacity(
+                    opacity: 0.25,
+                    child: Text(text,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800, fontSize: 40)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          onPressed: onPressed,
+        ),
       ),
     );
   }
