@@ -1,9 +1,13 @@
 import 'dart:convert';
-
-import 'package:anyline_plugin_example/result.dart';
-import 'package:flutter/material.dart';
 import 'dart:io';
+
+import 'package:anyline_plugin_example/home.dart';
+import 'package:anyline_plugin_example/result.dart';
+import 'package:anyline_plugin_example/styles.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
+
 import 'scan_modes.dart';
 
 class ResultDisplay extends StatelessWidget {
@@ -14,11 +18,23 @@ class ResultDisplay extends StatelessWidget {
     final Result result = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
+      backgroundColor: Styles.backgroundBlack,
       appBar: AppBar(
-        backgroundColor: Colors.black87,
-        title: Text("${result.scanMode.label} Result"),
+        backgroundColor: Styles.backgroundBlack,
+        centerTitle: true,
+        title: Text(
+          "${result.scanMode.label} Result",
+          style: GoogleFonts.montserrat(fontWeight: FontWeight.w400),
+        ),
+        elevation: 0,
       ),
-      body: ResultDetails(result.jsonMap),
+      body: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        child: Container(
+          color: Colors.white,
+          child: ResultDetails(result.jsonMap),
+        ),
+      ),
     );
   }
 }
@@ -40,15 +56,27 @@ class CompositeResultDisplay extends StatelessWidget {
       length: results.length,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.black87,
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: Styles.backgroundBlack,
           bottom: TabBar(
             tabs: createResultTabs(results),
-            indicatorColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorColor: Styles.anylineBlue,
+            labelStyle: GoogleFonts.montserrat(),
           ),
-          title: Text(result.scanMode.label),
+          title: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                "${result.scanMode.label}",
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.w400),
+              )),
         ),
-        body: TabBarView(
-          children: createResultTabViews(results),
+        body: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          child: TabBarView(
+            children: createResultTabViews(results),
+          ),
         ),
       ),
     );
@@ -80,32 +108,35 @@ class ResultDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Image.file(File(json['imagePath'])),
-        ListView.builder(
-            shrinkWrap: true,
-            physics: ScrollPhysics(),
-            itemCount: json.length,
-            itemBuilder: (BuildContext ctx, int index) {
-              return new ListTile(
-                title: Text(json.values.toList()[index].toString()),
-                subtitle: Text(json.keys.toList()[index].toString()),
-              );
-            }),
-        Container(
-          padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
-          child: RaisedButton(
-            child: Text('Show Full Image'),
-            onPressed: () {
-              Navigator.pushNamed(context, FullScreenImage.routeName,
-                  arguments: json['fullImagePath']);
-            },
-            color: Colors.black87,
-            textColor: Colors.white,
-          ),
-        )
-      ],
+    return Container(
+      color: Colors.white,
+      child: ListView(
+        children: [
+          Image.file(File(json['imagePath'])),
+          ListView.builder(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              itemCount: json.length,
+              itemBuilder: (BuildContext ctx, int index) {
+                return new ListTile(
+                  title: Text(json.values.toList()[index].toString()),
+                  subtitle: Text(json.keys.toList()[index].toString()),
+                );
+              }),
+          Container(
+            padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+            child: FlatButton(
+              child: Text('Show Full Image'),
+              onPressed: () {
+                Navigator.pushNamed(context, FullScreenImage.routeName,
+                    arguments: json['fullImagePath']);
+              },
+              color: Styles.backgroundBlack,
+              textColor: Colors.white,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

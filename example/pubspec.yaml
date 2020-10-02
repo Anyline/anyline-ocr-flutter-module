@@ -1,5 +1,6 @@
 name: anyline_plugin_example
 description: Demonstrates how to use the anyline_plugin plugin.
+version: 1.0.0
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,6 +16,7 @@ dependencies:
   photo_view: ^0.10.2
   intl: ^0.16.1
   shared_preferences: ^0.5.10
+  google_fonts: ^1.1.0
 
   anyline:
     # When depending on this package from a real application you should use:
@@ -45,6 +47,7 @@ flutter:
 
   assets:
     - config/
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
