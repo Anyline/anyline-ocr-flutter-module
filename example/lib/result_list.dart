@@ -1,5 +1,7 @@
+import 'package:anyline_plugin_example/home.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/scan_modes.dart';
+import 'package:anyline_plugin_example/styles.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -22,6 +24,7 @@ class ResultList extends StatelessWidget {
     return Container(
       child: results.length > 0
           ? ListView.builder(
+          padding: EdgeInsets.all(10),
               itemCount: results.length,
               itemBuilder: (BuildContext ctx, int index) {
                 DateTime timestamp = results[index].timestamp;
@@ -33,18 +36,18 @@ class ResultList extends StatelessWidget {
 
                 return results[index].scanMode.isCompositeScan()
                     ? CompositeResultListItem(results[index], timestampString)
-                    : ResultListItem(results[index], timestampString);
-              })
+                : ResultListItem(results[index], timestampString);
+          })
           : ListView(children: [
-              Container(
-                alignment: Alignment.topCenter,
-                padding: EdgeInsets.only(top: 35),
-                child: Text(
-                  'Empty history',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ]),
+        Container(
+          alignment: Alignment.topCenter,
+          padding: EdgeInsets.only(top: 35),
+          child: Text(
+            'Empty history',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+      ]),
     );
   }
 }
@@ -57,18 +60,53 @@ class CompositeResultListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-          splashColor: Colors.black87.withAlpha(30),
-          onTap: () {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          padding: EdgeInsets.zero,
+          color: Styles.anylineBlue,
+          onPressed: () {
             Navigator.pushNamed(context, CompositeResultDisplay.routeName,
                 arguments: result);
           },
-          child: Column(
+          child: Stack(
             children: [
-              ListTile(
-                title: Text(result.scanMode.label),
-                subtitle: Text(timestamp),
+              Positioned(
+                bottom: -15,
+                right: -5,
+                child: Opacity(
+                  opacity: 0.25,
+                  child: Text('Result',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 50,
+                        color: Colors.white,
+                      )),
+                ),
+              ),
+              Column(
+                children: [
+                  SizedBox(
+                    height: 5,
+                  ),
+                  ListTile(
+                      dense: true,
+                      title: Text(
+                        result.scanMode.label,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22),
+                      ),
+                      subtitle: Text(
+                        timestamp,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w100),
+                      )),
+                ],
               ),
             ],
           )),
@@ -84,20 +122,54 @@ class ResultListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-          splashColor: Colors.black87.withAlpha(30),
-          onTap: () {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          padding: EdgeInsets.zero,
+          color: Styles.anylineBlue,
+          onPressed: () {
             Navigator.pushNamed(context, ResultDisplay.routeName,
                 arguments: result);
           },
-          child: Column(
+          child: Stack(
             children: [
-              Image.file(File(result.jsonMap['imagePath'])),
-              ListTile(
-                title: Text(result.scanMode.label),
-                subtitle: Text(timestamp),
+              Positioned(
+                bottom: -15,
+                right: -5,
+                child: Opacity(
+                  opacity: 0.25,
+                  child: Text('Result',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 50,
+                        color: Colors.white,
+                      )),
+                ),
+              ),
+              Column(
+                children: [
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Image.file(File(result.jsonMap['imagePath'])),
+                  ListTile(
+                      dense: true,
+                      title: Text(
+                        result.scanMode.label,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22),
+                      ),
+                      subtitle: Text(
+                        timestamp,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w100),
+                      )),
+                ],
               ),
             ],
           )),
