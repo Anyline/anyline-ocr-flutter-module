@@ -1,4 +1,4 @@
-name: anyline
+name: anyline_plugin
 description: Flutter Plugin for Anyline OCR, which allows you to scan all kinds of numbers, characters, text and codes.
 version: 24.0.0-dev.1.2
 homepage: https://anyline.com

@@ -61,7 +61,7 @@ Install it with Flutter:
 
 ### 3. Import the plugin into your Dart file
 ```dart
-import 'package:anyline/anyline_plugin.dart';
+import 'package:anyline_plugin/anyline_plugin.dart';
 ```
 ### 4. Add the config file to the assets in your `pubspec.yaml`
 ```yaml

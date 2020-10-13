@@ -16,7 +16,7 @@ dependencies:
   intl: ^0.16.1
   shared_preferences: ^0.5.10
 
-  anyline:
+  anyline_plugin:
     # When depending on this package from a real application you should use:
     #   anyline: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints
