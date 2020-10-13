@@ -4,7 +4,7 @@ import 'package:anyline_plugin/anyline_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'anyline_demo.dart';
+import 'home.dart';
 
 void main() {
   runApp(AnylineDemoApp());
