@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:anyline/anyline_plugin.dart';
+import 'package:anyline_plugin/anyline_plugin.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/scan_modes.dart';
 import 'package:flutter/services.dart';

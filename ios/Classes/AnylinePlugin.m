@@ -25,7 +25,7 @@
           return;
       }
       [ALPluginHelper startScan:dictConfig finished:^(id  _Nonnull callbackObj, NSString * _Nonnull errorString) {
-          if (!errorString) {
+          if (errorString) {
               result(errorString);
               return;
           }
