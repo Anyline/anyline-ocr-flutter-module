@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ALPluginScanViewController : UIViewController
 
-typedef void (^ALPluginCallback)(id callbackObj, NSString *errorString);
+typedef void (^ALPluginCallback)(id _Nullable callbackObj, NSString * _Nullable errorString);
 
 @property (nonatomic, assign) BOOL nativeBarcodeEnabled;
 

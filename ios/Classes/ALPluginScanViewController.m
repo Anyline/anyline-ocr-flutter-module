@@ -78,8 +78,16 @@
     }
     
     if(!self.scanView) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could not start scanning" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        [self presentViewController:alert animated:YES completion:NULL];
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dismissViewControllerAnimated:YES completion:^{
+                self.callback(nil, @"Canceled");
+            }];
+        }];
+        
+        [alert addAction:action];
         
         return;
     }
@@ -102,8 +110,17 @@
         BOOL success = [self.scanView.captureDeviceManager addBarcodeDelegate:self error:&error];
         
         if(!success) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could not start scanning" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-            [alert show];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [self presentViewController:alert animated:YES completion:NULL];
+            
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self dismissViewControllerAnimated:YES completion:^{
+                    self.callback(nil, @"Canceled");
+                }];
+            }];
+            
+            [alert addAction:action];
+            
             
             return;
         }
@@ -124,8 +141,16 @@
     NSError *error;
     BOOL success = [self.scanView.scanViewPlugin startAndReturnError:&error];
     if(!success) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could not start scanning" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        [self presentViewController:alert animated:YES completion:NULL];
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dismissViewControllerAnimated:YES completion:^{
+                self.callback(nil, @"Canceled");
+            }];
+        }];
+        
+        [alert addAction:action];
     }
     
     
@@ -145,12 +170,6 @@
 
 - (BOOL)shouldAutorotate {
     return NO;
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    [self dismissViewControllerAnimated:YES completion:^{
-        self.callback(nil, @"Canceled");
-    }];
 }
 
 - (void)doneButtonPressed:(id)sender {

@@ -1,4 +1,4 @@
-# Anyline OCR Plugin
+# Anyline Flutter Plugin
 
 [![pub package](https://img.shields.io/pub/v/anyline.svg)](https://pub.dev/packages/anyline)
 
@@ -6,13 +6,12 @@
 
 The plugin enables the connection to the SDK via Flutter.
 
-> ### **This plugin is still in development, it is currently functional for Android only!**
 
 ## Requirements:
 
 | **iOS**           | **Android**  |
 |-------------------|--------------|
-| not supported yet | minSDK >= 19 |
+| baseSDK >= 10     | minSDK >= 19 |
 
 ## Example
 
@@ -50,7 +49,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  anyline: ^24.0.0-dev.1.2
+  anyline_plugin: ^24.1.0
 ```
 
 Install it with Flutter:
