@@ -1,6 +1,6 @@
 # Anyline Flutter Plugin
 
-[![pub package](https://img.shields.io/pub/v/anyline.svg)](https://pub.dev/packages/anyline)
+[![pub package](https://img.shields.io/pub/v/anyline_plugin.svg)](https://pub.dev/packages/anyline_plugin)
 
 [Anyline](https://www.anyline.io) is a mobile OCR SDK, which can be configured by yourself to scan all kinds of numbers, characters, text and codes. 
 
