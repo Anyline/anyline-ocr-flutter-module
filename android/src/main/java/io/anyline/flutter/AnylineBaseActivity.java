@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public abstract class AnylineBaseActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         licenseKey = getIntent().getStringExtra(Constants.EXTRA_LICENSE_KEY);
         configJson = getIntent().getStringExtra(Constants.EXTRA_CONFIG_JSON);
@@ -78,6 +80,14 @@ public abstract class AnylineBaseActivity extends Activity
         setResult(Constants.RESULT_ERROR, data);
         ResultReporter.onError(errorCode);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

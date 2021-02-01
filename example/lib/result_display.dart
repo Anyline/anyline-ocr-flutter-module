@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:anyline_plugin_example/home.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/styles.dart';
 import 'package:flutter/material.dart';
@@ -125,14 +123,13 @@ class ResultDetails extends StatelessWidget {
               }),
           Container(
             padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
-            child: FlatButton(
+            child: TextButton(
               child: Text('Show Full Image'),
               onPressed: () {
                 Navigator.pushNamed(context, FullScreenImage.routeName,
                     arguments: json['fullImagePath']);
               },
-              color: Styles.backgroundBlack,
-              textColor: Colors.white,
+
             ),
           )
         ],
