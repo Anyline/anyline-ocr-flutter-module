@@ -20,8 +20,6 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-import static io.anyline.flutter.Constants.REQUEST_ANYLINE_4;
-
 /**
  * AnylinePlugin
  */
@@ -86,15 +84,15 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
                 if (viewPlugin != null && viewPlugin.has("plugin")) {
                     JSONObject plugin = viewPlugin.getJSONObject("plugin");
                     if (plugin != null && plugin.has("documentPlugin")) {
-                        scan(Document4Activity.class, null, REQUEST_ANYLINE_4);
+                        scan(Document4Activity.class);
                     } else {
-                        scan(Anyline4Activity.class, null, REQUEST_ANYLINE_4);
+                        scan(Anyline4Activity.class);
                     }
                 } else {
                     returnError(Constants.EXCEPTION_CONFIG, "No Plugin in config. Please check your configuration.");
                 }
             } else if (options.has("serialViewPluginComposite") || options.has("parallelViewPluginComposite")) {
-                scan(Anyline4Activity.class, null, REQUEST_ANYLINE_4);
+                scan(Anyline4Activity.class);
             } else {
                 returnError(Constants.EXCEPTION_CONFIG, "No ViewPlugin in config. Please check your configuration.");
             }
@@ -104,7 +102,7 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
         }
     }
 
-    private void scan(Class<?> activityToStart, String scanMode, int requestCode) {
+    private void scan(Class<?> activityToStart) {
 
         Intent intent = new Intent(activity, activityToStart);
 
@@ -136,13 +134,13 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
             }
         }
 
-        if (scanMode != null) {
-            intent.putExtra(Constants.EXTRA_SCAN_MODE, scanMode);
+        if (null != null) {
+            intent.putExtra(Constants.EXTRA_SCAN_MODE, (String) null);
         }
         ResultReporter.setListener(this);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        activity.startActivityForResult(intent, requestCode, intent.getExtras());
+        activity.startActivityForResult(intent, Constants.REQUEST_ANYLINE_4, intent.getExtras());
 
     }
 

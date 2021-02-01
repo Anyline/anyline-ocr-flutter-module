@@ -110,7 +110,7 @@ public class Document4Activity extends AnylineBaseActivity implements CameraOpen
         JSONObject json = null;
         try {
             json = new JSONObject(configJson);
-            documentScanView.setScanConfig(json, licenseKey);
+            documentScanView.setScanConfig(json);
         } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "**************** Exception: " + e);

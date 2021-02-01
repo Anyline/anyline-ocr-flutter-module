@@ -1,6 +1,5 @@
 package io.anyline.flutter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,18 +11,22 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import at.nineyards.anyline.camera.CameraConfig;
 import at.nineyards.anyline.camera.CameraController;
 import at.nineyards.anyline.camera.CameraFeatures;
 import at.nineyards.anyline.camera.CameraOpenListener;
+import at.nineyards.anyline.core.LicenseException;
+import io.anyline.AnylineSDK;
 import io.anyline.plugin.barcode.BarcodeScanViewPlugin;
 import io.anyline.plugin.id.IdScanViewPlugin;
 import io.anyline.plugin.licenseplate.LicensePlateScanViewPlugin;
@@ -32,9 +35,8 @@ import io.anyline.plugin.ocr.OcrScanViewPlugin;
 import io.anyline.view.AbstractBaseScanViewPlugin;
 import io.anyline.view.ParallelScanViewComposite;
 import io.anyline.view.SerialScanViewComposite;
-//import io.anyline.view.ScanViewPlugin;
 
-public abstract class AnylineBaseActivity extends Activity
+public abstract class AnylineBaseActivity extends AppCompatActivity
         implements CameraOpenListener, Thread.UncaughtExceptionHandler {
 
     private static final String TAG = AnylineBaseActivity.class.getSimpleName();
@@ -46,10 +48,20 @@ public abstract class AnylineBaseActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         licenseKey = getIntent().getStringExtra(Constants.EXTRA_LICENSE_KEY);
         configJson = getIntent().getStringExtra(Constants.EXTRA_CONFIG_JSON);
+
+        try {
+            AnylineSDK.init(licenseKey, this);
+        } catch (LicenseException e) {
+            String errorCode = Constants.EXCEPTION_LICENSE;
+            finishWithError(errorCode);
+        }
     }
 
     /**

@@ -210,10 +210,10 @@ public class Anyline4Activity extends AnylineBaseActivity {
             json = AnylinePluginHelper.setLanguages(json, getApplicationContext());
 
             if (json.has("serialViewPluginComposite") || json.has("parallelViewPluginComposite")) {
-                anylineScanView.initComposite(json, licenseKey); // for composite
+                anylineScanView.initComposite(json); // for composite
                 scanViewPlugin = anylineScanView.getScanViewPlugin();
             } else {
-                anylineScanView.setScanConfig(json, licenseKey); // for non-composite
+                anylineScanView.setScanConfig(json); // for non-composite
             }
             if (anylineScanView != null) {
                 scanViewPlugin = anylineScanView.getScanViewPlugin();
@@ -399,7 +399,6 @@ public class Anyline4Activity extends AnylineBaseActivity {
                     JSONObject jsonBcResult = new JSONObject();
                     try {
                         jsonBcResult.put("value", subResult.getResult());
-                        jsonBcResult.put("format", ((BarcodeScanResult) subResult).getBarcodeFormat());
                         jsonBcResult = AnylinePluginHelper.jsonHelper(Anyline4Activity.this, subResult,
                                 jsonBcResult);
                         jsonResult.put(subResult.getPluginId(), jsonBcResult);
@@ -543,7 +542,9 @@ public class Anyline4Activity extends AnylineBaseActivity {
             try {
 
                 jsonResult.put("value", barcodeScanResult.getResult());
-                jsonResult.put("format", barcodeScanResult.getBarcodeFormat());
+
+                //TODO fix barcode (IB)
+               // jsonResult.put("format", barcodeScanResult.getBarcodeFormat());
                 jsonResult = AnylinePluginHelper.jsonHelper(Anyline4Activity.this, barcodeScanResult,
                         jsonResult);
             } catch (JSONException e) {
