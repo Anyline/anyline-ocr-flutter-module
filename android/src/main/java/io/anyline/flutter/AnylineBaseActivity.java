@@ -21,10 +21,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.nineyards.anyline.camera.CameraConfig;
-import at.nineyards.anyline.camera.CameraController;
-import at.nineyards.anyline.camera.CameraFeatures;
-import at.nineyards.anyline.camera.CameraOpenListener;
+import io.anyline.camera.CameraConfig;
+import io.anyline.camera.CameraController;
+import io.anyline.camera.CameraFeatures;
+import io.anyline.camera.CameraOpenListener;
 import at.nineyards.anyline.core.LicenseException;
 import io.anyline.AnylineSDK;
 import io.anyline.plugin.barcode.BarcodeScanViewPlugin;
@@ -48,10 +48,6 @@ public abstract class AnylineBaseActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         licenseKey = getIntent().getStringExtra(Constants.EXTRA_LICENSE_KEY);
         configJson = getIntent().getStringExtra(Constants.EXTRA_CONFIG_JSON);

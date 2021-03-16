@@ -11,6 +11,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.ActionBar;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import at.nineyards.anyline.AnylineDebugListener;
-import at.nineyards.anyline.camera.CameraController;
+import io.anyline.AnylineDebugListener;
+import io.anyline.camera.CameraController;
 import at.nineyards.anyline.core.RunFailure;
 import at.nineyards.anyline.core.Vector_Contour;
 import at.nineyards.anyline.core.exception_error_codes;
@@ -27,6 +29,7 @@ import at.nineyards.anyline.core.exception_error_codes;
 import io.anyline.plugin.ScanResult;
 import io.anyline.plugin.ScanResultListener;
 import io.anyline.plugin.barcode.BarcodeScanResult;
+import io.anyline.plugin.barcode.BarcodeFormat;
 import io.anyline.plugin.barcode.BarcodeScanViewPlugin;
 import io.anyline.plugin.id.DrivingLicenseConfig;
 import io.anyline.plugin.id.DrivingLicenseIdentification;
@@ -73,6 +76,11 @@ public class Anyline4Activity extends AnylineBaseActivity {
         try {
             // start initialize anyline
             initAnyline();
+
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null){
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -178,6 +186,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
 
                 } else if (scanViewPlugin instanceof BarcodeScanViewPlugin) {
 
+                    ((BarcodeScanViewPlugin) scanViewPlugin).setBarcodeFormats(BarcodeFormat.values());
                     scanViewPlugin.addScanResultListener(barcodeResultListener());
 
                 } else if (scanViewPlugin instanceof MeterScanViewPlugin) {
@@ -323,6 +332,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
             relativeLayout.addView(radioGroup, lp);
         }
         setContentView(relativeLayout, matchParentParams);
+
 
     }
 

@@ -44,7 +44,7 @@
             android:layout_margin="24dp"
             android:layout_gravity="center"
             android:background="@android:color/background_dark"
-            tools:text="Error: image to dark! but I am very very very long and you can not read me" />
+            tools:text="Error: image to dark!" />
 
     </FrameLayout>
 </RelativeLayout>

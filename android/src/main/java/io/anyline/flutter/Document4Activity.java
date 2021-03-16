@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.UUID;
 
 import androidx.core.content.ContextCompat;
-import at.nineyards.anyline.camera.CameraController;
-import at.nineyards.anyline.camera.CameraOpenListener;
-import at.nineyards.anyline.models.AnylineImage;
-import at.nineyards.anyline.util.TempFileUtil;
+import io.anyline.camera.CameraController;
+import io.anyline.camera.CameraOpenListener;
+import io.anyline.models.AnylineImage;
+import io.anyline.util.TempFileUtil;
 import io.anyline.plugin.ScanResult;
 import io.anyline.plugin.document.DocumentScanResultListener;
 import io.anyline.plugin.document.DocumentScanViewPlugin;
