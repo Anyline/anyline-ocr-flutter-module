@@ -13,8 +13,8 @@ class AnylinePlugin {
   AnylinePlugin();
 
   /// Returns the Anyline SDK version the plugin currently is powered by.
-  static Future<String?> get sdkVersion async {
-    final String? version =
+  static Future<String> get sdkVersion async {
+    final String version =
         await _channel.invokeMethod(Constants.METHOD_GET_SDK_VERSION);
     return version;
   }
@@ -26,15 +26,16 @@ class AnylinePlugin {
   /// and how to parse it, visit the [Anyline Documentation](https://documentation.anyline.com).
   ///
   /// Uses the third-party-package `permission_handler` to request camera permissions.
-  Future<String?> startScanning(String configJson) async {
+  Future<String> startScanning(String configJson) async {
     if (await Permission.camera.isPermanentlyDenied) {
       openAppSettings();
+      return '';
     } else if (await Permission.camera.request().isGranted) {
       final Map<String, String> config = {
         Constants.EXTRA_CONFIG_JSON: configJson
       };
       try {
-        final String? result =
+        final String result =
             await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
         return result;
       } on PlatformException catch (e) {
