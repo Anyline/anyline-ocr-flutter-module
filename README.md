@@ -11,7 +11,7 @@ The plugin enables the connection to the SDK via Flutter.
 
 | **iOS**           | **Android**  |
 |-------------------|--------------|
-| baseSDK >= 10     | minSDK >= 19 |
+| baseSDK >= 12     | minSDK >= 19 |
 
 ## Example
 
@@ -49,7 +49,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  anyline_plugin: ^24.1.0
+  anyline_plugin: ^36.0.0
 ```
 
 Install it with Flutter:

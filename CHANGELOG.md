@@ -1,3 +1,7 @@
+## 36.0.0
+
+Updated to Anyline 36
+
 ## 24.1.0-dev.1 
 
 Updated to Anyline 24.1, document scanner bugfix, redone example-app UI.
