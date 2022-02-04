@@ -1,48 +1,47 @@
 {
   "license": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6IDIsCiAgImRlYnVnUmVwb3J0aW5nIjogIm9uIiwKICAiaW1hZ2VSZXBvcnRDYWNoaW5nIjogdHJ1ZSwKICAibWFqb3JWZXJzaW9uIjogIjMiLAogICJtYXhEYXlzTm90UmVwb3J0ZWQiOiA1LAogICJhZHZhbmNlZEJhcmNvZGUiOiB0cnVlLAogICJtdWx0aUJhcmNvZGUiOiB0cnVlLAogICJzdXBwb3J0ZWRCYXJjb2RlRm9ybWF0cyI6IFsKICAgICJBTEwiCiAgXSwKICAicGluZ1JlcG9ydGluZyI6IHRydWUsCiAgInBsYXRmb3JtIjogWwogICAgImlPUyIsCiAgICAiQW5kcm9pZCIKICBdLAogICJzY29wZSI6IFsKICAgICJBTEwiCiAgXSwKICAic2hvd1BvcFVwQWZ0ZXJFeHBpcnkiOiB0cnVlLAogICJzaG93V2F0ZXJtYXJrIjogdHJ1ZSwKICAidG9sZXJhbmNlRGF5cyI6IDEwMCwKICAidmFsaWQiOiAiMjAyNS0xMi0zMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlciIsCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0KfQozTndZN0JzUDM3Y3BnL3pEV2NVTTljeUgwektmcTlTMDIwR1QzZDUrdXJQVUswMTZzVzUwQWJBMjQwRzdWNGlpU1ZCOWhYc1NHM1dqMFdHZmVWUEFHS3ZqSHFIOXA4QUtQZU52ZWlBOVcvOWlLTkJuTEFORzdJcmxIc3VKV2F5bHk1QStUendPOVMxdnVydjVsMDJXbHVjdGVmRklrellUN3ROSEJESHpsV3l1L3cwUDdIMXVUanRENC9yTWJRRHlFL3lxUHYxUVk0MFk5WWszM0llOUFmVkFqQWc5TjVtNVhLVmRYTnlVTzNvU1ZnV3VPd3ZYOW1ZM1NINTBMRTVpRjh0NkU5YUsrZllEREtYUmZzMnZaTkt5YmF3RFJTT1lMb2dNLytmQ0dQRGIzelJqVXJGWWpTaEJLZkwzbEdWR0o5VkppbEFRTXNmZjRKWHl3eXR4Umc9PQ==",
   "options": {
-    "camera": {
-      "captureResolution": "1080p"
+  "camera": {
+    "captureResolution": "1080p",
+    "zoomGesture": "true"
+  },
+  "flash": {
+    "mode": "manual",
+    "alignment": "bottom_right"
+  },
+  "viewPlugin" : {
+    "plugin": {
+      "id": "ID",
+      "idPlugin": {
+        "japaneseLandingPermissionConfig": {}
+      }
     },
-    "flash": {
-      "mode": "manual",
-      "alignment": "bottom_right"
+    "cutoutConfig": {
+      "style": "rect",
+      "maxWidthPercent": "70%",
+      "maxHeightPercent": "70%",
+      "alignment": "center",
+      "strokeWidth": 2,
+      "cornerRadius": 4,
+      "strokeColor": "FFFFFF",
+      "outerColor": "000000",
+      "outerAlpha": 0.3,
+      "ratioFromSize": {
+        "width": 440,
+        "height": 615
+      },
+      "feedbackStrokeColor": "0099FF"
     },
-    "viewPlugin": {
-      "plugin": {
-        "id": "CONTAINER_ID",
-        "ocrPlugin": {
-          "containerConfig": {
-            "scanMode": "vertical"
-          }
-        }
-      },
-      "cutoutConfig": {
-        "style": "rect",
-        "maxWidthPercent": "10%",
-        "alignment": "top_half",
-        "ratioFromSize": {
-          "width": 9,
-          "height": 62
-        },
-        "outerColor": "000000",
-        "outerAlpha": 0.3,
-        "strokeWidth": 1,
-        "strokeColor": "FFFFFF",
-        "cornerRadius": 2,
-        "feedbackStrokeColor": "0099FF"
-      },
-      "scanFeedback": {
-        "animation": "traverse_multi",
-        "animationDuration": 250,
-        "style": "contour_rect",
-        "strokeWidth": 2,
-        "strokeColor": "0099FF",
-        "beepOnResult": true,
-        "vibrateOnResult": true,
-        "blinkAnimationOnResult": true
-      },
-      "cancelOnResult": true
-    }
+    "scanFeedback": {
+      "style": "CONTOUR_RECT",
+      "visualFeedbackRedrawTimeout": 100,
+      "strokeColor": "0099FF",
+      "fillColor": "220099FF",
+      "beepOnResult": "true",
+      "vibrateOnResult": "true",
+      "strokeWidth": 2
+    },
+    "cancelOnResult": "true"
   }
+}
 }

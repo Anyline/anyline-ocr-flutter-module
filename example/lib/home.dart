@@ -56,8 +56,28 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> scan(ScanMode mode) async {
+  try {
     Result result = await _anylineService.scan(mode);
-    _openResultDisplay(result);
+    if (result != null) {
+        _openResultDisplay(result);
+    }
+    } catch (e, s) {
+      print('$e, $s');
+      showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                          elevation: 0,
+                          title: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                'Error',
+                              )),
+                          content: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                  '$e, $s')),
+                        ));
+    }
   }
 
   _openResultDisplay(Result result) {
@@ -336,9 +356,15 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'Driving License',
+              text: 'Arabic ID',
               onPressed: () {
-                scan(ScanMode.DrivingLicense);
+                scan(ScanMode.ArabicId);
+              },
+            ),
+            ScanButton(
+              text: 'Cyrillic ID',
+              onPressed: () {
+                scan(ScanMode.CyrillicId);
               },
             ),
             ScanButton(
@@ -348,9 +374,9 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'German ID Front',
+              text: 'Japanese Landing Permit',
               onPressed: () {
-                scan(ScanMode.GermanIDFront);
+                scan(ScanMode.JapaneseLandingPermit);
               },
             ),
             ScanButton(
@@ -375,6 +401,12 @@ class _HomeState extends State<Home> {
               text: 'License Plate',
               onPressed: () {
                 scan(ScanMode.LicensePlate);
+              },
+            ),
+            ScanButton(
+              text: 'License Plate US',
+              onPressed: () {
+                scan(ScanMode.LicensePlateUS);
               },
             ),
             ScanButton(

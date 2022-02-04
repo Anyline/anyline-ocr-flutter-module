@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'anyline_plugin'
-  s.version          = '24.1.0'
+  s.version          = '36.0.0'
   s.summary          = 'Anyline SDK'
   s.description      = <<-DESC
 Anyline OCR Module
@@ -16,9 +16,10 @@ Anyline OCR Module
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Anyline', '24.1'
+  s.dependency 'Anyline', '36'
   s.static_framework = true
-  s.platform = :ios, '10.0'
+  s.platform = :ios, '12.0'
+  s.ios.deployment_target = '12.0'
 
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }

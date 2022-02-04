@@ -58,9 +58,24 @@
     NSError *error = nil;
     
     
+    [AnylineSDK setupWithLicenseKey:self.licensekey error:&error];
+    if (error) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+                self.callback(nil, @"Canceled");
+            }];
+        }];
+        
+        [alert addAction:action];
+        
+        return;
+    }
+    
     self.scanView = [ALScanView scanViewForFrame:self.view.bounds
                                       configDict:self.anylineConfig
-                                      licenseKey:self.licensekey
                                         delegate:self
                                            error:&error];
     
@@ -76,13 +91,17 @@
         
         self.scanView.cameraConfig = [ALCameraConfig defaultCameraConfig];
     }
+
+    if ([self.scanView.scanViewPlugin isKindOfClass:[ALBarcodeScanViewPlugin class]] && self.anylineConfig[@"viewPlugin"][@"plugin"][@"barcodePlugin"][@"enablePDF417Parsing"]) {
+        ((ALBarcodeScanViewPlugin*)self.scanView.scanViewPlugin).barcodeScanPlugin.parsePDF417 = YES;
+    }
     
     if(!self.scanView) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [self presentViewController:alert animated:YES completion:NULL];
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
         
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self dismissViewControllerAnimated:YES completion:^{
+            [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
                 self.callback(nil, @"Canceled");
             }];
         }];
@@ -138,21 +157,22 @@
     
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
-    NSError *error;
-    BOOL success = [self.scanView.scanViewPlugin startAndReturnError:&error];
-    if(!success) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [self presentViewController:alert animated:YES completion:NULL];
-        
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self dismissViewControllerAnimated:YES completion:^{
-                self.callback(nil, @"Canceled");
+    if (self.scanView) {
+        NSError *error;
+        BOOL success = [self.scanView.scanViewPlugin startAndReturnError:&error];
+        if(!success) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [self presentViewController:alert animated:YES completion:NULL];
+            
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self dismissViewControllerAnimated:YES completion:^{
+                    self.callback(nil, @"Canceled");
+                }];
             }];
-        }];
-        
-        [alert addAction:action];
+            
+            [alert addAction:action];
+        }
     }
-    
     
     if(self.uiConfig.segmentModes){
         self.segment.frame = CGRectMake(self.scanView.scanViewPlugin.cutoutRect.origin.x + self.uiConfig.segmentXPositionOffset/2,

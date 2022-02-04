@@ -1,57 +1,43 @@
 {
   "license": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6IDIsCiAgImRlYnVnUmVwb3J0aW5nIjogIm9uIiwKICAiaW1hZ2VSZXBvcnRDYWNoaW5nIjogdHJ1ZSwKICAibWFqb3JWZXJzaW9uIjogIjMiLAogICJtYXhEYXlzTm90UmVwb3J0ZWQiOiA1LAogICJhZHZhbmNlZEJhcmNvZGUiOiB0cnVlLAogICJtdWx0aUJhcmNvZGUiOiB0cnVlLAogICJzdXBwb3J0ZWRCYXJjb2RlRm9ybWF0cyI6IFsKICAgICJBTEwiCiAgXSwKICAicGluZ1JlcG9ydGluZyI6IHRydWUsCiAgInBsYXRmb3JtIjogWwogICAgImlPUyIsCiAgICAiQW5kcm9pZCIKICBdLAogICJzY29wZSI6IFsKICAgICJBTEwiCiAgXSwKICAic2hvd1BvcFVwQWZ0ZXJFeHBpcnkiOiB0cnVlLAogICJzaG93V2F0ZXJtYXJrIjogdHJ1ZSwKICAidG9sZXJhbmNlRGF5cyI6IDEwMCwKICAidmFsaWQiOiAiMjAyNS0xMi0zMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlciIsCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0KfQozTndZN0JzUDM3Y3BnL3pEV2NVTTljeUgwektmcTlTMDIwR1QzZDUrdXJQVUswMTZzVzUwQWJBMjQwRzdWNGlpU1ZCOWhYc1NHM1dqMFdHZmVWUEFHS3ZqSHFIOXA4QUtQZU52ZWlBOVcvOWlLTkJuTEFORzdJcmxIc3VKV2F5bHk1QStUendPOVMxdnVydjVsMDJXbHVjdGVmRklrellUN3ROSEJESHpsV3l1L3cwUDdIMXVUanRENC9yTWJRRHlFL3lxUHYxUVk0MFk5WWszM0llOUFmVkFqQWc5TjVtNVhLVmRYTnlVTzNvU1ZnV3VPd3ZYOW1ZM1NINTBMRTVpRjh0NkU5YUsrZllEREtYUmZzMnZaTkt5YmF3RFJTT1lMb2dNLytmQ0dQRGIzelJqVXJGWWpTaEJLZkwzbEdWR0o5VkppbEFRTXNmZjRKWHl3eXR4Umc9PQ==",
   "options": {
-    "camera": {
-      "captureResolution": "1080p",
+    "camera" : {
+      "captureResolution" : "1080p",
       "zoomGesture": true
     },
-    "flash": {
+    "flash" : {
       "mode": "manual",
-      "alignment": "bottom_right"
+      "alignment": "bottom_right",
+      "imageOn": "flash_on",
+      "imageOff": "flash_off"
     },
     "viewPlugin" : {
       "plugin":{
         "id":"ID",
         "idPlugin": {
           "universalIdConfig": {
+            "alphabet" : "arabic",
             "faceDetection": true,
             "allowedLayouts": {
               "mrz": [],
-              "drivingLicense": [],
               "idFront": [],
-              "insuranceCard" : []
-            },
-            "drivingLicense": {
-              "surname": {"scanOption": 0, "minConfidence": 40},
-              "givenNames": {"scanOption": 0, "minConfidence": 40},
-              "dateOfBirth": {"scanOption": 0, "minConfidence": 50},
-              "placeOfBirth": {"scanOption": 1, "minConfidence": 50},
-              "dateOfIssue": {"scanOption": 0, "minConfidence": 50},
-              "dateOfExpiry": {"scanOption": 1, "minConfidence": 50},
-              "authority": {"scanOption": 1, "minConfidence": 30},
-              "documentNumber": {"scanOption": 0, "minConfidence": 40},
-              "categories": {"scanOption": 1, "minConfidence": 30},
-              "address": {"scanOption": 1}
+              "drivingLicense": []
             },
             "idFront": {
-              "surname": {"scanOption": 0, "minConfidence": 60},
-              "givenNames": {"scanOption": 0, "minConfidence": 60},
+              "fullName": {"scanOption": 0, "minConfidence": 60},
               "dateOfBirth": {"scanOption": 0, "minConfidence": 60},
               "placeOfBirth": {"scanOption": 1, "minConfidence": 60},
               "dateOfExpiry": {"scanOption": 1, "minConfidence": 60},
-              "cardAccessNumber": {"scanOption": 1, "minConfidence": 60},
               "documentNumber": {"scanOption": 0, "minConfidence": 60},
               "nationality": {"scanOption": 1, "minConfidence": 60}
             },
-            "insuranceCard": {
-              "nationality": {"scanOption": 0, "minConfidence": 50},
-              "surname": {"scanOption": 0, "minConfidence": 50},
-              "givenNames": {"scanOption": 0, "minConfidence": 50},
-              "dateOfBirth": {"scanOption": 0, "minConfidence": 50},
-              "personalNumber": {"scanOption": 0, "minConfidence": 50},
-              "authority": {"scanOption": 0, "minConfidence": 50},
-              "documentNumber": {"scanOption": 0, "minConfidence": 50},
-              "dateOfExpiry": {"scanOption": 0, "minConfidence": 50}
+            "drivingLicense": {
+              "fullName": {"scanOption": 0, "minConfidence": 60},
+              "dateOfBirth": {"scanOption": 0, "minConfidence": 60},
+              "placeOfBirth": {"scanOption": 1, "minConfidence": 60},
+              "dateOfExpiry": {"scanOption": 1, "minConfidence": 60},
+              "documentNumber": {"scanOption": 0, "minConfidence": 60},
+              "nationality": {"scanOption": 0, "minConfidence": 60}
             }
           }
         }
@@ -61,9 +47,10 @@
         "maxWidthPercent": "90%",
         "maxHeightPercent": "90%",
         "alignment": "center",
-        "strokeWidth": 8,
+        "strokeWidth": 3,
         "cornerRadius": 8,
         "strokeColor": "FFFFFF",
+        "outerColor": "000000",
         "outerAlpha": 0.3,
         "ratioFromSize" : {
           "width": 50,
@@ -91,4 +78,5 @@
       "cancelOnResult" : true
     }
   }
+  
 }

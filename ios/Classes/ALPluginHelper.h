@@ -18,12 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)startScan:(NSDictionary *)config finished:(ALPluginCallback)callback;
 
-+ (ALBarcodeFormat)barcodeFormatFromString:(NSString *)barcodeFormat;
-
-+ (NSString *)stringFromBarcodeFormat:(ALBarcodeFormat)barcodeFormat;
-
-+ (NSDictionary<NSString *, NSNumber *> *)barcodesFormatDict;
-
 + (ALScanMode)scanModeFromString:(NSString *)scanMode;
 
 + (NSString *)stringFromScanMode:(ALScanMode)scanMode;

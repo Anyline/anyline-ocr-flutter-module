@@ -20,14 +20,14 @@ class AnylineServiceImpl implements AnylineService {
   String _sdkVersion = 'Unknown';
 
   Future<Result> scan(ScanMode mode) async {
-    try {
+    
       Result result = await _callAnyline(mode);
+      if (result == null) {
+        return result;
+      }
       _saveResultToResultList(result);
       return result;
-    } catch (e, s) {
-      print('$e, $s');
-      return null;
-    }
+    
   }
 
   List<Result> getResultList() {
@@ -67,6 +67,12 @@ class AnylineServiceImpl implements AnylineService {
     String configJson = await _loadJsonConfigFromFile(mode.key);
 
     String stringResult = await anylinePlugin.startScanning(configJson);
+
+    print(stringResult);
+
+    if (stringResult == 'Canceled') {
+        return null;
+    }
 
     Map<String, dynamic> jsonResult = jsonDecode(stringResult);
     return Result(jsonResult, mode, DateTime.now());

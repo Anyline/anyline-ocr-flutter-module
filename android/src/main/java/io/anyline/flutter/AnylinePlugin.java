@@ -158,7 +158,7 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
 
     @Override
     public void onCancel() {
-        returnDefaultError("Anyline was cancelled");
+        result.success("Canceled");
     }
 
     private void returnError(String errorCode) {

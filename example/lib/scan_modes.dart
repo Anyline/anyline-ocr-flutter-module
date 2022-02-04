@@ -4,12 +4,14 @@ enum ScanMode {
   SerialNumber,
   DialMeter,
   DotMatrix,
-  DrivingLicense,
+  ArabicId,
+  CyrillicId,
   MRZ,
-  GermanIDFront,
+  JapaneseLandingPermit,
   Barcode_PDF417,
   UniversalId,
   LicensePlate,
+  LicensePlateUS,
   TIN,
   Iban,
   Voucher,
@@ -36,18 +38,22 @@ extension ScanModeInfo on ScanMode {
         return 'Dial Meter';
       case ScanMode.DotMatrix:
         return 'Dot Matrix';
-      case ScanMode.DrivingLicense:
-        return 'Driving License';
+      case ScanMode.ArabicId:
+        return 'Arabic ID';
+      case ScanMode.CyrillicId:
+        return 'Cyrillic ID';
       case ScanMode.MRZ:
         return 'MRZ';
-      case ScanMode.GermanIDFront:
-        return 'German ID Front';
+      case ScanMode.JapaneseLandingPermit:
+        return 'Japanese Landing Permit';
       case ScanMode.Barcode_PDF417:
         return 'Barcode_PDF417';
       case ScanMode.UniversalId:
         return 'Universal ID';
       case ScanMode.LicensePlate:
         return 'License Plate';
+      case ScanMode.LicensePlateUS:
+        return 'License Plate US';
       case ScanMode.TIN:
         return 'TIN';
       case ScanMode.Iban:

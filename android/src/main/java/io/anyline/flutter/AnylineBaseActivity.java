@@ -1,18 +1,15 @@
 package io.anyline.flutter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,12 +18,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.nineyards.anyline.camera.CameraConfig;
-import at.nineyards.anyline.camera.CameraController;
-import at.nineyards.anyline.camera.CameraFeatures;
-import at.nineyards.anyline.camera.CameraOpenListener;
-import at.nineyards.anyline.core.LicenseException;
-import io.anyline.AnylineSDK;
+import io.anyline.camera.CameraConfig;
+import io.anyline.camera.CameraController;
+import io.anyline.camera.CameraFeatures;
+import io.anyline.camera.CameraOpenListener;
 import io.anyline.plugin.barcode.BarcodeScanViewPlugin;
 import io.anyline.plugin.id.IdScanViewPlugin;
 import io.anyline.plugin.licenseplate.LicensePlateScanViewPlugin;
@@ -36,8 +31,7 @@ import io.anyline.view.AbstractBaseScanViewPlugin;
 import io.anyline.view.ParallelScanViewComposite;
 import io.anyline.view.SerialScanViewComposite;
 
-public abstract class AnylineBaseActivity extends AppCompatActivity
-        implements CameraOpenListener, Thread.UncaughtExceptionHandler {
+public abstract class AnylineBaseActivity extends Activity implements CameraOpenListener, Thread.UncaughtExceptionHandler {
 
     private static final String TAG = AnylineBaseActivity.class.getSimpleName();
 
@@ -48,58 +42,42 @@ public abstract class AnylineBaseActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        ActionBar actionBar = getSupportActionBar();
+//        if(actionBar != null){
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
 
         licenseKey = getIntent().getStringExtra(Constants.EXTRA_LICENSE_KEY);
         configJson = getIntent().getStringExtra(Constants.EXTRA_CONFIG_JSON);
-
-        try {
-            AnylineSDK.init(licenseKey, this);
-        } catch (LicenseException e) {
-            String errorCode = Constants.EXCEPTION_LICENSE;
-            finishWithError(errorCode);
-        }
     }
 
     /**
      * Always set this like this after the initAnyline: <br/>
      * scanView.getAnylineController().setWorkerThreadUncaughtExceptionHandler(this);<br/>
      * <br/>
-     * This will forward background errors back to the plugin (and back to flutter from there)
+     * This will forward background errors back to the plugin (and back to javascript from there)
      */
     @Override
     public void uncaughtException(Thread thread, Throwable e) {
         String msg = e.getMessage();
-        Log.e(TAG, "Catched uncaught exception", e);
+        Log.e(TAG, "Cached uncaught exception", e);
 
-        String errorCode;
+        String errorMessage;
         if (msg.contains("license") || msg.contains("License")) {
-            errorCode = Constants.EXCEPTION_LICENSE;
+            errorMessage = "error_licence_invalid";
         } else {
-            errorCode = Constants.EXCEPTION_CORE;
+            errorMessage = "error_occured";
         }
 
-        finishWithError(errorCode);
+        finishWithError(errorMessage);
     }
 
-    protected void finishWithError(String errorCode) {
-
+    protected void finishWithError(String errorMessage) {
         Intent data = new Intent();
-        data.putExtra(Constants.EXTRA_ERROR_CODE, errorCode);
+        data.putExtra(Constants.EXTRA_ERROR_CODE, errorMessage);
         setResult(Constants.RESULT_ERROR, data);
-        ResultReporter.onError(errorCode);
+        ResultReporter.onError(errorMessage);
         finish();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -109,7 +87,7 @@ public abstract class AnylineBaseActivity extends AppCompatActivity
 
     @Override
     public void onCameraError(Exception e) {
-        finishWithError(Constants.EXCEPTION_NO_CAMERA_PERMISSION);
+        finishWithError("error_accessing_camera");
     }
 
 
@@ -172,10 +150,9 @@ public abstract class AnylineBaseActivity extends AppCompatActivity
         return labelView;
     }
 
-    protected ArrayList<Double> getArrayListFromJsonArray(JSONArray jsonObject) {
-        ArrayList<Double> listdata = new ArrayList<>();
-        JSONArray jArray;
-        jArray = jsonObject;
+    protected ArrayList getArrayListFromJsonArray(JSONArray jsonObject) {
+        ArrayList<Double> listdata = new ArrayList<Double>();
+        JSONArray jArray = jsonObject;
         try {
             for (int i = 0; i < jArray.length(); i++) {
                 listdata.add(jArray.getDouble(i));
@@ -185,6 +162,7 @@ public abstract class AnylineBaseActivity extends AppCompatActivity
         }
         return listdata;
     }
+
 
     protected RelativeLayout.LayoutParams getTextLayoutParams() {
         // Defining the RelativeLayout layout parameters.
@@ -201,6 +179,7 @@ public abstract class AnylineBaseActivity extends AppCompatActivity
         lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         return lp;
     }
+
 
     protected void setFocusConfig(JSONObject json, CameraConfig camConfig) throws JSONException {
 
@@ -273,7 +252,6 @@ public abstract class AnylineBaseActivity extends AppCompatActivity
         }
 
         if (scanViewPlugin != null && isCancelOnResult) {
-//          if(scanViewPlugin != null && scanViewPlugin.getScanViewPluginConfig().isCancelOnResult()){
             ResultReporter.onResult(jsonResult, true);
             setResult(Constants.RESULT_OK);
             finish();
