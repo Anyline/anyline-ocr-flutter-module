@@ -188,8 +188,8 @@ class _HomeState extends State<Home> {
       unselectedFontSize: 12,
       items: [
         BottomNavigationBarItem(
-            icon: Icon(Icons.filter_center_focus), title: Text('Scan')),
-        BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('Results')),
+            icon: Icon(Icons.filter_center_focus), label: 'Scan'),
+        BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Results'),
       ],
       currentIndex: _bottomSelectedIndex,
       onTap: _onItemTapped,
@@ -413,6 +413,18 @@ class _HomeState extends State<Home> {
               text: 'TIN',
               onPressed: () {
                 scan(ScanMode.TIN);
+              },
+            ),
+            ScanButton(
+              text: 'Tire Size',
+              onPressed: () {
+                scan(ScanMode.TireSize);
+              },
+            ),
+            ScanButton(
+              text: 'Commercial Tire Id',
+              onPressed: () {
+                scan(ScanMode.CommercialTireId);
               },
             ),
             ScanButton(

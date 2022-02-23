@@ -13,6 +13,8 @@ enum ScanMode {
   LicensePlate,
   LicensePlateUS,
   TIN,
+  TireSize,
+  CommercialTireId,
   Iban,
   Voucher,
   VIN,
@@ -56,6 +58,10 @@ extension ScanModeInfo on ScanMode {
         return 'License Plate US';
       case ScanMode.TIN:
         return 'TIN';
+      case ScanMode.TireSize:
+        return 'Tire Size';
+      case ScanMode.CommercialTireId:
+        return 'Commercial Tire Id';
       case ScanMode.Iban:
         return 'IBAN';
       case ScanMode.Voucher:
