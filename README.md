@@ -11,11 +11,11 @@ The plugin enables the connection to the SDK via Flutter.
 
 | **iOS**           | **Android**  |
 |-------------------|--------------|
-| baseSDK >= 12     | minSDK >= 31 |
+| baseSDK >= 12     | minSDK >= 21 |
 
 ## Example
 
-This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [anyline_demo](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/anyline_demo.dart) module.
+This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [anyline_demo](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/main.dart) module.
 ```dart
 void scanWithAnyline() async {
   /// Instantiate the plugin.

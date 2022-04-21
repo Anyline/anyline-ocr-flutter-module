@@ -13,8 +13,8 @@ class AnylinePlugin {
   AnylinePlugin();
 
   /// Returns the Anyline SDK version the plugin currently is powered by.
-  static Future<String> get sdkVersion async {
-    final String version =
+  static Future<String?> get sdkVersion async {
+    final String? version =
         await _channel.invokeMethod(Constants.METHOD_GET_SDK_VERSION);
     return version;
   }
@@ -26,7 +26,7 @@ class AnylinePlugin {
   /// and how to parse it, visit the [Anyline Documentation](https://documentation.anyline.com).
   ///
   /// Uses the third-party-package `permission_handler` to request camera permissions.
-  Future<String> startScanning(String configJson) async {
+  Future<String?> startScanning(String configJson) async {
     if (await Permission.camera.isPermanentlyDenied) {
       openAppSettings();
     } else if (await Permission.camera.request().isGranted) {
@@ -34,7 +34,7 @@ class AnylinePlugin {
         Constants.EXTRA_CONFIG_JSON: configJson
       };
       try {
-        final String result =
+        final String? result =
             await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
         return result;
       } on PlatformException catch (e) {
@@ -48,13 +48,13 @@ class AnylinePlugin {
   /// Decodes the license and returns the expiration date.
   ///
   /// Can be provided with a full configJson string or with just the license string.
-  static String getLicenseExpiryDate(String base64License) {
+  static String? getLicenseExpiryDate(String base64License) {
     Map<String, dynamic> licenseMap =
-        _decodeBase64LicenseToJsonMap(base64License);
+        _decodeBase64LicenseToJsonMap(base64License)!;
     return licenseMap['valid'];
   }
 
-  static Map<String, dynamic> _decodeBase64LicenseToJsonMap(
+  static Map<String, dynamic>? _decodeBase64LicenseToJsonMap(
       String base64License) {
     Codec<String, String> base64ToString = ascii.fuse(base64);
     String licenseString = base64ToString.decode(base64License);
