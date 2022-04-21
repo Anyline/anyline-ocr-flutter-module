@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 /// Custom exception including parser to correctly interpret and propagate errors
 /// coming from the native SDK.
 class AnylineException implements Exception {
-  final String message;
+  final String? message;
 
   const AnylineException(this.message);
 
@@ -28,20 +28,20 @@ class AnylineException implements Exception {
 
 /// License is invalid or expired.
 class AnylineLicenseException extends AnylineException {
-  AnylineLicenseException(String message) : super(message);
+  AnylineLicenseException(String? message) : super(message);
 }
 
 /// Config JSON is malformed or missing necessary parts.
 class AnylineConfigException extends AnylineException {
-  AnylineConfigException(String message) : super(message);
+  AnylineConfigException(String? message) : super(message);
 }
 
 /// Camera Permission is not granted.
 class AnylineCameraPermissionException extends AnylineException {
-  AnylineCameraPermissionException(String message) : super(message);
+  AnylineCameraPermissionException(String? message) : super(message);
 }
 
 /// Anyline OCR Core threw an exception.
 class AnylineCoreException extends AnylineException {
-  AnylineCoreException(String message) : super(message);
+  AnylineCoreException(String? message) : super(message);
 }
