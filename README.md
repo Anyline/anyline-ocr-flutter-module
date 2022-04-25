@@ -15,7 +15,7 @@ The plugin enables the connection to the SDK via Flutter.
 
 ## Example
 
-This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [anyline_demo](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/main.dart) module.
+This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [example/lib/main.dart](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/main.dart) module.
 ```dart
 void scanWithAnyline() async {
   /// Instantiate the plugin.
@@ -40,8 +40,8 @@ void scanWithAnyline() async {
 For a more in-depth guide, consider checking out the [Anyline Flutter Guide on documentation.anyline.com](https://documentation.anyline.com/toc/platforms/flutter/getting_started.html#anyline-flutter-guide).
 
 ### 1. Get a License
-Get your [trial license](https://anyline.com/free-demos/) to try Anyline inside your app. 
-Reach out to our sales team to get a [commercial license](https://anyline.com/contact-sales/).
+Get your [trial license](https://ocr.anyline.com/request/sdk-trial/) to try Anyline inside your app. 
+Reach out to our sales team to get a [commercial license](https://ocr.anyline.com/request/sdk-trial/).
 
 ### 2. Get the Anyline flutter plugin
 
