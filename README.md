@@ -11,7 +11,6 @@ The plugin enables the connection to the SDK via Flutter.
 * [Example](#example)
 * [Quick Start Guide](#quick-start-guide)
 * [Additional Functions](#additional-functions)
-* [getLicenseExpiryDate](#getLicenseExpiryDate)
 * [Images](#Images)
 * [Get Help (Support)](#Get-Help-Support)
 * [License](#License)
@@ -24,7 +23,7 @@ The plugin enables the connection to the SDK via Flutter.
 
 ## Example
 
-This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [example/lib/main.dart](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/main.dart) module.
+This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [example/lib/main.dart](https://github.com/Anyline/anyline-ocr-flutter-module/blob/main/example/lib/main.dart) module.
 ```dart
 void scanWithAnyline() async {
   /// Instantiate the plugin.
@@ -121,7 +120,7 @@ For detailed information on handling results and the result structure, check out
 
 ### 7. Add TrainData to the OCR Module (optional) 
 If you are using the `ANYLINE_OCR` module, you'll have to add some `traineddata`. There are some predefined `traineddata` which
-you can find in the example app. Also the OCR Config has to reflect the path. Check the VoucherConfig.json in the [example/config](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/config) folder.
+you can find in the example app. Also the OCR Config has to reflect the path. Check the VoucherConfig.json in the [example/config](https://github.com/Anyline/anyline-ocr-flutter-module/blob/main/example/config) folder.
 
 > __IMPORTANT:__ The trainedFiles have to be directly in the Asset folder in Android.
 
