@@ -1,7 +1,7 @@
 PODS:
-  - Anyline (37)
-  - anyline_plugin (37.0.0):
-    - Anyline (= 37)
+  - Anyline (38.0.1)
+  - anyline_plugin (39.0.0):
+    - Anyline (= 38.0.1)
     - Flutter
   - Flutter (1.0.0)
   - path_provider_ios (0.0.1):
@@ -35,13 +35,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
 
 SPEC CHECKSUMS:
-  Anyline: 680bed0a260c01ca260c1aee61e6b40187ccbfab
-  anyline_plugin: 2e88f0ec8d34a158d875aac48eb09b9f0cc61476
+  Anyline: e15e0acad1b8ef2fa66ae9ecacb46d9a70fab166
+  anyline_plugin: 80321420a3a4fb76d5b77208281d1f48acbc411a
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
 
 PODFILE CHECKSUM: 8f522979e3f0c708f1d45db223b2aecbf369433f
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3
