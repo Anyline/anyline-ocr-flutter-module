@@ -6,6 +6,14 @@
 
 The plugin enables the connection to the SDK via Flutter.
 
+## Table of Contents
+* [Requirements](#requirements)
+* [Example](#example)
+* [Quick Start Guide](#quick-start-guide)
+* [Additional Functions](#additional-functions)
+* [getLicenseExpiryDate](#getLicenseExpiryDate)
+* [Images](#Images)
+* [License](#License)
 
 ## Requirements:
 
