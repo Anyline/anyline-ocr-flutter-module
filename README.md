@@ -13,6 +13,7 @@ The plugin enables the connection to the SDK via Flutter.
 * [Additional Functions](#additional-functions)
 * [getLicenseExpiryDate](#getLicenseExpiryDate)
 * [Images](#Images)
+* [Get Help (Support)](#Get-Help-Support)
 * [License](#License)
 
 ## Requirements:
@@ -152,7 +153,18 @@ Get the expiration date of the provided license. Returns a string.
 
 Keep in mind, all the images are saved in the cache directory of the app. For performance reasons, we only provide the 
 path as string, so we don't have to transfer the whole image through the bridge. Please be aware,  that you should not 
-use the images in the cache directory for persistent storage, but store the images in a location of your choice for persistence. 
+use the images in the cache directory for persistent storage, but store the images in a location of your choice for persistence.
+
+## Get Help (Support)
+
+We don't actively monitor the Github Issues, please raise a support request using the [Anyline Helpdesk](https://anyline.atlassian.net/servicedesk/customer/portal/2/group/6).
+When raising a support request based on this Github Issue, please fill out and include the following information:
+
+```
+Support request concerning Anyline Github Repository: anyline-ocr-flutter-module
+```
+
+Thank you!
 
 ## License
 
