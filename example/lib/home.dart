@@ -91,16 +91,30 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      bottomNavigationBar: _buildNavBar(),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+    return WillPopScope(
+      onWillPop: () {
+        bool willPopScreen = _scanTabBackButtonVisible ? false : true;
+        if (_scanTabBackButtonVisible) {
+          setState(() {
+            _bottomSelectedIndex == 0
+                ? _scanTab = _buildUseCases()
+                : _resultsTab = _buildResultList();
+            _scanTabBackButtonVisible = false;
+          });
+        }
+        return Future.value(willPopScreen);
+      },
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        bottomNavigationBar: _buildNavBar(),
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: _buildBody(),
         ),
-        child: _buildBody(),
-      ),
+      )
     );
   }
 
