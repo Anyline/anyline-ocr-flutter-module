@@ -1,3 +1,4 @@
+// plugin, library-level build.gradle
 group 'io.anyline.flutter'
 version '1.0'
 

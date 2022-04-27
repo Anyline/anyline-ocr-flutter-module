@@ -1,3 +1,4 @@
+// example, project-level build.gradle
 buildscript {
     repositories {
         google()
