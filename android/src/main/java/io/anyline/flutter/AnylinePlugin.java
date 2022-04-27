@@ -18,15 +18,19 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /**
  * AnylinePlugin
  */
-public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRegistry.ActivityResultListener, ResultReporter.OnResultListener, ActivityAware {
+public class AnylinePlugin implements
+        FlutterPlugin,
+        MethodCallHandler,
+        PluginRegistry.ActivityResultListener,
+        ResultReporter.OnResultListener,
+        ActivityAware
+{
 
     private MethodChannel channel;
-    private Context applicationContext;
 
     private String licenseKey;
     private String configJson;
@@ -43,19 +47,9 @@ public class AnylinePlugin implements FlutterPlugin, MethodCallHandler, PluginRe
         onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
     }
 
-    public static void registerWith(Registrar registrar) {
-        final AnylinePlugin instance = new AnylinePlugin(registrar.activity());
-        instance.onAttachedToEngine(registrar.context(), registrar.messenger());
-    }
-
     private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
-        this.applicationContext = applicationContext;
         channel = new MethodChannel(messenger, "anyline_plugin");
         channel.setMethodCallHandler(this);
-    }
-
-    private AnylinePlugin(Activity activity) {
-        this.activity = activity;
     }
 
     public AnylinePlugin() {
