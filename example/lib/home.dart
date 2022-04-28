@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:anyline_plugin_example/anyline_service.dart';
 import 'package:anyline_plugin_example/result.dart';
@@ -23,9 +22,9 @@ class AnylineDemoApp extends StatelessWidget {
       },
       home: Home(),
       theme: ThemeData.light().copyWith(
-        accentColor: Styles.backgroundBlack,
         scaffoldBackgroundColor: Styles.backgroundBlack,
         textTheme: GoogleFonts.montserratTextTheme(),
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Styles.backgroundBlack),
       ),
     );
   }
