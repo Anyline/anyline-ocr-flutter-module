@@ -51,7 +51,6 @@ import io.anyline.plugin.meter.MeterScanViewPlugin;
 import io.anyline.plugin.ocr.OcrScanResult;
 import io.anyline.plugin.ocr.OcrScanViewPlugin;
 import io.anyline.plugin.tire.TireScanResult;
-import io.anyline.plugin.tire.TireScanPlugin;
 import io.anyline.plugin.tire.TireScanViewPlugin;
 import io.anyline.view.AbstractBaseScanViewPlugin;
 import io.anyline.view.CutoutRect;
@@ -160,7 +159,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
         try {
             JSONObject json = new JSONObject(configJson);
             // this is used for the OCR Plugin, when languages has to be added
-            json = AnylinePluginHelper.setLanguages(json, getApplicationContext());
+            AnylinePluginHelper.setLanguages(json, getApplicationContext());
 
             try {
                 AnylineSDK.init(licenseKey, this);
@@ -196,7 +195,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
                             // only triggered if all plugins reached a result
                             JSONObject jsonResult = new JSONObject();
 
-                            for (ScanResult subResult : (Collection<ScanResult>) result.getResult()) {
+                            for (ScanResult<?> subResult : (Collection<ScanResult>) result.getResult()) {
                                 if (subResult instanceof LicensePlateScanResult) {
                                     JSONObject jsonLPResult = new JSONObject();
                                     try {
@@ -239,7 +238,7 @@ public class Anyline4Activity extends AnylineBaseActivity {
                                         e.printStackTrace();
                                     }
                                 } else if (subResult instanceof BarcodeScanResult) {
-                                    jsonResult = extractBarcodeResult(jsonResult, subResult);
+                                    jsonResult = extractBarcodeResult(jsonResult, (ScanResult<List<Barcode>>) subResult);
                                 } else if (subResult instanceof MeterScanResult) {
                                     JSONObject jsonMeterResult = new JSONObject();
                                     try {
@@ -477,9 +476,9 @@ public class Anyline4Activity extends AnylineBaseActivity {
         return false;
     }
 
-    private JSONObject extractBarcodeResult(JSONObject jsonResult, ScanResult subResult) {
+    private JSONObject extractBarcodeResult(JSONObject jsonResult, ScanResult<List<Barcode>> subResult) {
         try {
-            List<Barcode> barcodeList = (List<Barcode>) subResult.getResult();
+            List<Barcode> barcodeList = subResult.getResult();
 
             JSONArray barcodeArray = new JSONArray();
             if (barcodeList.size() > 1) {
