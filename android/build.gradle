@@ -45,7 +45,24 @@ android {
         targetCompatibility = 1.8
     }
     dependencies {
-        api "io.anyline:anylinesdk:$anyline_sdk_version"
+
+        /* To pull the Anyline Sdk dependency from maven, use this line */
+//        api "io.anyline:anylinesdk:$anyline_sdk_version"
+
+        /* To build the Anyline Sdk locally, use this line. Other changes necessary:
+         * This repo:
+         * - In example/android/settings.gradle add the AnylineSdk Project & Project Dir
+         * AnylineSdk repo:
+         * - In AnylineSdk/build.gradle the following changes:
+         *   - Uncomment "ndkPath project.ndkDir" and use "ndkVersion '21.3.6528147'" instead
+         *   - Use correct "targetSdkVersion" (i.e. 31)
+         *   - In "buildTypes { release {...}, debug {...} }" rename all "buildConfigField"s because
+         *     there is some kind of conflict with the VERSION_CODE and VERSION_NAME. Rename to
+         *     VERSION_CODE_ANYLINE_SDK & VERSION_NAME_ANYLINE_SDK and replace usage like
+         *     "at.nineyards.anyline.BuildConfig.VERSION_NAME" with the correct one.
+         * */
+        api project(':AnylineSdk')
+
         implementation 'com.google.android.material:material:1.4.0-rc01'
     }
 }

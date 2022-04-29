@@ -1,4 +1,5 @@
-include ':app'
+include ':app', 'AnylineSdk'
+project(':AnylineSdk').projectDir = new File('../../../../Bitbucket/anylinesdk-android-2/AnylineSdk')
 
 def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
 def properties = new Properties()
