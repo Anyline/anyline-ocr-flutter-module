@@ -6,6 +6,14 @@
 
 The plugin enables the connection to the SDK via Flutter.
 
+## Table of Contents
+* [Requirements](#requirements)
+* [Example](#example)
+* [Quick Start Guide](#quick-start-guide)
+* [Additional Functions](#additional-functions)
+* [Images](#Images)
+* [Get Help (Support)](#Get-Help-Support)
+* [License](#License)
 
 ## Requirements:
 
@@ -15,7 +23,7 @@ The plugin enables the connection to the SDK via Flutter.
 
 ## Example
 
-This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [anyline_demo](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/lib/main.dart) module.
+This is just a minimal example function to show how to use our plugin as quick as possible. For the code of our Flutter example app check out the [example/lib/main.dart](https://github.com/Anyline/anyline-ocr-flutter-module/blob/main/example/lib/main.dart) module.
 ```dart
 void scanWithAnyline() async {
   /// Instantiate the plugin.
@@ -40,8 +48,8 @@ void scanWithAnyline() async {
 For a more in-depth guide, consider checking out the [Anyline Flutter Guide on documentation.anyline.com](https://documentation.anyline.com/toc/platforms/flutter/getting_started.html#anyline-flutter-guide).
 
 ### 1. Get a License
-Get your [trial license](https://anyline.com/free-demos/) to try Anyline inside your app. 
-Reach out to our sales team to get a [commercial license](https://anyline.com/contact-sales/).
+Get your [trial license](https://ocr.anyline.com/request/sdk-trial/) to try Anyline inside your app. 
+Reach out to our sales team to get a [commercial license](https://ocr.anyline.com/request/sdk-trial/).
 
 ### 2. Get the Anyline flutter plugin
 
@@ -112,7 +120,7 @@ For detailed information on handling results and the result structure, check out
 
 ### 7. Add TrainData to the OCR Module (optional) 
 If you are using the `ANYLINE_OCR` module, you'll have to add some `traineddata`. There are some predefined `traineddata` which
-you can find in the example app. Also the OCR Config has to reflect the path. Check the VoucherConfig.json in the [example/config](https://github.com/Anyline/anyline-ocr-flutter-module/blob/master/example/config) folder.
+you can find in the example app. Also the OCR Config has to reflect the path. Check the VoucherConfig.json in the [example/config](https://github.com/Anyline/anyline-ocr-flutter-module/blob/main/example/config) folder.
 
 > __IMPORTANT:__ The trainedFiles have to be directly in the Asset folder in Android.
 
@@ -144,7 +152,18 @@ Get the expiration date of the provided license. Returns a string.
 
 Keep in mind, all the images are saved in the cache directory of the app. For performance reasons, we only provide the 
 path as string, so we don't have to transfer the whole image through the bridge. Please be aware,  that you should not 
-use the images in the cache directory for persistent storage, but store the images in a location of your choice for persistence. 
+use the images in the cache directory for persistent storage, but store the images in a location of your choice for persistence.
+
+## Get Help (Support)
+
+We don't actively monitor the Github Issues, please raise a support request using the [Anyline Helpdesk](https://anyline.atlassian.net/servicedesk/customer/portal/2/group/6).
+When raising a support request based on this Github Issue, please fill out and include the following information:
+
+```
+Support request concerning Anyline Github Repository: anyline-ocr-flutter-module
+```
+
+Thank you!
 
 ## License
 

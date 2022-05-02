@@ -18,3 +18,6 @@ doc/api/
 #For library packages, don’t commit the pubspec.lock file. Regenerating the pubspec.lock file lets you test your package against the latest compatible versions of its dependencies.
 #For application packages, we recommend that you commit the pubspec.lock file. Saving pubspec.lock ensures that everyone working on the app uses the exact same versions.
 pubspec.lock
+
+# For Obsidian Markdown Editing
+.obsidian/
