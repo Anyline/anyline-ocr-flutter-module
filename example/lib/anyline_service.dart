@@ -7,21 +7,21 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AnylineService {
-  Future<Result> scan(ScanMode mode);
+  Future<Result?> scan(ScanMode mode);
 
   List<Result> getResultList();
 
-  String getSdkVersion();
+  String? getSdkVersion();
 }
 
 class AnylineServiceImpl implements AnylineService {
-  AnylinePlugin anylinePlugin;
+  late AnylinePlugin anylinePlugin;
   List<Result> _results = [];
-  String _sdkVersion = 'Unknown';
+  String? _sdkVersion = 'Unknown';
 
-  Future<Result> scan(ScanMode mode) async {
+  Future<Result?> scan(ScanMode mode) async {
     
-      Result result = await _callAnyline(mode);
+      Result? result = await _callAnyline(mode);
       if (result == null) {
         return result;
       }
@@ -39,12 +39,12 @@ class AnylineServiceImpl implements AnylineService {
     _initResultListFromSharedPreferences();
   }
 
-  String getSdkVersion() {
+  String? getSdkVersion() {
     return _sdkVersion;
   }
 
   _initAnylinePlugin() async {
-    String sdkVersion;
+    String? sdkVersion;
     try {
       sdkVersion = await AnylinePlugin.sdkVersion;
       anylinePlugin = AnylinePlugin();
@@ -63,10 +63,10 @@ class AnylineServiceImpl implements AnylineService {
     _results = results;
   }
 
-  Future<Result> _callAnyline(ScanMode mode) async {
+  Future<Result?> _callAnyline(ScanMode mode) async {
     String configJson = await _loadJsonConfigFromFile(mode.key);
 
-    String stringResult = await anylinePlugin.startScanning(configJson);
+    String? stringResult = await anylinePlugin.startScanning(configJson);
 
     print(stringResult);
 
@@ -74,7 +74,7 @@ class AnylineServiceImpl implements AnylineService {
         return null;
     }
 
-    Map<String, dynamic> jsonResult = jsonDecode(stringResult);
+    Map<String, dynamic>? jsonResult = jsonDecode(stringResult!);
     return Result(jsonResult, mode, DateTime.now());
   }
 
