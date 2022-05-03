@@ -154,7 +154,7 @@ class ResultListItem extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  Image.file(File(result.jsonMap['imagePath'])),
+                  Image.file(File(result.jsonMap!['imagePath'])),
                   ListTile(
                       dense: true,
                       title: Text(

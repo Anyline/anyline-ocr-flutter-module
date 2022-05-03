@@ -41,10 +41,10 @@ class _HomeState extends State<Home> {
   bool _scanTabBackButtonVisible = false;
   bool _resultsTabBackButtonVisible = false;
 
-  Widget _scanTab;
-  Widget _resultsTab;
+  Widget? _scanTab;
+  Widget? _resultsTab;
 
-  AnylineService _anylineService;
+  late AnylineService _anylineService;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
 
   Future<void> scan(ScanMode mode) async {
   try {
-    Result result = await _anylineService.scan(mode);
+    Result? result = await _anylineService.scan(mode);
     if (result != null) {
         _openResultDisplay(result);
     }
@@ -104,7 +104,7 @@ class _HomeState extends State<Home> {
         return Future.value(willPopScreen);
       },
       child: Scaffold(
-        appBar: _buildAppBar(),
+        appBar: _buildAppBar() as PreferredSizeWidget?,
         bottomNavigationBar: _buildNavBar(),
         body: Container(
           decoration: BoxDecoration(
@@ -215,11 +215,11 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Widget _buildBody() {
+  Widget? _buildBody() {
     return _bottomSelectedIndex == 0 ? _buildScanTab() : _buildResultList();
   }
 
-  Widget _buildScanTab() {
+  Widget? _buildScanTab() {
     return _scanTab;
   }
 
@@ -526,10 +526,10 @@ class _HomeState extends State<Home> {
 }
 
 class ScanButton extends StatelessWidget {
-  ScanButton({@required this.text, this.onPressed});
+  ScanButton({required this.text, this.onPressed});
 
   final String text;
-  final Function onPressed;
+  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -570,7 +570,7 @@ class ScanButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed,
+          onPressed: onPressed as void Function()?,
         ),
       ),
     );
@@ -578,11 +578,11 @@ class ScanButton extends StatelessWidget {
 }
 
 class UseCaseButton extends StatelessWidget {
-  UseCaseButton({this.image, @required this.text, this.onPressed});
+  UseCaseButton({this.image, required this.text, this.onPressed});
 
-  final ImageProvider image;
+  final ImageProvider? image;
   final String text;
-  final Function onPressed;
+  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -606,7 +606,7 @@ class UseCaseButton extends StatelessWidget {
                     top: 10,
                     right: 10,
                     child: Image(
-                      image: image,
+                      image: image!,
                       height: 60,
                     )),
                 Positioned(
@@ -629,7 +629,7 @@ class UseCaseButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed,
+          onPressed: onPressed as void Function()?,
         ),
       ),
     );
