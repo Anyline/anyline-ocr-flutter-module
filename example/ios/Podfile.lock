@@ -1,6 +1,6 @@
 PODS:
   - Anyline (38.0.1)
-  - anyline_plugin (38.0.1-dev.2):
+  - anyline_plugin (38.0.1-dev.3):
     - Anyline (= 38.0.1)
     - Flutter
   - Flutter (1.0.0)
