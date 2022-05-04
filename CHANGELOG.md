@@ -1,27 +1,27 @@
-## 38.0.1-dev.1
+## 38.0.1-dev.2
 
-Updated to Anyline 38.0.1
+- Updated to Anyline 38.0.1
 
 ### Universal ID
 
-Fixed height field scanning issue on US layouts
-Fixed umlaut scanning on some layouts
-Improved scanning of inch unit (”)
-Added support for 3 additional Austrian Army ID layouts
-Added support for the following Austrian IDs: Austrian Health Insurance Card, Austrian ID (new version), Austrian Pensioner ID, Austrian Disability ID
-Added support for 2 Pakistani ID layouts
-Added support for 2nd DVL version of the following states: Oregon, Georgia
-Added support for the following 3 Arabic layouts: Tunisia DVL, Morocco DVL, Morocco IDC
-Fixed maidenName and lastName scanning issues on German IDC
+- Fixed height field scanning issue on US layouts
+- Fixed umlaut scanning on some layouts
+- Improved scanning of inch unit (”)
+- Added support for 3 additional Austrian Army ID layouts
+- Added support for the following Austrian IDs: Austrian Health Insurance Card, Austrian ID (new version), Austrian Pensioner ID, Austrian Disability ID
+- Added support for 2 Pakistani ID layouts
+- Added support for 2nd DVL version of the following states: Oregon, Georgia
+- Added support for the following 3 Arabic layouts: Tunisia DVL, Morocco DVL, Morocco IDC
+- Fixed maidenName and lastName scanning issues on German IDC
 
 ### License Plate
 
-Fixed a crash when ScanMode is set to a specific country (as opposed to automatic detection).
-Fixed issue scanning white European license plates on white cars
-Fixed issue scanning Euopean license plates partially cast in shadow
-Now correctly scans dashes (“-“) on European license plates instead of returning them as whitespaces
-Now returns the country for Swiss license plates if the Swiss coat of arms is visible on the license plate
-Overall improved accuracy on European license plates
+- Fixed a crash when ScanMode is set to a specific country (as opposed to automatic detection).
+- Fixed issue scanning white European license plates on white cars
+- Fixed issue scanning Euopean license plates partially cast in shadow
+- Now correctly scans dashes (“-“) on European license plates instead of returning them as whitespaces
+- Now returns the country for Swiss license plates if the Swiss coat of arms is visible on the license plate
+- Overall improved accuracy on European license plates
 
 ## 37.0.0
 
