@@ -501,12 +501,6 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             ScanButton(
-              text: 'Document Scanner',
-              onPressed: () {
-                scan(ScanMode.Document);
-              },
-            ),
-            ScanButton(
               text: 'Serial Scanning (LP>DL>VIN)',
               onPressed: () {
                 scan(ScanMode.SerialScanning);
