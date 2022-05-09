@@ -46,9 +46,7 @@ class CompositeResultDisplay extends StatelessWidget {
 
     var subResults = result.jsonMap!.values.take(3);
 
-    List<Map<String, dynamic>> results = [
-      for (Map<String, dynamic> j in subResults as Iterable<Map<String, dynamic>>) j,
-    ];
+    List<Map<String, dynamic>> results = [for (var j in subResults) j];
 
     return DefaultTabController(
       length: results.length,
