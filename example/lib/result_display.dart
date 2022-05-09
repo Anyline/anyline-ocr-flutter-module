@@ -110,7 +110,14 @@ class ResultDetails extends StatelessWidget {
       color: Colors.white,
       child: ListView(
         children: [
-          Image.file(File(json!['imagePath'])),
+          Container(
+              child: Image.file(
+                File(json!['imagePath']),
+                fit: BoxFit.scaleDown,
+                height:
+                    240, // prevents weird display of tall images (e.g. vertical shipping containers)
+              ),
+              color: Colors.black87),
           ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),

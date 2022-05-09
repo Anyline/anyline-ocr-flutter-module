@@ -471,6 +471,12 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
+              text: 'Vertical Shipping Container',
+              onPressed: () {
+                scan(ScanMode.VerticalContainer);
+              },
+            ),
+            ScanButton(
               text: 'IBAN',
               onPressed: () {
                 scan(ScanMode.Iban);
