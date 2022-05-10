@@ -423,6 +423,12 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
+              text: 'License Plate Africa',
+              onPressed: () {
+                scan(ScanMode.LicensePlateAF);
+              },
+            ),
+            ScanButton(
               text: 'TIN',
               onPressed: () {
                 scan(ScanMode.TIN);
