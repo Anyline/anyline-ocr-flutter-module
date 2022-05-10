@@ -1,6 +1,6 @@
-## 39.0.0-rc.3
+## 39.0.0-rc.4
 
-- Updated to Anyline 39.0.0-rc.3
+- Updated to Anyline 39.0.0-rc.4
 
 ## 38.0.1-dev.3
 
