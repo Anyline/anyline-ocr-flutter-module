@@ -21,6 +21,7 @@ enum ScanMode {
   VIN,
   USNR,
   ContainerShip,
+  VerticalContainer,
   Barcode,
   Document,
   CattleTag,
@@ -75,6 +76,8 @@ extension ScanModeInfo on ScanMode {
         return 'Universal Serial Number';
       case ScanMode.ContainerShip:
         return 'Container';
+      case ScanMode.VerticalContainer:
+        return 'Vertical Container';
       case ScanMode.Barcode:
         return 'Barcode';
       case ScanMode.Document:
