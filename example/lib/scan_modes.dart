@@ -12,6 +12,7 @@ enum ScanMode {
   UniversalId,
   LicensePlate,
   LicensePlateUS,
+  LicensePlateAF,
   TIN,
   TireSize,
   CommercialTireId,
@@ -20,6 +21,7 @@ enum ScanMode {
   VIN,
   USNR,
   ContainerShip,
+  VerticalContainer,
   Barcode,
   Document,
   CattleTag,
@@ -56,6 +58,8 @@ extension ScanModeInfo on ScanMode {
         return 'License Plate';
       case ScanMode.LicensePlateUS:
         return 'License Plate US';
+      case ScanMode.LicensePlateAF:
+        return 'License Plate Africa';
       case ScanMode.TIN:
         return 'TIN';
       case ScanMode.TireSize:
@@ -72,6 +76,8 @@ extension ScanModeInfo on ScanMode {
         return 'Universal Serial Number';
       case ScanMode.ContainerShip:
         return 'Container';
+      case ScanMode.VerticalContainer:
+        return 'Vertical Container';
       case ScanMode.Barcode:
         return 'Barcode';
       case ScanMode.Document:

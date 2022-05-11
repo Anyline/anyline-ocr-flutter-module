@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:anyline_plugin_example/anyline_service.dart';
 import 'package:anyline_plugin_example/result.dart';
@@ -23,9 +22,9 @@ class AnylineDemoApp extends StatelessWidget {
       },
       home: Home(),
       theme: ThemeData.light().copyWith(
-        accentColor: Styles.backgroundBlack,
         scaffoldBackgroundColor: Styles.backgroundBlack,
         textTheme: GoogleFonts.montserratTextTheme(),
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Styles.backgroundBlack),
       ),
     );
   }
@@ -42,10 +41,10 @@ class _HomeState extends State<Home> {
   bool _scanTabBackButtonVisible = false;
   bool _resultsTabBackButtonVisible = false;
 
-  Widget _scanTab;
-  Widget _resultsTab;
+  Widget? _scanTab;
+  Widget? _resultsTab;
 
-  AnylineService _anylineService;
+  late AnylineService _anylineService;
 
   @override
   void initState() {
@@ -57,7 +56,7 @@ class _HomeState extends State<Home> {
 
   Future<void> scan(ScanMode mode) async {
   try {
-    Result result = await _anylineService.scan(mode);
+    Result? result = await _anylineService.scan(mode);
     if (result != null) {
         _openResultDisplay(result);
     }
@@ -91,16 +90,30 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      bottomNavigationBar: _buildNavBar(),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+    return WillPopScope(
+      onWillPop: () {
+        bool willPopScreen = _scanTabBackButtonVisible ? false : true;
+        if (_scanTabBackButtonVisible) {
+          setState(() {
+            _bottomSelectedIndex == 0
+                ? _scanTab = _buildUseCases()
+                : _resultsTab = _buildResultList();
+            _scanTabBackButtonVisible = false;
+          });
+        }
+        return Future.value(willPopScreen);
+      },
+      child: Scaffold(
+        appBar: _buildAppBar() as PreferredSizeWidget?,
+        bottomNavigationBar: _buildNavBar(),
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: _buildBody(),
         ),
-        child: _buildBody(),
-      ),
+      )
     );
   }
 
@@ -202,11 +215,11 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Widget _buildBody() {
+  Widget? _buildBody() {
     return _bottomSelectedIndex == 0 ? _buildScanTab() : _buildResultList();
   }
 
-  Widget _buildScanTab() {
+  Widget? _buildScanTab() {
     return _scanTab;
   }
 
@@ -410,6 +423,12 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
+              text: 'License Plate Africa',
+              onPressed: () {
+                scan(ScanMode.LicensePlateAF);
+              },
+            ),
+            ScanButton(
               text: 'TIN',
               onPressed: () {
                 scan(ScanMode.TIN);
@@ -458,6 +477,12 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
+              text: 'Vertical Shipping Container',
+              onPressed: () {
+                scan(ScanMode.VerticalContainer);
+              },
+            ),
+            ScanButton(
               text: 'IBAN',
               onPressed: () {
                 scan(ScanMode.Iban);
@@ -488,12 +513,6 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             ScanButton(
-              text: 'Document Scanner',
-              onPressed: () {
-                scan(ScanMode.Document);
-              },
-            ),
-            ScanButton(
               text: 'Serial Scanning (LP>DL>VIN)',
               onPressed: () {
                 scan(ScanMode.SerialScanning);
@@ -513,10 +532,10 @@ class _HomeState extends State<Home> {
 }
 
 class ScanButton extends StatelessWidget {
-  ScanButton({@required this.text, this.onPressed});
+  ScanButton({required this.text, this.onPressed});
 
   final String text;
-  final Function onPressed;
+  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -557,7 +576,7 @@ class ScanButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed,
+          onPressed: onPressed as void Function()?,
         ),
       ),
     );
@@ -565,11 +584,11 @@ class ScanButton extends StatelessWidget {
 }
 
 class UseCaseButton extends StatelessWidget {
-  UseCaseButton({this.image, @required this.text, this.onPressed});
+  UseCaseButton({this.image, required this.text, this.onPressed});
 
-  final ImageProvider image;
+  final ImageProvider? image;
   final String text;
-  final Function onPressed;
+  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -593,7 +612,7 @@ class UseCaseButton extends StatelessWidget {
                     top: 10,
                     right: 10,
                     child: Image(
-                      image: image,
+                      image: image!,
                       height: 60,
                     )),
                 Positioned(
@@ -616,7 +635,7 @@ class UseCaseButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed,
+          onPressed: onPressed as void Function()?,
         ),
       ),
     );

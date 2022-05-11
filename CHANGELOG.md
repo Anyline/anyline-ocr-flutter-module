@@ -1,3 +1,48 @@
+## 39.0.0
+
+- Updated to Anyline 39.0.0
+- First public release
+
+### Universal ID
+
+- Added support for additional versions of the following IDs: France, Lesotho, Ukraine, Tunisia, Algeria, Morocco, Utah (US), Nebraska (US)
+- Added support for additional versions of the following driver license IDs: Ukraine (2 types), Algeria, Morocco, Iowa (US), Utah (US), Nebraska (US)
+- Improved scanning for Netherlands DL and ID
+- For non-MRZ documents, the result now contains layout metadata. This includes the country of origin, the category, the type, the version(s) and the side of the document. The ``layoutDefinition`` entry within the result will be deprecated in the future. The layout metadata within the result should be used instead.
+
+### License Plate
+
+- 'charWhitelist' parameter is no longer supported
+
+### Tire
+
+- Added support for `upsideDownMode` for TireSize and CommercialTireID
+
+## 38.0.1-dev.3
+
+- Updated to Anyline 38.0.1
+
+### Universal ID
+
+- Fixed height field scanning issue on US layouts
+- Fixed umlaut scanning on some layouts
+- Improved scanning of inch unit (”)
+- Added support for 3 additional Austrian Army ID layouts
+- Added support for the following Austrian IDs: Austrian Health Insurance Card, Austrian ID (new version), Austrian Pensioner ID, Austrian Disability ID
+- Added support for 2 Pakistani ID layouts
+- Added support for 2nd DVL version of the following states: Oregon, Georgia
+- Added support for the following 3 Arabic layouts: Tunisia DVL, Morocco DVL, Morocco IDC
+- Fixed maidenName and lastName scanning issues on German IDC
+
+### License Plate
+
+- Fixed a crash when ScanMode is set to a specific country (as opposed to automatic detection).
+- Fixed issue scanning white European license plates on white cars
+- Fixed issue scanning Euopean license plates partially cast in shadow
+- Now correctly scans dashes (“-“) on European license plates instead of returning them as whitespaces
+- Now returns the country for Swiss license plates if the Swiss coat of arms is visible on the license plate
+- Overall improved accuracy on European license plates
+
 ## 37.0.0
 
 Updated to Anyline 37

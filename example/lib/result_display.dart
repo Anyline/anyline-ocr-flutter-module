@@ -13,7 +13,7 @@ class ResultDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Result result = ModalRoute.of(context).settings.arguments;
+    final Result result = ModalRoute.of(context)!.settings.arguments as Result;
 
     return Scaffold(
       backgroundColor: Styles.backgroundBlack,
@@ -42,13 +42,11 @@ class CompositeResultDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Result result = ModalRoute.of(context).settings.arguments;
+    final Result result = ModalRoute.of(context)!.settings.arguments as Result;
 
-    var subResults = result.jsonMap.values.take(3);
+    var subResults = result.jsonMap!.values.take(3);
 
-    List<Map<String, dynamic>> results = [
-      for (Map<String, dynamic> j in subResults) j,
-    ];
+    List<Map<String, dynamic>> results = [for (var j in subResults) j];
 
     return DefaultTabController(
       length: results.length,
@@ -100,7 +98,7 @@ class CompositeResultDisplay extends StatelessWidget {
 }
 
 class ResultDetails extends StatelessWidget {
-  final Map<String, dynamic> json;
+  final Map<String, dynamic>? json;
 
   ResultDetails(this.json);
 
@@ -110,15 +108,22 @@ class ResultDetails extends StatelessWidget {
       color: Colors.white,
       child: ListView(
         children: [
-          Image.file(File(json['imagePath'])),
+          Container(
+              child: Image.file(
+                File(json!['imagePath']),
+                fit: BoxFit.scaleDown,
+                height:
+                    240, // prevents weird display of tall images (e.g. vertical shipping containers)
+              ),
+              color: Colors.black87),
           ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
-              itemCount: json.length,
+              itemCount: json!.length,
               itemBuilder: (BuildContext ctx, int index) {
                 return new ListTile(
-                  title: Text(json.values.toList()[index].toString()),
-                  subtitle: Text(json.keys.toList()[index].toString()),
+                  title: Text(json!.values.toList()[index].toString()),
+                  subtitle: Text(json!.keys.toList()[index].toString()),
                 );
               }),
           Container(
@@ -127,7 +132,7 @@ class ResultDetails extends StatelessWidget {
               child: Text('Show Full Image'),
               onPressed: () {
                 Navigator.pushNamed(context, FullScreenImage.routeName,
-                    arguments: json['fullImagePath']);
+                    arguments: json!['fullImagePath']);
               },
 
             ),
@@ -143,7 +148,7 @@ class FullScreenImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String fullImagePath = ModalRoute.of(context).settings.arguments;
+    final String fullImagePath = ModalRoute.of(context)!.settings.arguments as String;
 
     return GestureDetector(
       child: Container(
