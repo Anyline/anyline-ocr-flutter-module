@@ -1,3 +1,23 @@
+## 39.0.0
+
+- Updated to Anyline 39.0.0
+- First public release
+
+### Universal ID
+
+- Added support for additional versions of the following IDs: France, Lesotho, Ukraine, Tunisia, Algeria, Morocco, Utah (US), Nebraska (US)
+- Added support for additional versions of the following driver license IDs: Ukraine (2 types), Algeria, Morocco, Iowa (US), Utah (US), Nebraska (US)
+- Improved scanning for Netherlands DL and ID
+- For non-MRZ documents, the result now contains layout metadata. This includes the country of origin, the category, the type, the version(s) and the side of the document. The ``layoutDefinition`` entry within the result will be deprecated in the future. The layout metadata within the result should be used instead.
+
+### License Plate
+
+- 'charWhitelist' parameter is no longer supported
+
+### Tire
+
+- Added support for `upsideDownMode` for TireSize and CommercialTireID
+
 ## 38.0.1-dev.3
 
 - Updated to Anyline 38.0.1

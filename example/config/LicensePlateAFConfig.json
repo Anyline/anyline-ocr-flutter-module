@@ -11,8 +11,9 @@
     },
     "viewPlugin": {
       "plugin": {
-        "id": "LicensePlate_ID",
+        "id": "LICENSE_PLATE_AF",
         "licensePlatePlugin": {
+          "scanMode": "africa"
         }
       },
       "cutoutConfig": {

@@ -46,9 +46,7 @@ class CompositeResultDisplay extends StatelessWidget {
 
     var subResults = result.jsonMap!.values.take(3);
 
-    List<Map<String, dynamic>> results = [
-      for (Map<String, dynamic> j in subResults as Iterable<Map<String, dynamic>>) j,
-    ];
+    List<Map<String, dynamic>> results = [for (var j in subResults) j];
 
     return DefaultTabController(
       length: results.length,
@@ -110,7 +108,14 @@ class ResultDetails extends StatelessWidget {
       color: Colors.white,
       child: ListView(
         children: [
-          Image.file(File(json!['imagePath'])),
+          Container(
+              child: Image.file(
+                File(json!['imagePath']),
+                fit: BoxFit.scaleDown,
+                height:
+                    240, // prevents weird display of tall images (e.g. vertical shipping containers)
+              ),
+              color: Colors.black87),
           ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
