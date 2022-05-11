@@ -1,7 +1,7 @@
 PODS:
-  - Anyline (39.0.0-rc.2)
-  - anyline_plugin (39.0.0-rc.2):
-    - Anyline (= 39.0.0-rc.2)
+  - Anyline (39.0.0)
+  - anyline_plugin (39.0.0):
+    - Anyline (= 39.0.0)
     - Flutter
   - Flutter (1.0.0)
   - path_provider_ios (0.0.1):
