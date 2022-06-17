@@ -553,8 +553,7 @@ class ScanButton extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: Stack(
-              overflow: Overflow.clip,
-              alignment: Alignment.bottomLeft,
+              clipBehavior: Clip.hardEdge, alignment: Alignment.bottomLeft,
               children: [
                 Positioned(
                   bottom: 10,
