@@ -57,7 +57,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  anyline_plugin: ^39.0.0
+  anyline_plugin: ^40.0.0
 ```
 
 Install it with Flutter:
