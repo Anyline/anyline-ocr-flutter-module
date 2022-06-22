@@ -10,6 +10,18 @@
 - Improved scanning for France driving license
 - Improved scanning for Jordan identification card
 
+### License Plate
+
+- Removed the charWhitelist parameter from the LPT plugin in the SDK
+
+### Tire
+
+- Improved: (Android) the Camera Exposure is now increased for all of the Tire products to improve the scanning capability
+
+### General
+
+- Fixed: (Android) If the License Key allows it, integrating apps that force-remove the Internet Permission via AndroidManifest will not produce a crash anymore
+
 ## 39.0.0
 
 - Updated to Anyline 39.0.0
