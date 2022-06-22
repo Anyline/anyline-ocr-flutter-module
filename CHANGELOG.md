@@ -1,6 +1,14 @@
 # 40.0.0
 
-- TODO
+### TIN
+- `tinConfig` had been removed as a config for `ocrPlugin` in this release. Please use `tinConfig` from within `tirePlugin` instead.
+
+### Universal ID
+
+- Added support for the latest ID versions of the following US states: New York, Texas, and New Jersey (also Driver License)
+- Added support for the following identification cards in Cyrillic: Bulgaria, Serbia
+- Improved scanning for France driving license
+- Improved scanning for Jordan identification card
 
 ## 39.0.0
 
