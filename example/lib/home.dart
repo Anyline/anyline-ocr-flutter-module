@@ -24,7 +24,8 @@ class AnylineDemoApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: Styles.backgroundBlack,
         textTheme: GoogleFonts.montserratTextTheme(),
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Styles.backgroundBlack),
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(secondary: Styles.backgroundBlack),
       ),
     );
   }
@@ -55,27 +56,24 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> scan(ScanMode mode) async {
-  try {
-    Result? result = await _anylineService.scan(mode);
-    if (result != null) {
+    try {
+      Result? result = await _anylineService.scan(mode);
+      if (result != null) {
         _openResultDisplay(result);
-    }
+      }
     } catch (e, s) {
       print('$e, $s');
       showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                          elevation: 0,
-                          title: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                'Error',
-                              )),
-                          content: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                  '$e, $s')),
-                        ));
+          context: context,
+          builder: (_) => AlertDialog(
+                elevation: 0,
+                title: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                      'Error',
+                    )),
+                content: FittedBox(fit: BoxFit.fitWidth, child: Text('$e, $s')),
+              ));
     }
   }
 
@@ -91,30 +89,29 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        bool willPopScreen = _scanTabBackButtonVisible ? false : true;
-        if (_scanTabBackButtonVisible) {
-          setState(() {
-            _bottomSelectedIndex == 0
-                ? _scanTab = _buildUseCases()
-                : _resultsTab = _buildResultList();
-            _scanTabBackButtonVisible = false;
-          });
-        }
-        return Future.value(willPopScreen);
-      },
-      child: Scaffold(
-        appBar: _buildAppBar() as PreferredSizeWidget?,
-        bottomNavigationBar: _buildNavBar(),
-        body: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+        onWillPop: () {
+          bool willPopScreen = _scanTabBackButtonVisible ? false : true;
+          if (_scanTabBackButtonVisible) {
+            setState(() {
+              _bottomSelectedIndex == 0
+                  ? _scanTab = _buildUseCases()
+                  : _resultsTab = _buildResultList();
+              _scanTabBackButtonVisible = false;
+            });
+          }
+          return Future.value(willPopScreen);
+        },
+        child: Scaffold(
+          appBar: _buildAppBar() as PreferredSizeWidget?,
+          bottomNavigationBar: _buildNavBar(),
+          body: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: _buildBody(),
           ),
-          child: _buildBody(),
-        ),
-      )
-    );
+        ));
   }
 
   Widget _buildAppBar() {
@@ -553,7 +550,8 @@ class ScanButton extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: Stack(
-              clipBehavior: Clip.hardEdge, alignment: Alignment.bottomLeft,
+              clipBehavior: Clip.hardEdge,
+              alignment: Alignment.bottomLeft,
               children: [
                 Positioned(
                   bottom: 10,
