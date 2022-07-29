@@ -140,6 +140,18 @@ android
                              └─── myTrainedData.traineddata || myTrainedData.any
 ```
 
+### Release Builds / ProGuard Config (Android)
+
+When building on release, setting a ProGuard config is required for Android.
+
+#### proguard-rules.pro
+```
+-keep class at.nineyards.anyline.** { *; }
+-dontwarn at.nineyards.anyline.**
+-keep class org.opencv.** { *; }
+-dontwarn org.opencv.**
+```
+
 
 ## Additional Functions
 
