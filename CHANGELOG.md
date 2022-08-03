@@ -1,3 +1,20 @@
+# 41.0.0
+
+### Meter
+
+- Improved accuracy, speed and scanning distance
+- NOTE: Meter scan modes `ANALOG_METER`, `DIGITAL_METER`, and `DOT_MATRIX_METER` have been deprecated, and will be removed in a future version. Please use `AUTO_ANALOG_DIGITAL_METER` instead.
+- Consequently, the ``segment`` JSON configuration property for the Meter plugin is no longer necessary, and support for it will be removed in a future release.
+
+### Universal ID
+
+- Added support for Turkish driving license and residence permit card
+
+### Tire Size
+
+- Improved scanning detection, accuracy and speed
+
+
 # 40.0.0
 
 ### TIN
