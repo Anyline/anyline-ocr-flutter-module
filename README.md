@@ -57,7 +57,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  anyline_plugin: ^40.0.0
+  anyline_plugin: ^41.0.0
 ```
 
 Install it with Flutter:
@@ -81,7 +81,7 @@ Add a JSON file with the proper structure and elements. The JSON config contains
 1. The license key 
 2. Options field with
 -	AnylineSDK config parameter
--	“segment”: which contains the scanModes for the UI Segment (e.g. switch between Analog and Digital) - optional
+-	“segment”: which contains the scanModes for the UI Segment (e.g. switch between Auto and Dial in Meter) - optional
 3. OCR field with (Only if you want to use the OCR module)
 -   your custom training data
 -   RegEx validation
