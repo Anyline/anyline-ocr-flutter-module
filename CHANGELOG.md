@@ -1,3 +1,9 @@
+# 41.0.1
+
+### Fixes
+
+- Fixed an asset corruption issue (iOS) in the previous release in which the framework went without a `CFBundleVersion` key in its Info.plist file.
+
 # 41.0.0
 
 ### Meter
