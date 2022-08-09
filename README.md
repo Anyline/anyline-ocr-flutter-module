@@ -146,6 +146,9 @@ When building on release, setting a ProGuard config is required for Android.
 
 #### proguard-rules.pro
 ```
+-keep public class * {
+    public protected *;
+}
 -keep class at.nineyards.anyline.** { *; }
 -dontwarn at.nineyards.anyline.**
 -keep class org.opencv.** { *; }
