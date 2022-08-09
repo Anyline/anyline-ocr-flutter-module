@@ -1,0 +1,13 @@
+# See https://docs.antora.org/antora/2.0/component-descriptor/
+name: flutter-plugin-component
+title: Anyline Flutter Plugin
+version: 1.0.0
+prerelease: -preview.1
+# By default, Antora looks for "ROOT:index.adoc". See https://docs.antora.org/antora/2.0/component-descriptor/#start-page-key
+start_page: ROOT:index.adoc
+asciidoc:
+  attributes:
+    source-language: asciidoc@
+    table-caption: false
+nav:
+- modules/ROOT/nav.adoc
