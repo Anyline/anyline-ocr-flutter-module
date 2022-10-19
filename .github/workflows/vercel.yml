@@ -1,0 +1,25 @@
+name: Vercel
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches:
+      - main
+      - 'antora/**'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "deploy"
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Trigger deployment on main branch of antora documentation at vercel
+      # See https://vercel.com/anyline-capture/anyline-documentation-antora/deployments
+      # See https://vercel.com/anyline-capture/anyline-documentation-antora/settings/git
+      - name: Run a multi-line script
+        run: |
+          curl -sX POST "${{ secrets.VERCEL_ANTORA_DEPLOY_MAIN }}"
