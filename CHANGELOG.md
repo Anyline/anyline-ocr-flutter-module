@@ -1,3 +1,7 @@
+# 42.0.0
+
+- Minor bug fixes and improvements
+
 # 41.0.1
 
 ### Fixes
