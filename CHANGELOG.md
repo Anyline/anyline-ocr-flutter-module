@@ -1,3 +1,7 @@
+# 42.0.0
+
+- Updates to Anyline SDK 42.0.0
+
 # 41.0.1
 
 ### Fixes
