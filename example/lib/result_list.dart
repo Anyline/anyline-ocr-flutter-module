@@ -1,4 +1,3 @@
-import 'package:anyline_plugin_example/home.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/scan_modes.dart';
 import 'package:anyline_plugin_example/styles.dart';
@@ -53,8 +52,8 @@ class ResultList extends StatelessWidget {
 }
 
 class CompositeResultListItem extends StatelessWidget {
-  Result result;
-  String timestamp;
+  final Result result;
+  final String timestamp;
 
   CompositeResultListItem(this.result, this.timestamp);
 
@@ -119,8 +118,8 @@ class CompositeResultListItem extends StatelessWidget {
 }
 
 class ResultListItem extends StatelessWidget {
-  Result result;
-  String timestamp;
+  final Result result;
+  final String timestamp;
 
   ResultListItem(this.result, this.timestamp);
 
