@@ -4,7 +4,7 @@ version '1.0'
 
 buildscript {
     ext {
-        anyline_sdk_version = "41.0.0"
+        anyline_sdk_version = "42.0.0"
         kotlin_version = "1.6.10"
     }
     repositories {
@@ -13,7 +13,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -35,7 +35,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android' // When converting Java files to Kotlin, make sure to move the Kotlin files from "src/main/java" to "src/main/kotlin/"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 21

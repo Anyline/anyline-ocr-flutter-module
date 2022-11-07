@@ -534,18 +534,22 @@ class ScanButton extends StatelessWidget {
   final String text;
   final Function? onPressed;
 
+  final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+    padding: EdgeInsets.all(0),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.zero
+    ),
+    foregroundColor: Colors.white,
+    backgroundColor: Styles.anylineBlue
+  );
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(10),
-        child: FlatButton(
-          padding: EdgeInsets.all(0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
-          textColor: Colors.white,
-          color: Styles.anylineBlue,
+        child: TextButton(
+          style: flatButtonStyle,
           child: Container(
             height: double.infinity,
             width: double.infinity,
@@ -587,18 +591,22 @@ class UseCaseButton extends StatelessWidget {
   final String text;
   final Function? onPressed;
 
+  final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      padding: EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero
+      ),
+      foregroundColor: Colors.white,
+      backgroundColor: Styles.anylineBlue
+  );
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(10),
-        child: FlatButton(
-          padding: EdgeInsets.all(0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
-          textColor: Colors.white,
-          color: Styles.anylineBlue,
+        child: TextButton(
+          style: flatButtonStyle,
           child: Container(
             height: double.infinity,
             width: double.infinity,

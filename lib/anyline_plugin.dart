@@ -43,6 +43,7 @@ class AnylinePlugin {
     } else {
       throw AnylineCameraPermissionException('Camera permission missing.');
     }
+    return null;
   }
 
   /// Decodes the license and returns the expiration date.

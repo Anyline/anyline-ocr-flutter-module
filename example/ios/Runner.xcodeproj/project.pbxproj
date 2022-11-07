@@ -402,7 +402,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 41.0.0;
+				MARKETING_VERSION = 42.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.anyline.flutter.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -537,7 +537,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 41.0.0;
+				MARKETING_VERSION = 42.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.anyline.flutter.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -567,7 +567,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 41.0.0;
+				MARKETING_VERSION = 42.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.anyline.flutter.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";

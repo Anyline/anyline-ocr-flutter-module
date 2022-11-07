@@ -1,3 +1,34 @@
+# 42.0.0
+
+### New
+
+#### Universal ID
+
+- Added support for Polish driving licenses `04001 <https://www.consilium.europa.eu/prado/en/POL-FO-04001/index.html>`_ and `05001 <https://www.consilium.europa.eu/prado/en/POL-FO-05001/index.html>`_
+- Added support for Turkey identification card
+- Added support for second layout version of Georgia driver's license: ``GA_DVL_O_R381_F``
+- Added support for a Colorado identification card
+- Added support for the newest Kentucky identification card
+- Added support for the newest West Virginia driver's license
+
+### Improved
+
+- Adapted the text message that pops up in case an Anyline license expired
+
+#### Tire Size
+
+- Improved accuracy and now supports the following characters: ``[A-HJ-NP-Z0-9/+-&().]``
+
+#### TIN
+
+- Added stricter checks for valid production date.
+
+### Fixed
+
+- Android: Fix cutout not respecting maxHeightPercent parameter [SDKY-759]
+- Android: Fix Flash Mode “AUTO” not working [SDKY-708]
+
+
 # 41.0.1
 
 ### Fixes

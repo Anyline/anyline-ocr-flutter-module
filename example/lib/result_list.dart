@@ -1,4 +1,3 @@
-import 'package:anyline_plugin_example/home.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/scan_modes.dart';
 import 'package:anyline_plugin_example/styles.dart';
@@ -53,21 +52,25 @@ class ResultList extends StatelessWidget {
 }
 
 class CompositeResultListItem extends StatelessWidget {
-  Result result;
-  String timestamp;
+  final Result result;
+  final String timestamp;
 
   CompositeResultListItem(this.result, this.timestamp);
+
+  final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0),
+    ),
+    padding: EdgeInsets.zero,
+    foregroundColor: Styles.anylineBlue,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10),
-      child: FlatButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          padding: EdgeInsets.zero,
-          color: Styles.anylineBlue,
+      child: TextButton(
+        style: flatButtonStyle,
           onPressed: () {
             Navigator.pushNamed(context, CompositeResultDisplay.routeName,
                 arguments: result);
@@ -115,21 +118,25 @@ class CompositeResultListItem extends StatelessWidget {
 }
 
 class ResultListItem extends StatelessWidget {
-  Result result;
-  String timestamp;
+  final Result result;
+  final String timestamp;
 
   ResultListItem(this.result, this.timestamp);
+
+  final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0),
+    ),
+    padding: EdgeInsets.zero,
+    foregroundColor: Styles.anylineBlue,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10),
-      child: FlatButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          padding: EdgeInsets.zero,
-          color: Styles.anylineBlue,
+      child: TextButton(
+        style: flatButtonStyle,
           onPressed: () {
             Navigator.pushNamed(context, ResultDisplay.routeName,
                 arguments: result);
