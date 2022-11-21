@@ -52,6 +52,7 @@ import io.anyline.plugin.ocr.OcrScanResult;
 import io.anyline.plugin.ocr.OcrScanViewPlugin;
 import io.anyline.plugin.tire.TireScanResult;
 import io.anyline.plugin.tire.TireScanViewPlugin;
+import io.anyline.plugin.tire.TireSizeScanResult;
 import io.anyline.view.AbstractBaseScanViewPlugin;
 import io.anyline.view.CutoutRect;
 import io.anyline.view.ParallelScanViewComposite;
@@ -364,6 +365,10 @@ public class Anyline4Activity extends AnylineBaseActivity {
                                 jsonResult.put("text", tireScanResult.getResult().trim());
                                 jsonResult = AnylinePluginHelper.jsonHelper(Anyline4Activity.this, tireScanResult,
                                         jsonResult);
+                                if (tireScanResult instanceof TireSizeScanResult) {
+                                    String tireScanDetailedResult = ((TireSizeScanResult) tireScanResult).getResult().toJson();
+                                    jsonResult.put("tireScanDetailedResult", tireScanDetailedResult);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
