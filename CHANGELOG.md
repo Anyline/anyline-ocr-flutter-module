@@ -1,3 +1,26 @@
+# 42.2.0
+
+- Update to using Anyline Android SDK 42.2.0
+- No change in using Anyline iOS SDK 42.0.0
+
+## New
+
+### User-Corrected Results
+
+- (Android only) Added support for user-corrected results, allowing the reporting of corrected results to our backend
+
+### Tire Size Information
+
+- (Android only) Added Tire Size Detail Information. Refer to [Tire Size Scanning Specifications](https://documentation.anyline.com/toc/products/tire/tire_size/index.html#products-tire-size-scanning) for details and [Android Plugin](https://documentation.anyline.com/toc/platforms/android/plugins/tire.html#android-tire-size-scanning) for implementation help.
+
+## Improved
+
+### Android
+
+- Updated Gradle wrapper version
+- Raised target SDK version to 31
+- Raised compile SDK version to 31
+
 # 42.0.0
 
 ### New
