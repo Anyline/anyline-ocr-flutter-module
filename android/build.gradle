@@ -4,7 +4,7 @@ version '1.0'
 
 buildscript {
     ext {
-        anyline_sdk_version = "42.0.0"
+        anyline_sdk_version = "42.2.0"
         kotlin_version = "1.6.10"
     }
     repositories {
@@ -25,9 +25,9 @@ rootProject.allprojects {
         maven {
             url 'https://anylinesdk.blob.core.windows.net/maven/'
         }
-        maven {
-            url 'https://anylinesdk.blob.core.windows.net/testing/'
-        }
+//        maven {
+//            url 'https://anylinesdk.blob.core.windows.net/testing/'
+//        }
     }
 }
 
