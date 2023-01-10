@@ -341,12 +341,12 @@ class _HomeState extends State<Home> {
                 scan(ScanMode.DialMeter);
               },
             ),
-            ScanButton(
-              text: 'Dot Matrix',
-              onPressed: () {
-                scan(ScanMode.DotMatrix);
-              },
-            ),
+            // ScanButton(
+            //   text: 'Dot Matrix',
+            //   onPressed: () {
+            //     scan(ScanMode.DotMatrix);
+            //   },
+            // ),
           ],
         ),
       ),
@@ -535,13 +535,10 @@ class ScanButton extends StatelessWidget {
   final Function? onPressed;
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-    padding: EdgeInsets.all(0),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.zero
-    ),
-    foregroundColor: Colors.white,
-    backgroundColor: Styles.anylineBlue
-  );
+      padding: EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      foregroundColor: Colors.white,
+      backgroundColor: Styles.anylineBlue);
 
   @override
   Widget build(BuildContext context) {
@@ -593,12 +590,9 @@ class UseCaseButton extends StatelessWidget {
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
       padding: EdgeInsets.all(0),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       foregroundColor: Colors.white,
-      backgroundColor: Styles.anylineBlue
-  );
+      backgroundColor: Styles.anylineBlue);
 
   @override
   Widget build(BuildContext context) {
