@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ALScanResult (ALResultHelper)
 
-- (NSDictionary *)asJSONDictionary;
+- (NSDictionary *)enhancedDictionary;
 
 @end
 

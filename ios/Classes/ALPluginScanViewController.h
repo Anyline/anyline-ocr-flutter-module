@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSUInteger quality;
 
-- (instancetype)initWithLicensekey:(NSString *)licensekey
-                     configuration:(NSDictionary *)anylineConfig
-                   uiConfiguration:(ALJSONUIConfiguration *)jsonUIConfig
+- (instancetype)initWithLicensekey:(NSString *)licenseKey
+                     configuration:(NSDictionary *)config
+                   uiConfiguration:(ALJSONUIConfiguration *)JSONUIConfig
                           finished:(ALPluginCallback)callback;
 
 @end

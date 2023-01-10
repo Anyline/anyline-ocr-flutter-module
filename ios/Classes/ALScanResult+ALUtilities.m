@@ -8,14 +8,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation ALScanResult (ALResultHelper)
 
-- (NSDictionary *)asJSONDictionary {
+// TODO: parts of this will have to go back to the SDK.
+- (NSDictionary *)enhancedDictionary {
 
     ALPluginResult *pluginResult = self.pluginResult;
-
-    // ALScanResult -> Dictionary
-    NSString *resultAsJSONString = [pluginResult asJSONString];
-    NSDictionary *resultAsJSONDictionary = [resultAsJSONString asJSONObject];
-    NSMutableDictionary *resultDictionary = [NSMutableDictionary dictionaryWithDictionary:resultAsJSONDictionary];
+    NSMutableDictionary *resultDictionary = [NSMutableDictionary dictionaryWithDictionary:self. resultDictionary];
 
     // string with more additional details from the result included.
     NSString *resultString;

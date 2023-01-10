@@ -4,30 +4,30 @@
 #import "ALPluginHelper.h"
 #import "ALPluginResultHelper.h"
 #import "ALRoundedView.h"
+#import "ALScanResult+ALUtilities.h"
 
-@interface ALPluginScanViewController () <ALScanPluginDelegate, ALScanViewPluginDelegate>
+@interface ALPluginScanViewController () <ALScanPluginDelegate>
 
 // ACO should it have the `assign` attribute?
 @property (nonatomic) ALPluginCallback callback;
 
-@property (nonatomic, strong) NSDictionary *anylineConfig;
+@property (nonatomic, strong) NSDictionary *config;
 
 @property (nonatomic, copy) NSString *licenseKey;
 
 @property (nonatomic, strong) ALJSONUIConfiguration *uiConfig;
 
+@property (nonatomic, strong) ALScanView *scanView;
+
 @property (nonatomic, strong) UIButton *doneButton;
+
+@property (nonatomic, assign) BOOL showingLabel; // ACO i think for showing scanning hints with document use case (obsolete)
 
 @property (nonatomic, strong) UILabel *scannedLabel;
 
-@property (nonatomic, strong) UISegmentedControl *segment;
-
 @property (nonatomic, strong) ALRoundedView *roundedView;
 
-// ACO what label?
-@property (nonatomic, assign) BOOL showingLabel;
-
-@property (nonatomic, strong) ALScanView *scanView;
+@property (nonatomic, strong) UISegmentedControl *segment;
 
 @property (nonatomic, strong) NSMutableArray<NSDictionary *> *detectedBarcodes;
 
@@ -36,16 +36,16 @@
 
 @implementation ALPluginScanViewController
 
-- (instancetype)initWithLicensekey:(NSString *)licensekey
-                     configuration:(NSDictionary *)anylineConfig
-                   uiConfiguration:(ALJSONUIConfiguration *)jsonUIConfig
+- (instancetype)initWithLicensekey:(NSString *)licenseKey
+                     configuration:(NSDictionary *)config
+                   uiConfiguration:(ALJSONUIConfiguration *)JSONUIConfig
                           finished:(ALPluginCallback)callback {
 
     if (self = [super init]) {
-        _licenseKey = licensekey;
+        _licenseKey = licenseKey;
         _callback = callback;
-        _anylineConfig = anylineConfig;
-        _uiConfig = jsonUIConfig;
+        _config = config;
+        _uiConfig = JSONUIConfig;
         
         self.quality = 100;
         self.nativeBarcodeEnabled = NO;
@@ -66,7 +66,7 @@
         return;
     }
 
-    self.scanView = [ALScanViewFactory withJSONDictionary:self.anylineConfig
+    self.scanView = [ALScanViewFactory withJSONDictionary:self.config
                                                  delegate:self
                                                     error:&error];
 
@@ -196,7 +196,7 @@
 
 - (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
     // NOTE: for now the second param in handleResult:result: is not used.
-    [self handleResult:scanResult.asJSONDictionary result:scanResult];
+    [self handleResult:scanResult.enhancedDictionary result:scanResult];
 }
 
 //- (void)scanPlugin:(ALScanPlugin *)scanPlugin errorReceived:(ALEvent *)event {
