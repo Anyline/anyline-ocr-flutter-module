@@ -26,7 +26,6 @@
 
 // This generates a list of fields in the ALIDResult during runtime.
 + (NSArray<NSString *> *)fieldNames {
-    // ------------
     unsigned int count;
     Ivar* ivars = class_copyIvarList(ALIDResult.class, &count);
     NSMutableArray *ivarArray = [NSMutableArray arrayWithCapacity:count];

@@ -5,72 +5,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation ALScanResult (ALResultHelper)
-
-// This generates a list of fields in the ALIDResult during runtime.
-// Not used now, but it would require the <objc/runtime.h> header.
-+ (NSArray<NSString *> *)fieldNames {
-    // ------------
-    unsigned int count;
-    Ivar* ivars = class_copyIvarList(ALPluginResult.class, &count);
-    NSMutableArray *ivarArray = [NSMutableArray arrayWithCapacity:count];
-    for (int i = 0; i < count ; i++) {
-        const char *ivarName = ivar_getName(ivars[i]);
-        [ivarArray addObject:[NSString stringWithCString:ivarName encoding:NSUTF8StringEncoding]];
-    }
-    free(ivars);
-    return ivarArray;
-}
-
-
-- (NSDictionary *)resultDictionary {
-
-    // ALScanResult -> Dictionary
-    NSMutableDictionary *resultDictionary = [NSMutableDictionary dictionaryWithDictionary:self.pluginResult.asJSONString.asJSONObject];
-
-    // resultString: more useful info added in.
-    NSString *resultString;
-
-    ALPluginResult *pluginResult = self.pluginResult;
-    for (NSString *fName in [self.class fieldNames]) {
-        NSString *fieldName = [fName stringByReplacingCharactersInRange:NSMakeRange(0, 1)
-                                                             withString:@""];
-        if (![pluginResult respondsToSelector:NSSelectorFromString(fieldName)]) {
-            continue;
-        }
-        id obj = [pluginResult valueForKey:fieldName];
-        if ([obj conformsToProtocol:@protocol(ALResultListEnumerable)]) {
-            resultString = [self JSONStringFromArray:((id<ALResultListEnumerable>)obj).resultEntryList
-                                            isPretty:YES];
-            break;
-        }
-    }
-
-    if (resultString) {
-        resultDictionary[@"result"] = resultString;
-    }
-
-    return resultDictionary;
-}
-
-- (NSString *)JSONStringFromArray:(NSArray<ALResultEntry *> *)resultEntries isPretty:(BOOL)isPretty {
-
-    NSMutableArray *arrayOfJSON = [NSMutableArray array];
-
-    for (ALResultEntry *entry in resultEntries) {
-        NSString *elementJSONString = [entry asJSONStringPretty:isPretty];
-        [arrayOfJSON addObject:[elementJSONString asJSONObject]];
-    }
-
-    NSError *error;
-    NSString *ret = [arrayOfJSON toJSONStringPretty:isPretty error:&error];
-
-    return ret;
-
-}
-
-@end
-
 @implementation ALResultEntry
 
 - (instancetype)init {
@@ -110,15 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
     return [self toJSONStringPretty:NO error:error];
 }
 
-- (NSString * _Nullable)toJSONStringPretty:(BOOL)isPretty error:(NSError *__autoreleasing  _Nullable * _Nullable)error {
-
-    NSDictionary *dict = @{
-        @"title": self.title,
+- (NSString * _Nullable)toJSONStringPretty:(BOOL)isPretty
+                                     error:(NSError *__autoreleasing  _Nullable * _Nullable)error {
+    return [@{
+        @"field": self.title,
         @"value": self.value,
-    };
-
-    return [dict toJSONStringPretty:isPretty error:error];
-    
+    } toJSONStringPretty:isPretty error:error];
 }
 
 @end
@@ -143,8 +74,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSMutableArray (ALExtras)
 
 - (BOOL)appendValue:(NSString * _Nullable)value forKey:(NSString *)key;
-- (BOOL)appendValue:(NSString * _Nullable)value forKey:(NSString *)key scriptCode:(NSString * _Nullable)scriptCode;
-- (BOOL)appendValue:(NSString * _Nullable)value forKey:(NSString *)key scriptCode:(NSString * _Nullable)scriptCode spellOut:(BOOL)spellOut;
+- (BOOL)appendValue:(NSString * _Nullable)value forKey:(NSString *)key
+         scriptCode:(NSString * _Nullable)scriptCode;
+- (BOOL)appendValue:(NSString * _Nullable)value forKey:(NSString *)key
+         scriptCode:(NSString * _Nullable)scriptCode
+           spellOut:(BOOL)spellOut;
 
 @end
 

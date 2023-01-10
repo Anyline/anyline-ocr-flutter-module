@@ -1,22 +1,26 @@
-//
-//  ALPluginHelper.h
-//  Anyline React-Native Example
-//
-//  Created by Daniel Albertini on 30.10.18.
-//
-
-#import <Foundation/Foundation.h>
-#import <Anyline/Anyline.h>
-#import <UIKit/UIKit.h>
-#import "ALJsonUIConfiguration.h"
-#import "ALNFCScanViewController.h"
+#import "ALJSONUIConfiguration.h"
 #import "ALRoundedView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^ALPluginCallback)(id _Nullable callbackObj, NSString * _Nullable errorString);
+
+
 @interface ALPluginHelper : NSObject
 
 + (void)startScan:(NSDictionary *)config finished:(ALPluginCallback)callback;
+
++ (NSString *)saveImageToFileSystem:(UIImage *)image;
+
++ (NSString *)saveImageToFileSystem:(UIImage *)image
+                 compressionQuality:(CGFloat)compressionQuality;
+
++ (UILabel *)createLabelForView:(UIView *)view;
+
++ (UIButton *)createButtonForViewController:(UIViewController *)viewController
+                                     config:(ALJSONUIConfiguration *)config;
+
++ (ALRoundedView *)createRoundedViewForViewController:(UIViewController *)viewController;
 
 //+ (ALScanMode)scanModeFromString:(NSString *)scanMode;
 //
@@ -26,23 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 //+ (NSDictionary<NSString *, NSNumber *> *)scanModesDict;
 
-+ (NSString *)saveImageToFileSystem:(UIImage *)image;
-
-+ (NSString *)saveImageToFileSystem:(UIImage *)image
-                 compressionQuality:(CGFloat)compressionQuality;
-
-+ (UILabel *)createLabelForView:(UIView *)view;
-
 //+ (UISegmentedControl *)createSegmentForViewController:(UIViewController *)viewController
 //                                                config:(ALJsonUIConfiguration *)config
 //                                              scanMode:(ALScanMode)scanMode;
 
 //+ (NSString *)barcodeFormatForNativeString:(NSString *)barcodeType;
-
-+ (UIButton *)createButtonForViewController:(UIViewController *)viewController
-                                     config:(ALJsonUIConfiguration *)config;
-
-+ (ALRoundedView *)createRoundedViewForViewController:(UIViewController *)viewController;
 
 //+ (NSDictionary *)dictionaryForMeterResult:(ALMeterResult *)scanResult
 //                          detectedBarcodes:(NSMutableArray<NSDictionary *> *)detectedBarcodes

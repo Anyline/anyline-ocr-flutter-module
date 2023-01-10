@@ -14,7 +14,7 @@
 
 @property (nonatomic, copy) NSString *licenseKey;
 
-@property (nonatomic, strong) ALJsonUIConfiguration *uiConfig;
+@property (nonatomic, strong) ALJSONUIConfiguration *uiConfig;
 
 @property (nonatomic, strong) UIButton *doneButton;
 
@@ -38,7 +38,7 @@
 
 - (instancetype)initWithLicensekey:(NSString *)licensekey
                      configuration:(NSDictionary *)anylineConfig
-                   uiConfiguration:(ALJsonUIConfiguration *)jsonUIConfig
+                   uiConfiguration:(ALJSONUIConfiguration *)jsonUIConfig
                           finished:(ALPluginCallback)callback {
 
     if (self = [super init]) {
@@ -67,7 +67,6 @@
         return;
     }
 
-    // TODO: scanviewfactory == nil: why no error?
     self.scanView = [ALScanViewFactory withJSONDictionary:self.anylineConfig
                                                  delegate:self
                                                     error:&error];
@@ -75,24 +74,18 @@
     if ([self showErrorAlertIfNeeded:error]) {
         return;
     }
+
     [self.view addSubview:self.scanView];
 
-    // TODO: configure the layout of the ScanView
     self.scanView.translatesAutoresizingMaskIntoConstraints = false;
     [self.scanView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
     [self.scanView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
     [self.scanView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor].active = YES;
     [self.scanView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
 
-    // self.scanView.delegate = self; // if needed
-
-    if ([self showErrorAlertIfNeeded:error]) {
-        return;
-    }
-    
     [self.scanView startCamera];
 
-    // ACO add a segmented view to switch between various scan modes.
+    // TODO: add a segmented view to switch between various scan modes.
 
 //    if (self.uiConfig.segmentModes && [self.scanView.scanViewPlugin isKindOfClass:[ALMeterScanViewPlugin class]]) {
 //        self.segment = [ALPluginHelper createSegmentForViewController:self
@@ -102,7 +95,6 @@
 //    }
 
     // TODO: handle native barcode, if config specifies it.
-    
     
 //    if (self.nativeBarcodeEnabled) {
 //        error = nil;
@@ -121,11 +113,11 @@
 //        }
 //    }
     
-    self.detectedBarcodes = [NSMutableArray array];
-    
-    self.doneButton = [ALPluginHelper createButtonForViewController:self config:self.uiConfig];
-    
-    self.scannedLabel = [ALPluginHelper createLabelForView:self.view];
+//    self.detectedBarcodes = [NSMutableArray array];
+//
+//    self.doneButton = [ALPluginHelper createButtonForViewController:self config:self.uiConfig];
+//
+//    self.scannedLabel = [ALPluginHelper createLabelForView:self.view];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -136,10 +128,9 @@
 
     NSError *error;
     [self.scanView.scanViewPlugin startWithError:&error];
-
     [self showErrorAlertIfNeeded:error];
 
-    // TODO add segment if config asks for it
+    // TODO: add segment if config asks for it
 //    if (self.uiConfig.segmentModes) {
 //        self.segment.frame = CGRectMake(self.scanView.scanViewPlugin.cutoutRect.origin.x + self.uiConfig.segmentXPositionOffset / 2.0,
 //                                        self.scanView.scanViewPlugin.cutoutRect.origin.y + self.uiConfig.segmentYPositionOffset / 2.0,
@@ -177,44 +168,36 @@
 //    }
 }
 
+// TODO: make a utility method out of this, as it seems to be repeated.
 - (BOOL)showErrorAlertIfNeeded:(NSError *)error {
-    if (error) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning"
-                                                                       message:error.localizedDescription
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok"
-                                                         style:UIAlertActionStyleDefault
-                                                       handler:^(UIAlertAction * _Nonnull action) {
-            [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
-                self.callback(nil, @"Canceled");
-            }];
-        }];
-
-        [alert addAction:action];
-
-        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert
-                                                                                     animated:YES
-                                                                                   completion:NULL];
-        return YES;
+    if (!error) {
+        return NO;
     }
-    return NO;
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning"
+                                                                   message:error.localizedDescription
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication].keyWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+            self.callback(nil, @"Canceled");
+        }];
+    }];
+
+    [alert addAction:action];
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert
+                                                                                 animated:YES
+                                                                               completion:NULL];
+    return YES;
 }
 
 // MARK: - ALScanPluginDelegate
 
 - (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
-    // for now the second param is not used.
-
-    NSMutableDictionary *resultDict = [NSMutableDictionary dictionaryWithDictionary:scanResult.resultDictionary];
-
-    NSString *imagePath = [ALPluginHelper saveImageToFileSystem:scanResult.croppedImage];
-    resultDict[@"imagePath"] = imagePath;
-
-    imagePath = [ALPluginHelper saveImageToFileSystem:scanResult.fullSizeImage];
-    resultDict[@"fullImagePath"] = imagePath;
-
-    [self handleResult:resultDict result:scanResult];
+    // NOTE: for now the second param in handleResult:result: is not used.
+    [self handleResult:scanResult.asJSONDictionary result:scanResult];
 }
 
 //- (void)scanPlugin:(ALScanPlugin *)scanPlugin errorReceived:(ALEvent *)event {
@@ -261,17 +244,20 @@
 //    if ([scanResult.result isKindOfClass:[NSString class]]) {
 //        self.scannedLabel.text = (NSString *)scanResult.result;
 //    }
-    
-    self.callback(dictResult, nil);
 
+//    self.detectedBarcodes = [NSMutableArray array];
+
+    NSObject<ALScanViewPluginBase> *scanViewPluginBase = self.scanView.scanViewPlugin;
     // TODO: handle this for composites: cancelOnResult = true? dismiss
-    if ([self.scanView.scanViewPlugin isKindOfClass:ALScanViewPlugin.class]) {
-        if (((ALScanViewPlugin *)self.scanView.scanViewPlugin).scanPlugin.scanPluginConfig.cancelOnResult) {
+    if ([scanViewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
+        ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)scanViewPluginBase;
+        BOOL cancelOnResult = scanViewPlugin.scanPlugin.scanPluginConfig.cancelOnResult;
+        if (cancelOnResult) {
             [self dismissViewControllerAnimated:YES completion:nil];
         }
     }
+    self.callback(dictResult, nil);
 
-    self.detectedBarcodes = [NSMutableArray array];
 }
 
 //- (void)showUserLabel:(ALDocumentError)error {

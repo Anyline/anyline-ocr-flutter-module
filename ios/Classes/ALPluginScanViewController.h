@@ -1,11 +1,9 @@
 #import <UIKit/UIKit.h>
-#import "ALJsonUIConfiguration.h"
+#import "ALPluginHelper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ALPluginScanViewController : UIViewController
-
-typedef void (^ALPluginCallback)(id _Nullable callbackObj, NSString * _Nullable errorString);
 
 @property (nonatomic, assign) BOOL nativeBarcodeEnabled;
 
@@ -15,7 +13,7 @@ typedef void (^ALPluginCallback)(id _Nullable callbackObj, NSString * _Nullable 
 
 - (instancetype)initWithLicensekey:(NSString *)licensekey
                      configuration:(NSDictionary *)anylineConfig
-                   uiConfiguration:(ALJsonUIConfiguration *)jsonUIConfig
+                   uiConfiguration:(ALJSONUIConfiguration *)jsonUIConfig
                           finished:(ALPluginCallback)callback;
 
 @end

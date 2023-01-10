@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, ALButtonType) {
 };
 
 
-@interface ALJsonUIConfiguration : NSObject
+@interface ALJSONUIConfiguration : NSObject
 
 // Done Button
 @property (nonatomic, strong) NSString   *buttonDoneTitle;

@@ -1,5 +1,5 @@
 #import "ALPluginScanViewController.h"
-#import "ALJsonUIConfiguration.h"
+#import "ALJSONUIConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithLicensekey:(NSString *)licensekey
                      configuration:(NSDictionary *)anylineConfig
-                          uiConfig:(ALJsonUIConfiguration *)uiConfig
+                          uiConfig:(ALJSONUIConfiguration *)uiConfig
                           finished:(ALPluginCallback)callback;
 @end
 

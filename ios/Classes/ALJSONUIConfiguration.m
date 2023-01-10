@@ -1,4 +1,4 @@
-#import "ALJsonUIConfiguration.h"
+#import "ALJSONUIConfiguration.h"
 
 NSString * const DONE_BUTTON = @"doneButton";
 NSString * const DONE_BUTTON_TITLE = @"title";
@@ -30,7 +30,7 @@ NSString * const LABEL_OFFSET = @"labelOffset";
 NSString * const LABEL_OFFSET_X = @"offset.x";
 NSString * const LABEL_OFFSET_Y = @"offset.y";
 
-@implementation ALJsonUIConfiguration
+@implementation ALJSONUIConfiguration
 
 -(instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = [super init];
@@ -55,30 +55,30 @@ NSString * const LABEL_OFFSET_Y = @"offset.y";
                 _buttonDoneFontName = [btnDict valueForKeyPath:DONE_BUTTON_FONT_NAME];
             
             if([btnDict valueForKey:DONE_BUTTON_COLOR])
-                _buttonDoneTextColor = [ALJsonUIConfiguration colorFromHexString:[btnDict valueForKeyPath:DONE_BUTTON_COLOR]];
+                _buttonDoneTextColor = [ALJSONUIConfiguration colorFromHexString:[btnDict valueForKeyPath:DONE_BUTTON_COLOR]];
             
             if([btnDict valueForKey:DONE_BUTTON_COLOR_HIGHLIGHTED])
-                _buttonDoneTextColorHighlighted = [ALJsonUIConfiguration colorFromHexString:[btnDict valueForKeyPath:DONE_BUTTON_COLOR_HIGHLIGHTED]];
+                _buttonDoneTextColorHighlighted = [ALJSONUIConfiguration colorFromHexString:[btnDict valueForKeyPath:DONE_BUTTON_COLOR_HIGHLIGHTED]];
             
             
             if([btnDict valueForKey:DONE_BUTTON_FONT_SIZE])
                 _buttonDoneFontSize = [[btnDict valueForKeyPath:DONE_BUTTON_FONT_SIZE] floatValue];
             
             if([btnDict valueForKey:DONE_BUTTON_TYPE])
-                _buttonType =  [ALJsonUIConfiguration stringToButtonType:[btnDict valueForKeyPath:DONE_BUTTON_TYPE]];
+                _buttonType =  [ALJSONUIConfiguration stringToButtonType:[btnDict valueForKeyPath:DONE_BUTTON_TYPE]];
             
             if([btnDict valueForKey:DONE_BUTTON_BACKGROUND_COLOR])
-                _buttonDoneBackgroundColor = [ALJsonUIConfiguration colorFromHexString:[btnDict valueForKey:DONE_BUTTON_BACKGROUND_COLOR]];
+                _buttonDoneBackgroundColor = [ALJSONUIConfiguration colorFromHexString:[btnDict valueForKey:DONE_BUTTON_BACKGROUND_COLOR]];
             
             if([btnDict valueForKey:DONE_BUTTON_TITLE])
                 _buttonDoneTitle = [btnDict valueForKeyPath:DONE_BUTTON_TITLE];
             
             if([btnDict valueForKey:DONE_BUTTON_X_ALIGNMENT]) {
-                _buttonDoneXAlignment = [ALJsonUIConfiguration stringToButtonXAlignment:[btnDict valueForKeyPath:DONE_BUTTON_X_ALIGNMENT]];
+                _buttonDoneXAlignment = [ALJSONUIConfiguration stringToButtonXAlignment:[btnDict valueForKeyPath:DONE_BUTTON_X_ALIGNMENT]];
             }
             
             if([btnDict valueForKey:DONE_BUTTON_Y_ALIGNMENT]) {
-                _buttonDoneYAlignment = [ALJsonUIConfiguration stringToButtonYAlignment:[btnDict valueForKeyPath:DONE_BUTTON_Y_ALIGNMENT]];
+                _buttonDoneYAlignment = [ALJSONUIConfiguration stringToButtonYAlignment:[btnDict valueForKeyPath:DONE_BUTTON_Y_ALIGNMENT]];
             }
             
             
@@ -103,7 +103,7 @@ NSString * const LABEL_OFFSET_Y = @"offset.y";
                 _segmentModes = [segDict valueForKey:SEGMENT_MODES];
             
             if([segDict valueForKey:SEGMENT_TINT_COLOR])
-                _segmentTintColor = [ALJsonUIConfiguration colorFromHexString:[segDict valueForKey:SEGMENT_TINT_COLOR]];
+                _segmentTintColor = [ALJSONUIConfiguration colorFromHexString:[segDict valueForKey:SEGMENT_TINT_COLOR]];
             
             if([segDict valueForKeyPath:OFFSET_X])
                 _segmentXPositionOffset = [[segDict valueForKeyPath:OFFSET_X] floatValue];
@@ -122,7 +122,7 @@ NSString * const LABEL_OFFSET_Y = @"offset.y";
                 _labelSize = [[labDict valueForKeyPath:LABEL_SIZE] floatValue];
             
             if([labDict valueForKey:LABEL_COLOR])
-                _labelColor = [ALJsonUIConfiguration colorFromHexString:[labDict valueForKey:LABEL_COLOR]];
+                _labelColor = [ALJSONUIConfiguration colorFromHexString:[labDict valueForKey:LABEL_COLOR]];
             
             if([labDict valueForKeyPath:LABEL_OFFSET_X])
                 _labelXPositionOffset = [[labDict valueForKeyPath:LABEL_OFFSET_X] floatValue];

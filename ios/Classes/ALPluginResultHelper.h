@@ -1,10 +1,6 @@
-#import <Foundation/Foundation.h>
 #import <Anyline/Anyline.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-@class ALPluginResult;
-// @class ALResultEntry;
 
 @interface ALResultEntry : NSObject <ALJSONStringRepresentable>
 
@@ -12,21 +8,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *value;
 @property (nonatomic, assign) BOOL isMandatory;
 
-- (instancetype)initWithTitle:(NSString *)title value:(NSString *)value isMandatory:(BOOL)isMandatory NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithTitle:(NSString *)title
+                        value:(NSString *)value
+                  isMandatory:(BOOL)isMandatory NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithTitle:(NSString *)title value:(NSString *)value;
 
-+ (ALResultEntry *)withTitle:(NSString *)title value:(NSString *)value isMandatory:(BOOL)isMandatory;
++ (ALResultEntry *)withTitle:(NSString *)title
+                       value:(NSString *)value
+                 isMandatory:(BOOL)isMandatory;
 
-+ (ALResultEntry *)withTitle:(NSString *)title value:(NSString *)value;
-// TODO: toDict
-
-@end
-
-
-@interface ALScanResult (ALResultHelper)
-
-- (NSDictionary *)resultDictionary;
++ (ALResultEntry *)withTitle:(NSString *)title
+                       value:(NSString *)value;
 
 @end
 
@@ -81,9 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ALOcrResult (ALExtras) <ALResultListEnumerable>
 @end
 
-// TODO: need to support these
-
-//@interface ALJapaneseLandingPermissionResult (ALExtras) <ALResultListEnumerable>
-//@end
+// TODO: need to support these (if needed)
+// @interface ALJapaneseLandingPermissionResult (ALExtras) <ALResultListEnumerable>
+// @end
 
 NS_ASSUME_NONNULL_END

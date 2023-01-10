@@ -1,19 +1,13 @@
-//
-//  ALPluginHelper.m
-//  Anyline React-Native Example
-//
-//  Created by Daniel Albertini on 30.10.18.
-//
-
 #import "ALPluginHelper.h"
 #import <Anyline/Anyline.h>
+#import "ALNFCScanViewController.h" // because NFC-specific code is there
 
 @implementation ALPluginHelper
 
 #pragma mark - Launch Anyline
 
 + (void)startScan:(NSDictionary *)config finished:(ALPluginCallback)callback {
-    ALJsonUIConfiguration *jsonUIConf = [[ALJsonUIConfiguration alloc] initWithDictionary:[config objectForKey:@"options"]];
+    ALJSONUIConfiguration *jsonUIConf = [[ALJSONUIConfiguration alloc] initWithDictionary:[config objectForKey:@"options"]];
     
     NSDictionary *pluginConf = config;
     
@@ -36,16 +30,16 @@
             if([pluginConf valueForKey:@"quality"]){
                 nfcScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
             }
-                       
+
             if([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
                 NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
                 nfcScanViewController.cropAndTransformErrorMessage = str;
             }
-                       
+
             if ([pluginConf valueForKey:@"nativeBarcodeEnabled"]) {
                 nfcScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
             }
-                       
+
             if(nfcScanViewController != nil){
                 [nfcScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
                 [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:nfcScanViewController
@@ -61,20 +55,20 @@
                                                                                                         configuration:pluginConf
                                                                                                       uiConfiguration:jsonUIConf
                                                                                                              finished:callback];
-            
+
         if ([pluginConf valueForKey:@"quality"]){
             pluginScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
         }
-            
+
         if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
             NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
             pluginScanViewController.cropAndTransformErrorMessage = str;
         }
-            
+
         if ([pluginConf valueForKey:@"nativeBarcodeEnabled"]) {
             pluginScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
         }
-            
+
         if (pluginScanViewController != nil){
             [pluginScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
             [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:pluginScanViewController
@@ -166,7 +160,6 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
     
-    
     NSData *binaryImageData = UIImageJPEGRepresentation(image, compressionQuality);
     NSString *uuid = [NSUUID UUID].UUIDString;
     NSString *imagePath = [NSString stringWithFormat:@"%@.jpg",uuid];
@@ -213,7 +206,7 @@
 //}
 
 + (UIButton *)createButtonForViewController:(UIViewController *)viewController
-                                     config:(ALJsonUIConfiguration *)config {
+                                     config:(ALJSONUIConfiguration *)config {
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [doneButton setTitle:config.buttonDoneTitle
@@ -240,7 +233,7 @@
 }
 
 + (void)updateButtonPosition:(UIButton *)button
-           withConfiguration:(ALJsonUIConfiguration *)conf
+           withConfiguration:(ALJSONUIConfiguration *)conf
                       onView:(UIView *)view {
     
     button.titleLabel.font = [UIFont fontWithName:conf.buttonDoneFontName size:conf.buttonDoneFontSize];

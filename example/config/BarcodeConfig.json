@@ -4,6 +4,7 @@
         "pluginConfig": {
             "id": "com.anyline.configs.plugin.barcode",
             "barcodeConfig": {
+                "parseAAMVA": true,
                 "barcodeFormats": [
                     "ALL"
                 ]

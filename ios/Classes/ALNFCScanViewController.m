@@ -29,7 +29,7 @@ API_AVAILABLE(ios(13.0))
 
 @property (nonatomic, strong) NSString *licensekey;
 
-@property (nonatomic, strong) ALJsonUIConfiguration *uiConfig;
+@property (nonatomic, strong) ALJSONUIConfiguration *uiConfig;
 
 @property (nonatomic, strong) NSMutableDictionary *anylineResult;
 
@@ -42,7 +42,7 @@ API_AVAILABLE(ios(13.0))
 
 - (instancetype)initWithLicensekey:(NSString *)licensekey
                      configuration:(NSDictionary *)anylineConfig
-                          uiConfig:(ALJsonUIConfiguration *)uiConfig
+                          uiConfig:(ALJSONUIConfiguration *)uiConfig
                           finished:(ALPluginCallback)callback {
     if (self = [super init]) {
         _licensekey = licensekey;
