@@ -1,10 +1,3 @@
-//
-//  ALPluginScanViewController.h
-//  Anyline React-Native Example
-//
-//  Created by Daniel Albertini on 30.10.18.
-//
-
 #import <UIKit/UIKit.h>
 #import "ALJsonUIConfiguration.h"
 
@@ -20,9 +13,9 @@ typedef void (^ALPluginCallback)(id _Nullable callbackObj, NSString * _Nullable 
 
 @property (nonatomic, assign) NSUInteger quality;
 
-- (instancetype)initWithLicensekey:(NSString*)licensekey
+- (instancetype)initWithLicensekey:(NSString *)licensekey
                      configuration:(NSDictionary *)anylineConfig
-                   uiConfiguration:(ALJsonUIConfiguration*)jsonUIConfig
+                   uiConfiguration:(ALJsonUIConfiguration *)jsonUIConfig
                           finished:(ALPluginCallback)callback;
 
 @end

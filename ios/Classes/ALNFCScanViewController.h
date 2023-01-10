@@ -1,10 +1,3 @@
-//
-//  ALNFCScanViewController.h
-//  AnylineExamples
-//
-//  Created by Angela Brett on 08.10.19.
-//
-
 #import "ALPluginScanViewController.h"
 #import "ALJsonUIConfiguration.h"
 
