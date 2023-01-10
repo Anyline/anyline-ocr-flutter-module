@@ -54,7 +54,6 @@
     return self;
 }
 
-/// <#Description#>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -114,9 +113,9 @@
 //    }
     
 //    self.detectedBarcodes = [NSMutableArray array];
-//
-//    self.doneButton = [ALPluginHelper createButtonForViewController:self config:self.uiConfig];
-//
+    
+    self.doneButton = [ALPluginHelper createButtonForViewController:self config:self.uiConfig];
+
 //    self.scannedLabel = [ALPluginHelper createLabelForView:self.view];
 }
 

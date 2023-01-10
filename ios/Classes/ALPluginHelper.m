@@ -212,7 +212,10 @@
     [doneButton setTitle:config.buttonDoneTitle
                 forState:UIControlStateNormal];
     
-    [doneButton addTarget:viewController action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [doneButton addTarget:viewController
+                   action:@selector(doneButtonPressed:)
+         forControlEvents:UIControlEventTouchUpInside];
+
     [viewController.view addSubview:doneButton];
     
     [ALPluginHelper updateButtonPosition:doneButton
