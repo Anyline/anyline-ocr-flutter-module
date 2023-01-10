@@ -1,63 +1,69 @@
 {
-  "license": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6ICIzLjAiLAogICJkZWJ1Z1JlcG9ydGluZyI6ICJwaW5nIiwKICAibWFqb3JWZXJzaW9uIjogIjM3IiwKICAic2NvcGUiOiBbCiAgICAiQUxMIgogIF0sCiAgIm1heERheXNOb3RSZXBvcnRlZCI6IDUsCiAgImFkdmFuY2VkQmFyY29kZSI6IHRydWUsCiAgIm11bHRpQmFyY29kZSI6IHRydWUsCiAgInN1cHBvcnRlZEJhcmNvZGVGb3JtYXRzIjogWwogICAgIkFMTCIKICBdLAogICJwbGF0Zm9ybSI6IFsKICAgICJpT1MiLAogICAgIkFuZHJvaWQiCiAgXSwKICAic2hvd1dhdGVybWFyayI6IHRydWUsCiAgInRvbGVyYW5jZURheXMiOiAzMCwKICAidmFsaWQiOiAiMjAyMy0wMS0wMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlci5leGFtcGxlcyIKICBdCn0KbngwVmNGYW5nTWRBR1grMERKK1l4bXE2aCtkbWJyQmg2OVZFZFIyV0dpNkFpYUYvemhWbkdyNDI5NzdoK1c0dXF6R1I3MUZGOEhjZkh4ZlA0bTkvc3Ywa3F5T2V4UnhIUzJLSWxqNncrT25iakhPa0Z2K1BsN0tVS09oZXNqNTFPVXlEbkdZNlZqbWczeVgyTWdqd3cyZ2N4MTFvUHpBVXdPS3VyeUpBMEZuQndnQXdtVTgzaGFRQlVNTUI2UHZMQnpXYVh4a2x1ZnN0eVl3STY5YVo0dkc3a3lqYXFYOW5mcTM4Kzk0Y2R2ZTFqcE82Zjk3blVwVVhodHdnKytET3FaMjUvQVh6WmhhaXNqU2FaaUxiejJWcWk0MFh3UnVHdzMyYXlRMmcyUTBxMXk2MlppbDcvQUhvalFMNHNTTk93cjdjaGgwVTM1Q0czamNmMUU5RTZBPT0=",
-  "options": {
-    "camera": {
-      "captureResolution": "1080p"
-    },
-    "flash": {
-      "mode": "auto",
-      "alignment": "bottom_right"
-    },
-    "viewPlugin": {
-      "plugin": {
-        "id": "Barcode_ID",
-        "barcodePlugin": {
-          "barcodeFormatOptions": ["UPC_E", "EAN_13", "UPC_A", "EAN_8", "AZTEC", "CODABAR", "CODE_11", "CODE_32", "CODE_39", "CODE_93", "CODE_128", "DATABAR", "DATA_MATRIX", "GS1_QR_CODE", "GS1_128", "ITF", "ISBT_128", "MSI", "MICRO_QR", "MICRO_PDF", "PDF_417", "POST_UK",
-                    "QR_CODE", "RSS_14", "RSS_EXPANDED", "TRIOPTIC", "USPS_4CB", "US_PLANET", "US_POSTNET"],
-          "enablePDF417Parsing": true
-        }
-      },
-      "cutoutConfig": {
-        "style": "rect",
-        "maxWidthPercent": "80%",
-        "maxHeightPercent": "80%",
-        "alignment": "center",
-        "ratioFromSize": {
-          "width": 100,
-          "height": 80
+    "license": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6ICIzLjAiLAogICJkZWJ1Z1JlcG9ydGluZyI6ICJwaW5nIiwKICAibWFqb3JWZXJzaW9uIjogIjM3IiwKICAic2NvcGUiOiBbCiAgICAiQUxMIgogIF0sCiAgIm1heERheXNOb3RSZXBvcnRlZCI6IDUsCiAgImFkdmFuY2VkQmFyY29kZSI6IHRydWUsCiAgIm11bHRpQmFyY29kZSI6IHRydWUsCiAgInN1cHBvcnRlZEJhcmNvZGVGb3JtYXRzIjogWwogICAgIkFMTCIKICBdLAogICJwbGF0Zm9ybSI6IFsKICAgICJpT1MiLAogICAgIkFuZHJvaWQiCiAgXSwKICAic2hvd1dhdGVybWFyayI6IHRydWUsCiAgInRvbGVyYW5jZURheXMiOiAzMCwKICAidmFsaWQiOiAiMjAyMy0xMi0zMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlci5leGFtcGxlcyIKICBdCn0KMUZiOGkyYmM5NW81dmV5NGJxRUR6RVN2eVRia3dYS3pDRFpCbFlIMFUwdWg1eGZ3K0JNNjJ6WXJSNmZ2MUR0RktuVXhDbEhud1V3di9Tenh1dEJ2VjVMdWpXQ1hhRld5TWNXS084RWdsSnJDMGRQckx2NDlCRlF5OHczcXVHaE1Pczk1QVliVU1PT1AyNlV1Z093UmRPYmVuOXlYNlE4MCt4bUFwcW9lTllLcFMrMGFKbndBeDlabmRJTXNDNGp1SlNsZncvSUhLQ2JpV0d5UDdyTktBUG15NzIxZjFKVGNXb2JkY3kzeUp2Mkw4cFBUekViUWFIa1lMMHFYT2ZZVlJ5ckNvcjlKUFg4amJvZm5wWnEyTDM1aWs1bDZBaEZGODRMVzhLd1J1aGF4UlpnUythZ3l3Z2ZQdC91Y25VYlFxVEg5NFVEc1FCZVBMaTNpOERCbnV3PT0=",
+    "viewPluginConfig": {
+        "pluginConfig": {
+            "id": "com.anyline.configs.plugin.barcode",
+            "barcodeConfig": {
+                "barcodeFormats": [
+                    "ALL"
+                ]
+            },
+            "cancelOnResult": true,
+            "startScanDelay": 1000
         },
-        "strokeWidth": 1,
-        "cornerRadius": 3,
-        "strokeColor": "FFFFFF",
-        "outerColor": "000000",
-        "outerAlpha": 0.3,
-        "feedbackStrokeColor": "0099FF"
-      },
-      "scanFeedback": {
-        "style": "rect",
-        "strokeColor": "0099FF",
-        "fillColor": "220099FF",
-        "animationDuration": 150,
-        "blinkOnResult": true,
-        "beepOnResult": true,
-        "vibrateOnResult": true
-      },
-      "cancelOnResult": true
+        "cutoutConfig": {
+            "animation": "none",
+            "maxWidthPercent": "70%",
+            "maxHeightPercent": "70%",
+            "alignment": "center",
+            "ratioFromSize": {
+                "width": 3,
+                "height": 2
+            },
+            "offset": {
+                "x": 0,
+                "y": 0
+            },
+            "cropOffset": {
+                "x": 0,
+                "y": 0
+            },
+            "cropPadding": {
+                "x": 0,
+                "y": 0
+            },
+            "cornerRadius": 4,
+            "strokeColor": "0099ff",
+            "strokeWidth": 2,
+            "outerColor": "000000",
+            "feedbackStrokeColor": "0099FF",
+            "outerAlpha": 0.3
+        },
+        "scanFeedbackConfig": {
+            "style": "none",
+            "strokeWidth": 0,
+            "strokeColor": "0099FF",
+            "fillColor": "330099FF",
+            "beepOnResult": false,
+            "vibrateOnResult": false,
+            "blinkAnimationOnResult": false
+        }
     },
-    "doneButton": {
-      "title": "OK",
-      "type": "rect",
-      "cornerRadius": 0,
-      "textColor": "FFFFFF",
-      "textColorHighlighted": "CCCCCC",
-      "fontSize": 33,
-      "fontName": "HelveticaNeue",
-      "positionXAlignment": "center",
-      "positionYAlignment": "bottom",
-      "offset": {
-        "x": 0,
-        "y": -88
-      }
+    "options": {
+        "doneButton": {
+            "title": "OK",
+            "type": "rect",
+            "cornerRadius": 0,
+            "textColor": "FFFFFF",
+            "textColorHighlighted": "CCCCCC",
+            "fontSize": 33,
+            "fontName": "HelveticaNeue",
+            "positionXAlignment": "center",
+            "positionYAlignment": "bottom",
+            "offset": {
+                "x": 0,
+                "y": -88
+            }
+        }
     }
-  }
 }
