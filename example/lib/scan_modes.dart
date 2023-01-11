@@ -26,7 +26,8 @@ enum ScanMode {
   Document,
   CattleTag,
   SerialScanning,
-  ParallelScanning
+  ParallelScanning,
+  NFCAndMRZ
 }
 
 extension ScanModeInfo on ScanMode {
@@ -88,6 +89,8 @@ extension ScanModeInfo on ScanMode {
         return 'Parallel Scanning (Meter/USRN)';
       case ScanMode.SerialScanning:
         return 'Serial Scanning (LP>DL>VIN)';
+      case ScanMode.NFCAndMRZ:
+        return 'MRZ and NFC';
     }
   }
 

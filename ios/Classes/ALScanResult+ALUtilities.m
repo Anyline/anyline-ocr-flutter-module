@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
         id obj = [pluginResult valueForKey:fieldName];
         if ([obj conformsToProtocol:@protocol(ALResultListEnumerable)]) {
             NSArray<ALResultEntry *> *resultEntries = [(id<ALResultListEnumerable>)obj resultEntryList];
-            resultString = [self.class JSONStringFromArray:resultEntries isPretty:YES];
+            resultString = [self.class JSONStringFromArray:resultEntries isPretty:NO];
             break;
         }
     }

@@ -9,7 +9,7 @@
 @interface ALPluginScanViewController () <ALScanPluginDelegate, ALViewPluginCompositeDelegate>
 
 // ACO should it have the `assign` attribute?
-@property (nonatomic) ALPluginCallback callback;
+@property (nonatomic, strong) ALPluginCallback callback;
 
 @property (nonatomic, strong) NSDictionary *config;
 
@@ -149,6 +149,51 @@
     return NO;
 }
 
+- (void)handleResult:(id _Nullable)resultObj {
+
+    // TODO: give the string version of the result to the self.scannedLabel label (if applicable)
+//    if ([scanResult.result isKindOfClass:[NSString class]]) {
+//        self.scannedLabel.text = (NSString *)scanResult.result;
+//    }
+
+//    self.detectedBarcodes = [NSMutableArray array];
+
+    NSObject<ALScanViewPluginBase> *scanViewPluginBase = self.scanView.scanViewPlugin;
+    // TODO: handle this for composites: cancelOnResult = true? dismiss
+    if ([scanViewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
+        ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)scanViewPluginBase;
+        BOOL cancelOnResult = scanViewPlugin.scanPlugin.scanPluginConfig.cancelOnResult;
+        if (cancelOnResult) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+    } else if ([scanViewPluginBase isKindOfClass:ALViewPluginComposite.class]) {
+        // for composites, the cancelOnResult values for each child don't matter
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    self.callback(resultObj, nil);
+}
+
+// MARK: - ALScanPluginDelegate
+
+- (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
+    [self handleResult:scanResult.enhancedDictionary];
+}
+
+// MARK: - ALViewPluginCompositeDelegate
+
+- (void)viewPluginComposite:(ALViewPluginComposite *)viewPluginComposite
+         allResultsReceived:(NSArray<ALScanResult *> *)scanResults {
+
+    // combine all into an array and create a string version of it.
+    NSMutableDictionary *results = [NSMutableDictionary dictionaryWithCapacity:scanResults.count];
+    for (ALScanResult *scanResult in scanResults) {
+        results[scanResult.pluginID] = scanResult.enhancedDictionary;
+    }
+    [self handleResult:results];
+}
+
+// MARK: - Selector Actions
+
 - (void)doneButtonPressed:(id)sender {
     [self.scanView.scanViewPlugin stop];
 
@@ -166,6 +211,8 @@
 //        [((ALMeterScanViewPlugin *)self.scanView.scanViewPlugin).meterScanPlugin setScanMode:scanMode error:nil];
 //    }
 }
+
+// MARK: - Miscellaneous
 
 // TODO: make a utility method out of this, as it seems to be repeated.
 - (BOOL)showErrorAlertIfNeeded:(NSError *)error {
@@ -192,51 +239,5 @@
     return YES;
 }
 
-// MARK: - ALScanPluginDelegate
-
-- (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
-    // NOTE: for now the second param in handleResult:result: is not used.
-    [self handleResult:scanResult.enhancedDictionary];
-}
-
-// MARK: - ALViewPluginCompositeDelegate
-
-- (void)viewPluginComposite:(ALViewPluginComposite *)viewPluginComposite
-         allResultsReceived:(NSArray<ALScanResult *> *)scanResults {
-
-    // combine all into an array and create a string version of it.
-    NSMutableDictionary *results = [NSMutableDictionary dictionaryWithCapacity:scanResults.count];
-    for (ALScanResult *scanResult in scanResults) {
-        results[scanResult.pluginID] = scanResult.enhancedDictionary;
-    }
-    [self handleResult:results];
-}
-
-- (void)handleResult:(id _Nullable)resultObj {
-
-    // TODO: give the string version of the result to the self.scannedLabel label (if applicable)
-//    if ([scanResult.result isKindOfClass:[NSString class]]) {
-//        self.scannedLabel.text = (NSString *)scanResult.result;
-//    }
-
-//    self.detectedBarcodes = [NSMutableArray array];
-
-    NSObject<ALScanViewPluginBase> *scanViewPluginBase = self.scanView.scanViewPlugin;
-    // TODO: handle this for composites: cancelOnResult = true? dismiss
-    if ([scanViewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
-        ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)scanViewPluginBase;
-        BOOL cancelOnResult = scanViewPlugin.scanPlugin.scanPluginConfig.cancelOnResult;
-        if (cancelOnResult) {
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    } else if ([scanViewPluginBase isKindOfClass:ALViewPluginComposite.class]) {
-        // for composites, the cancelOnResult values for each child don't matter
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-
-    // TODO: make the first param a string instead.
-    self.callback(resultObj, nil);
-
-}
-
 @end
+

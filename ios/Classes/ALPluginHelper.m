@@ -14,10 +14,16 @@
     NSString *licenseKey = [config objectForKey:@"license"];
     
     [[UIApplication sharedApplication] keyWindow].rootViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    
-    NSDictionary *nfcPlugin = [pluginConf valueForKeyPath:@"viewPlugin.plugin.nfcPlugin"];
-    if (nfcPlugin) {
+
+    BOOL isNFC = [pluginConf[@"NFCWithMRZ"] boolValue];
+
+    // old
+//    NSDictionary *nfcPlugin = [pluginConf valueForKeyPath:@"viewPlugin.plugin.nfcPlugin"];
+//    isNFC = nfcPlugin != nil;
+
+    if (isNFC) {
         if (@available(iOS 13.0, *)) {
+
             if (![ALNFCDetector readingAvailable]) {
                 callback(nil, @"NFC passport reading is not supported on this device or app.");
                 return;
@@ -27,21 +33,21 @@
                                                                                                    configuration:pluginConf
                                                                                                         uiConfig:jsonUIConf
                                                                                                         finished:callback];
-            if ([pluginConf valueForKey:@"quality"]){
-                nfcScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
-            }
+//            if ([pluginConf valueForKey:@"quality"]){
+//                nfcScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
+//            }
+//
+//            if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
+//                NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
+//                nfcScanViewController.cropAndTransformErrorMessage = str;
+//            }
+//
+//            if ([pluginConf valueForKey:@"nativeBarcodeEnabled"]) {
+//                nfcScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
+//            }
 
-            if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
-                NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
-                nfcScanViewController.cropAndTransformErrorMessage = str;
-            }
-
-            if ([pluginConf valueForKey:@"nativeBarcodeEnabled"]) {
-                nfcScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
-            }
-
-            if (nfcScanViewController != nil){
-                [nfcScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
+            if (nfcScanViewController != nil) {
+                [nfcScanViewController setModalPresentationStyle:UIModalPresentationFullScreen];
                 [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:nfcScanViewController
                                                                                                animated:YES
                                                                                              completion:nil];

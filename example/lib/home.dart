@@ -383,10 +383,16 @@ class _HomeState extends State<Home> {
                 scan(ScanMode.MRZ);
               },
             ),
+            // ScanButton(
+            //   text: 'Japanese Landing Permit',
+            //   onPressed: () {
+            //     scan(ScanMode.JapaneseLandingPermit);
+            //   },
+            // ),
             ScanButton(
-              text: 'Japanese Landing Permit',
+              text: 'NFC',
               onPressed: () {
-                scan(ScanMode.JapaneseLandingPermit);
+                scan(ScanMode.NFCAndMRZ);
               },
             ),
             ScanButton(
