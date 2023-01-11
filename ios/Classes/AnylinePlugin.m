@@ -38,11 +38,8 @@
                 if (error) {
                     resultStr = error.debugDescription;
                 }
-            } else if ([callbackObj isKindOfClass:NSArray.class]) {
-                resultStr = [(NSArray *)callbackObj toJSONStringPretty:YES error:&error];
-                if (error) {
-                    resultStr = error.debugDescription;
-                }
+            } else {
+                resultStr = @"callback object should be of dictionary type";
             }
             result(resultStr);
         }];

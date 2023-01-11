@@ -205,12 +205,11 @@
          allResultsReceived:(NSArray<ALScanResult *> *)scanResults {
 
     // combine all into an array and create a string version of it.
-    NSMutableArray *results = [NSMutableArray arrayWithCapacity:scanResults.count];
+    NSMutableDictionary *results = [NSMutableDictionary dictionaryWithCapacity:scanResults.count];
     for (ALScanResult *scanResult in scanResults) {
-        [results addObject:scanResult.enhancedDictionary];
+        results[scanResult.pluginID] = scanResult.enhancedDictionary;
     }
-    // [self handleResult:results];
-    [self handleResult:@{ @"results": results }];
+    [self handleResult:results];
 }
 
 - (void)handleResult:(id _Nullable)resultObj {
