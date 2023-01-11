@@ -28,32 +28,27 @@
         }
 
         [ALPluginHelper startScan:dictConfig finished:^(id  _Nonnull callbackObj, NSString * _Nonnull errorString) {
+
+            NSString *resultStr;
+            NSError *error;
             if (errorString) {
-                result(errorString);
-                return;
+                resultStr = errorString;
+            } else if ([callbackObj isKindOfClass:NSDictionary.class]) {
+                resultStr = [(NSDictionary *)callbackObj toJSONStringPretty:YES error:&error];
+                if (error) {
+                    resultStr = error.debugDescription;
+                }
+            } else if ([callbackObj isKindOfClass:NSArray.class]) {
+                resultStr = [(NSArray *)callbackObj toJSONStringPretty:YES error:&error];
+                if (error) {
+                    resultStr = error.debugDescription;
+                }
             }
-            NSError *error = nil;
-
-            if (![callbackObj isKindOfClass:NSDictionary.class]) {
-                result(@"cannot convert result string to JSON");
-                return;
-            }
-
-            NSDictionary *resultDict = (NSDictionary *)callbackObj;
-            NSString *resultStr = [resultDict toJSONStringPretty:YES error:&error];
-
-            if (error) {
-                result(error.debugDescription);
-                return;
-            }
-
             result(resultStr);
         }];
     } else {
         result(FlutterMethodNotImplemented);
     }
 }
-
-
 
 @end

@@ -6,7 +6,7 @@
 #import "ALRoundedView.h"
 #import "ALScanResult+ALUtilities.h"
 
-@interface ALPluginScanViewController () <ALScanPluginDelegate>
+@interface ALPluginScanViewController () <ALScanPluginDelegate, ALViewPluginCompositeDelegate>
 
 // ACO should it have the `assign` attribute?
 @property (nonatomic) ALPluginCallback callback;
@@ -196,48 +196,24 @@
 
 - (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
     // NOTE: for now the second param in handleResult:result: is not used.
-    [self handleResult:scanResult.enhancedDictionary result:scanResult];
+    [self handleResult:scanResult.enhancedDictionary];
 }
 
-//- (void)scanPlugin:(ALScanPlugin *)scanPlugin errorReceived:(ALEvent *)event {
-//
-//    // call showUserLabel. This is for the document scan problems (we don't have it now)
-//}
+// MARK: - ALViewPluginCompositeDelegate
 
+- (void)viewPluginComposite:(ALViewPluginComposite *)viewPluginComposite
+         allResultsReceived:(NSArray<ALScanResult *> *)scanResults {
 
-//- (void)anylineScanPlugin:(ALAbstractScanPlugin * _Nonnull)anylineScanPlugin
-//               runSkipped:(ALRunSkippedReason * _Nonnull)runSkippedReason {
-//
-//    switch (runSkippedReason.reason) {
-//        case ALRunFailurePointsOutOfCutout: {
-//            NSLog(@"Failure: points out of bounce");
-//
-//            self.roundedView.textLabel.text = self.cropAndTransformErrorMessage;
-//
-//            // Animate the appearance of the label
-//            CGFloat fadeDuration = 1.5;
-//
-//            // Check for Strict Mode and set it
-//            if( self.showingLabel == 0){
-//                self.showingLabel = 1;
-//                [UIView animateWithDuration:fadeDuration animations:^{
-//                    self.roundedView.alpha = 1;
-//                } completion:^(BOOL finished) {
-//                    [UIView animateWithDuration:fadeDuration animations:^{
-//                        self.roundedView.alpha = 0;
-//                    } completion:^(BOOL finished) {
-//                        self.showingLabel = 0;
-//                    }];
-//                }];
-//            }
-//            break;
-//        }
-//        default:
-//            break;
-//    }
-//}
+    // combine all into an array and create a string version of it.
+    NSMutableArray *results = [NSMutableArray arrayWithCapacity:scanResults.count];
+    for (ALScanResult *scanResult in scanResults) {
+        [results addObject:scanResult.enhancedDictionary];
+    }
+    // [self handleResult:results];
+    [self handleResult:@{ @"results": results }];
+}
 
-- (void)handleResult:(NSDictionary *)dictResult result:(ALScanResult *)scanResult {
+- (void)handleResult:(id _Nullable)resultObj {
 
     // TODO: give the string version of the result to the self.scannedLabel label (if applicable)
 //    if ([scanResult.result isKindOfClass:[NSString class]]) {
@@ -254,50 +230,14 @@
         if (cancelOnResult) {
             [self dismissViewControllerAnimated:YES completion:nil];
         }
+    } else if ([scanViewPluginBase isKindOfClass:ALViewPluginComposite.class]) {
+        // for composites, the cancelOnResult values for each child don't matter
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
-    self.callback(dictResult, nil);
+
+    // TODO: make the first param a string instead.
+    self.callback(resultObj, nil);
 
 }
-
-//- (void)showUserLabel:(ALDocumentError)error {
-//    NSString *helpString = nil;
-//    switch (error) {
-//        case ALDocumentErrorNotSharp:
-//            helpString = @"Document not Sharp";
-//            break;
-//        case ALDocumentErrorSkewTooHigh:
-//            helpString = @"Wrong Perspective";
-//            break;
-//        case ALDocumentErrorImageTooDark:
-//            helpString = @"Too Dark";
-//            break;
-//        case ALDocumentErrorShakeDetected:
-//            helpString = @"Too much shaking";
-//            break;
-//        default:
-//            break;
-//    }
-//
-//    // The error is not in the list above or a label is on screen at the moment
-//    if(!helpString || self.showingLabel) {
-//        return;
-//    }
-//
-//    self.showingLabel = YES;
-//    self.roundedView.textLabel.text = helpString;
-//
-//
-//    // Animate the appearance of the label
-//    CGFloat fadeDuration = 0.8;
-//    [UIView animateWithDuration:fadeDuration animations:^{
-//        self.roundedView.alpha = 1;
-//    } completion:^(BOOL finished) {
-//        [UIView animateWithDuration:fadeDuration animations:^{
-//            self.roundedView.alpha = 0;
-//        } completion:^(BOOL finished) {
-//            self.showingLabel = NO;
-//        }];
-//    }];
-//}
 
 @end

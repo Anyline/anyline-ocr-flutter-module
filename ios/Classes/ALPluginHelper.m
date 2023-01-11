@@ -27,11 +27,11 @@
                                                                                                    configuration:pluginConf
                                                                                                         uiConfig:jsonUIConf
                                                                                                         finished:callback];
-            if([pluginConf valueForKey:@"quality"]){
+            if ([pluginConf valueForKey:@"quality"]){
                 nfcScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
             }
 
-            if([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
+            if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]){
                 NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
                 nfcScanViewController.cropAndTransformErrorMessage = str;
             }
@@ -40,7 +40,7 @@
                 nfcScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
             }
 
-            if(nfcScanViewController != nil){
+            if (nfcScanViewController != nil){
                 [nfcScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
                 [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:nfcScanViewController
                                                                                                animated:YES
@@ -56,6 +56,7 @@
                                                                                                       uiConfiguration:jsonUIConf
                                                                                                              finished:callback];
 
+        // TODO: should remove these extras
         if ([pluginConf valueForKey:@"quality"]){
             pluginScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
         }
@@ -69,8 +70,8 @@
             pluginScanViewController.nativeBarcodeEnabled = [[pluginConf objectForKey:@"nativeBarcodeEnabled"] boolValue];
         }
 
-        if (pluginScanViewController != nil){
-            [pluginScanViewController setModalPresentationStyle: UIModalPresentationFullScreen];
+        if (pluginScanViewController) {
+            [pluginScanViewController setModalPresentationStyle:UIModalPresentationFullScreen];
             [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:pluginScanViewController
                                                                                            animated:YES
                                                                                          completion:nil];
