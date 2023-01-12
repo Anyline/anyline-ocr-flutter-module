@@ -11,7 +11,7 @@
     
     NSDictionary *pluginConf = config;
     
-    NSString *licenseKey = [config objectForKey:@"license"];
+    NSString *licenseKey = [config objectForKey:@"licenseKey"];
     
     [[UIApplication sharedApplication] keyWindow].rootViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
