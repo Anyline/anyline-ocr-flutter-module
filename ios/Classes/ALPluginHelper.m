@@ -7,19 +7,17 @@
 #pragma mark - Launch Anyline
 
 + (void)startScan:(NSDictionary *)config finished:(ALPluginCallback)callback {
-    ALJSONUIConfiguration *jsonUIConf = [[ALJSONUIConfiguration alloc] initWithDictionary:[config objectForKey:@"options"]];
-    
+
     NSDictionary *pluginConf = config;
     
     NSString *licenseKey = [config objectForKey:@"licenseKey"];
     
     [[UIApplication sharedApplication] keyWindow].rootViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
-    BOOL isNFC = [pluginConf[@"NFCWithMRZ"] boolValue];
+    NSDictionary *optionsDict = [config objectForKey:@"options"];
+    ALJSONUIConfiguration *jsonUIConf = [[ALJSONUIConfiguration alloc] initWithDictionary:optionsDict];
 
-    // old
-//    NSDictionary *nfcPlugin = [pluginConf valueForKeyPath:@"viewPlugin.plugin.nfcPlugin"];
-//    isNFC = nfcPlugin != nil;
+    BOOL isNFC = [optionsDict[@"enableNFCWithMRZ"] boolValue];
 
     if (isNFC) {
         if (@available(iOS 13.0, *)) {

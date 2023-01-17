@@ -396,7 +396,7 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'PDF 417',
+              text: 'PDF 417 (AAMVA)',
               onPressed: () {
                 scan(ScanMode.Barcode_PDF417);
               },

@@ -2,9 +2,7 @@
 
 #import "ALPluginScanViewController.h"
 #import "ALPluginHelper.h"
-#import "ALPluginResultHelper.h"
 #import "ALRoundedView.h"
-#import "ALScanResult+ALUtilities.h"
 
 @interface ALPluginScanViewController () <ALScanPluginDelegate, ALViewPluginCompositeDelegate>
 
@@ -176,7 +174,7 @@
 // MARK: - ALScanPluginDelegate
 
 - (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
-    [self handleResult:scanResult.enhancedDictionary];
+    [self handleResult:scanResult.resultDictionary];
 }
 
 // MARK: - ALViewPluginCompositeDelegate
@@ -187,7 +185,7 @@
     // combine all into an array and create a string version of it.
     NSMutableDictionary *results = [NSMutableDictionary dictionaryWithCapacity:scanResults.count];
     for (ALScanResult *scanResult in scanResults) {
-        results[scanResult.pluginID] = scanResult.enhancedDictionary;
+        results[scanResult.pluginID] = scanResult.resultDictionary;
     }
     [self handleResult:results];
 }

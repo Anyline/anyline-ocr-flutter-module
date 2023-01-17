@@ -1,10 +1,9 @@
 #import <Anyline/Anyline.h>
 #import "ALNFCScanViewController.h"
 #import "ALPluginHelper.h"
-#import "ALScanResult+ALUtilities.h"
 
 API_AVAILABLE(ios(13.0))
-@interface ALNFCScanViewController () <ALNFCDetectorDelegate, ALScanPluginDelegate>
+@interface ALNFCScanViewController () <ALNFCDetectorDelegate, ALScanPluginDelegate, ALScanViewDelegate>
 
 @property (nonatomic, strong) ALPluginCallback callback;
 
@@ -12,26 +11,25 @@ API_AVAILABLE(ios(13.0))
 
 @property (nonatomic, copy) NSString *licenseKey;
 
-@property (nonatomic, strong) ALJSONUIConfiguration *uiConfig;
-
 @property (nonatomic, strong) ALScanView *scanView;
 
-@property (nonatomic, strong) UIButton *doneButton;
+@property (nonatomic, strong) ALScanViewPlugin *mrzScanViewPlugin;
 
+@property (nonatomic, strong) ALNFCDetector *nfcDetector;
 
+// the result from NFC scanning is retained while NFC reading is initiated, and the results aggregated later
+@property (nonatomic, strong) NSMutableDictionary *resultDict;
+
+// TODO: make sure the following use the `options` group in the uiConfig
 // BOOL showingLabel
 // UILabel scannedLabel
 // ALRoundedView
 // Segment
-@property (nonatomic, strong) NSMutableArray<NSDictionary *> *detectedBarcodes;
-
-@property (nonatomic, strong) ALNFCDetector *nfcDetector;
-
-@property (nonatomic, strong) NSMutableDictionary *MRZResult;
-
-@property (nonatomic, strong) ALScanViewPlugin *mrzScanViewPlugin;
+@property (nonatomic, strong) ALJSONUIConfiguration *uiConfig;
 
 @property (nonatomic, strong) UIView *hintView;
+
+@property (nonatomic, strong) UIButton *doneButton;
 
 // keep the last values we read from the MRZ so we can retry reading NFC
 // if NFC failed for reasons other than getting these details wrong
@@ -40,6 +38,17 @@ API_AVAILABLE(ios(13.0))
 @property (nonatomic, strong) NSDate *dateOfBirth;
 
 @property (nonatomic, strong) NSDate *dateOfExpiry;
+
+@property (nonatomic, strong) NSMutableArray<NSDictionary *> *detectedBarcodes;
+
+@property (nonatomic, assign) BOOL nativeBarcodeEnabled;
+
+// not used
+@property (nonatomic, strong) NSString *cropAndTransformErrorMessage;
+
+// JPEG compression quality 0-100
+@property (nonatomic, assign) NSUInteger quality;
+
 
 @end
 
@@ -56,7 +65,7 @@ API_AVAILABLE(ios(13.0))
         _config = anylineConfig;
         _uiConfig = uiConfig;
         
-        self.quality = 100;
+        self.quality = 90;
         self.nativeBarcodeEnabled = NO;
         self.cropAndTransformErrorMessage = @"";
     }
@@ -75,7 +84,11 @@ API_AVAILABLE(ios(13.0))
     }
 
     if (@available(iOS 13.0, *)) {
-        self.nfcDetector = [[ALNFCDetector alloc] initWithDelegate:self];
+        self.nfcDetector = [[ALNFCDetector alloc] initWithDelegate:self error:&error];
+        if (!self.nfcDetector && error) {
+            [self showErrorAlertIfNeeded:error];
+            return;
+        }
         if (![ALNFCDetector readingAvailable]) {
             [self showAlertWithTitle:@"Error" message:@"NFC is not available"];
             return;
@@ -88,41 +101,13 @@ API_AVAILABLE(ios(13.0))
 
     [self.view addSubview:self.scanView];
 
-    self.MRZResult = [[NSMutableDictionary alloc] init];
+    self.resultDict = [[NSMutableDictionary alloc] init];
     self.detectedBarcodes = [NSMutableArray array];
 
-    self.hintView = [self.class hintView];
-    [self.view addSubview:self.hintView];
-
-//    NSDictionary *mrzConfigDict = [self.config valueForKeyPath:@"viewPlugin.plugin.nfcPlugin.mrzConfig"];
-
-    // TODO: tweak the MRZ config (override the given field confidences and scan options)
-//    ALMRZConfig *mrzConfig;
-//    if (mrzConfigDict) {
-//        mrzConfig = [[ALMRZConfig alloc] initWithJsonDictionary:mrzConfigDict];
-//    } else {
-//        mrzConfig = [[ALMRZConfig alloc] init];
-//        //we want to be quite confident of these fields to ensure we can read the NFC with them
-//        ALMRZFieldConfidences *fieldConfidences = [[ALMRZFieldConfidences alloc] init];
-//        fieldConfidences.documentNumber = 90;
-//        fieldConfidences.dateOfBirth = 90;
-//        fieldConfidences.dateOfExpiry = 90;
-//        mrzConfig.idFieldConfidences = fieldConfidences;
-//
-//        //Create fieldScanOptions to configure individual scannable fields
-//        ALMRZFieldScanOptions *scanOptions = [[ALMRZFieldScanOptions alloc] init];
-//        scanOptions.vizAddress = ALDefault;
-//        scanOptions.vizDateOfIssue = ALDefault;
-//        scanOptions.vizSurname = ALDefault;
-//        scanOptions.vizGivenNames = ALDefault;
-//        scanOptions.vizDateOfBirth = ALDefault;
-//        scanOptions.vizDateOfExpiry = ALDefault;
-//
-//        //Set scanOptions for MRZConfig
-//        mrzConfig.idFieldScanOptions = scanOptions;
-//    }
-
     self.scanView = [ALScanViewFactory withJSONDictionary:self.config delegate:self error:&error];
+    self.scanView.delegate = self;
+
+    [self configureMRZPlugin];
 
     if ([self showErrorAlertIfNeeded:error]) {
         return;
@@ -142,6 +127,10 @@ API_AVAILABLE(ios(13.0))
     [self.scanView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
 
     [self.scanView startCamera];
+
+    self.hintView = [self.class hintView];
+    [self.view addSubview:self.hintView];
+    self.hintView.center = CGPointMake(self.view.center.x, 0);
 
     self.doneButton = [ALPluginHelper createButtonForViewController:self config:self.uiConfig];
 }
@@ -169,24 +158,55 @@ API_AVAILABLE(ios(13.0))
     self.hintView.hidden = YES;
 }
 
-- (void)readNFCChip {
-    __weak __block typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf.nfcDetector startNfcDetectionWithPassportNumber:weakSelf.passportNumberForNFC
-                                                      dateOfBirth:weakSelf.dateOfBirth
-                                                   expirationDate:weakSelf.dateOfExpiry];
-    });
+- (void)configureMRZPlugin {
 
+    ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)self.scanView.scanViewPlugin;
+    if (![scanViewPlugin isKindOfClass:ALScanViewPlugin.class]) {
+        return;
+    }
+
+    ALCutoutConfig *cutoutConfig = scanViewPlugin.scanViewPluginConfig.cutoutConfig;
+    ALScanFeedbackConfig *scanFeedbackConfig = scanViewPlugin.scanViewPluginConfig.scanFeedbackConfig;
+
+    ALPluginConfig *pluginConfig = scanViewPlugin.scanPlugin.scanPluginConfig.pluginConfig;
+    ALMrzConfig *mrzConfig = pluginConfig.mrzConfig;
+
+    // a bit lengthy but this is how you properly change the config (mrzFieldScanOptions and mrzMinFieldConfidences)
+    // taking into account the readonly config fields
+    mrzConfig.mrzFieldScanOptions = [[ALMrzFieldScanOptions alloc] init];
+
+    mrzConfig.mrzFieldScanOptions.vizAddress = ALMrzScanOption.mrzScanOptionDefault;
+    mrzConfig.mrzFieldScanOptions.vizDateOfIssue = ALMrzScanOption.mrzScanOptionDefault;
+    mrzConfig.mrzFieldScanOptions.vizSurname = ALMrzScanOption.mrzScanOptionDefault;
+    mrzConfig.mrzFieldScanOptions.vizGivenNames = ALMrzScanOption.mrzScanOptionDefault;
+    mrzConfig.mrzFieldScanOptions.vizDateOfBirth = ALMrzScanOption.mrzScanOptionDefault;
+    mrzConfig.mrzFieldScanOptions.vizDateOfExpiry = ALMrzScanOption.mrzScanOptionDefault;
+
+    mrzConfig.mrzMinFieldConfidences = [[ALMrzMinFieldConfidences alloc] init];
+    mrzConfig.mrzMinFieldConfidences.documentNumber = @(90);
+    mrzConfig.mrzMinFieldConfidences.dateOfBirth = @(90);
+    mrzConfig.mrzMinFieldConfidences.dateOfExpiry = @(90);
+
+    NSError *error;
+    ALScanViewPluginConfig *scanViewPluginConfig = [ALScanViewPluginConfig withScanPluginConfig:[ALScanPluginConfig withPluginConfig:pluginConfig]
+                                                                                   cutoutConfig:cutoutConfig
+                                                                             scanFeedbackConfig:scanFeedbackConfig];
+    ALScanViewPlugin *updatedScanViewPlugin = [[ALScanViewPlugin alloc] initWithConfig:scanViewPluginConfig error:&error];
+    [self.scanView setScanViewPlugin:updatedScanViewPlugin error:&error];
+
+    // the delegate binding was lost when you recreated the ScanPlugin it so you have to bring it back here
+    scanViewPlugin = (ALScanViewPlugin *)self.scanView.scanViewPlugin;
+    scanViewPlugin.scanPlugin.delegate = self;
 }
 
 // MARK: - ALIDPluginDelegate
 
 - (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
 
-    // probably not needed, as cancelOnResult should be true for this config
-    // [self stopMRZScanning];
+    // ACO just a failsafe for when cancelOnResult is not true
+    [self stopMRZScanning];
 
-    self.MRZResult = [NSMutableDictionary dictionaryWithDictionary:scanResult.enhancedDictionary];
+    self.resultDict = [NSMutableDictionary dictionaryWithDictionary:scanResult.resultDictionary];
 
     ALMrzResult *MRZResult = scanResult.pluginResult.mrzResult;
     NSString *passportNumber = [MRZResult.documentNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -205,8 +225,6 @@ API_AVAILABLE(ios(13.0))
 
     self.passportNumberForNFC = passportNumberForNFC;
 
-
-//    [self readNFCChip];
     [self.nfcDetector startNfcDetectionWithPassportNumber:self.passportNumberForNFC
                                               dateOfBirth:self.dateOfBirth
                                            expirationDate:self.dateOfExpiry];
@@ -260,15 +278,12 @@ API_AVAILABLE(ios(13.0))
     [dictResultDataGroup1 setValue:nfcResult.dataGroup1.lastName forKey:@"lastName"];
     [dictResultDataGroup1 setValue:nfcResult.dataGroup1.nationality forKey:@"nationality"];
 
-    [self.MRZResult setObject:dictResultDataGroup1 forKey:@"dataGroup1"];
+    [self.resultDict setObject:dictResultDataGroup1 forKey:@"dataGroup1"];
 
     // DataGroup2
-    NSMutableDictionary *dictResultDataGroup2 = [[NSMutableDictionary alloc] initWithCapacity:1];
+    // ACO: we don't put the path into a separate 'dataGroup' category for the wrapper
     NSString *imagePath = [ALPluginHelper saveImageToFileSystem:nfcResult.dataGroup2.faceImage
-                                             compressionQuality:0.9];
-    [dictResultDataGroup2 setValue:imagePath forKey:@"imagePath"];
-
-    [self.MRZResult setObject:dictResultDataGroup2 forKey:@"dataGroup2"];
+                                             compressionQuality:self.quality / (CGFloat)100.0f];
 
     // SOB
     NSMutableDictionary *dictResultSOB = [[NSMutableDictionary alloc] init];
@@ -282,11 +297,13 @@ API_AVAILABLE(ios(13.0))
     [dictResultSOB setValue:nfcResult.sod.validFromString forKey:@"validFromString"];
     [dictResultSOB setValue:nfcResult.sod.validUntilString forKey:@"validUntilString"];
 
-    [self.MRZResult setObject:dictResultSOB forKey:@"sob"];
+    [self.resultDict setObject:dictResultSOB forKey:@"sob"];
+
+    [self.resultDict setValue:imagePath forKey:@"imagePath"];
 
     __weak __block typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf handleResult:weakSelf.MRZResult];
+        [weakSelf handleResult:weakSelf.resultDict];
     });
 }
 
@@ -297,17 +314,39 @@ API_AVAILABLE(ios(13.0))
                              message:@"NFC passport reading is not supported on this device."];
         }
         if (error.code == ALNFCTagErrorResponseError || // MRZ key was likely wrong
-            error.code == ALNFCTagErrorUnexpectedError) { // can mean the user pressed the 'Cancel' button while scanning, or the phone lost the connection with the NFC chip because it was moved
+            error.code == ALNFCTagErrorUnexpectedError) {
+            // can mean the user pressed the 'Cancel' button while scanning, or the phone lost the
+            // connection with the NFC chip because it was moved
             [self startMRZScanning:nil]; //run the MRZ scanner so we can try again.
         } else {
             // the MRZ details are correct, but something else went wrong. We can try reading
             // the NFC chip again without rescanning the MRZ.
-            [self readNFCChip];
+            __weak __block typeof(self) weakSelf = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.nfcDetector startNfcDetectionWithPassportNumber:weakSelf.passportNumberForNFC
+                                                              dateOfBirth:weakSelf.dateOfBirth
+                                                           expirationDate:weakSelf.dateOfExpiry];
+            });
         }
     });
 }
 
+// MARK: - ALScanViewDelegate
 
+- (void)scanView:(ALScanView *)scanView updatedCutoutWithPluginID:(NSString *)pluginID frame:(CGRect)frame {
+    // position the hintView above the cutout.
+
+    CGFloat yOrigin = frame.origin.y;
+
+    self.hintView.hidden = YES;
+    if (yOrigin >= 0) {
+        self.hintView.hidden = NO;
+    }
+
+    [self updateHintPosition:yOrigin];
+}
+
+// MARK: - Alerts
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
@@ -343,9 +382,7 @@ API_AVAILABLE(ios(13.0))
     return YES;
 }
 
-//- (void)anylineScanViewPlugin:(ALAbstractScanViewPlugin *)anylineScanViewPlugin updatedCutout:(CGRect)cutoutRect {
-//    [self updateHintPosition:cutoutRect.origin.y + self.scanView.frame.origin.y - 50];
-//}
+// MARK: - User Interface
 
 // TODO: position this properly according to the cutout
 + (UIView *)hintView {
@@ -357,7 +394,6 @@ API_AVAILABLE(ios(13.0))
     [hintView addSubview:hintViewLabel];
     hintView.frame = UIEdgeInsetsInsetRect(hintViewLabel.frame,
                                            UIEdgeInsetsMake(-hintMargin, -hintMargin, -hintMargin, -hintMargin));
-    // hintView.center = CGPointMake(self.view.center.x, 0);
     hintViewLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [hintViewLabel.centerYAnchor constraintEqualToAnchor:hintView.centerYAnchor constant:0].active = YES;
     [hintViewLabel.centerXAnchor constraintEqualToAnchor:hintView.centerXAnchor constant:0].active = YES;

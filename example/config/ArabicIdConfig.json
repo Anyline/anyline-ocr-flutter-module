@@ -1,82 +1,142 @@
 {
-  "licenseKey": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6ICIzLjAiLAogICJkZWJ1Z1JlcG9ydGluZyI6ICJwaW5nIiwKICAibWFqb3JWZXJzaW9uIjogIjM3IiwKICAic2NvcGUiOiBbCiAgICAiQUxMIgogIF0sCiAgIm1heERheXNOb3RSZXBvcnRlZCI6IDUsCiAgImFkdmFuY2VkQmFyY29kZSI6IHRydWUsCiAgIm11bHRpQmFyY29kZSI6IHRydWUsCiAgInN1cHBvcnRlZEJhcmNvZGVGb3JtYXRzIjogWwogICAgIkFMTCIKICBdLAogICJwbGF0Zm9ybSI6IFsKICAgICJpT1MiLAogICAgIkFuZHJvaWQiCiAgXSwKICAic2hvd1dhdGVybWFyayI6IHRydWUsCiAgInRvbGVyYW5jZURheXMiOiAzMCwKICAidmFsaWQiOiAiMjAyMy0wMS0wMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlci5leGFtcGxlcyIKICBdCn0KbngwVmNGYW5nTWRBR1grMERKK1l4bXE2aCtkbWJyQmg2OVZFZFIyV0dpNkFpYUYvemhWbkdyNDI5NzdoK1c0dXF6R1I3MUZGOEhjZkh4ZlA0bTkvc3Ywa3F5T2V4UnhIUzJLSWxqNncrT25iakhPa0Z2K1BsN0tVS09oZXNqNTFPVXlEbkdZNlZqbWczeVgyTWdqd3cyZ2N4MTFvUHpBVXdPS3VyeUpBMEZuQndnQXdtVTgzaGFRQlVNTUI2UHZMQnpXYVh4a2x1ZnN0eVl3STY5YVo0dkc3a3lqYXFYOW5mcTM4Kzk0Y2R2ZTFqcE82Zjk3blVwVVhodHdnKytET3FaMjUvQVh6WmhhaXNqU2FaaUxiejJWcWk0MFh3UnVHdzMyYXlRMmcyUTBxMXk2MlppbDcvQUhvalFMNHNTTk93cjdjaGgwVTM1Q0czamNmMUU5RTZBPT0=",
-  "options": {
-    "camera" : {
-      "captureResolution" : "1080p",
-      "zoomGesture": true
+    "licenseKey": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6ICIzLjAiLAogICJkZWJ1Z1JlcG9ydGluZyI6ICJwaW5nIiwKICAibWFqb3JWZXJzaW9uIjogIjM3IiwKICAic2NvcGUiOiBbCiAgICAiQUxMIgogIF0sCiAgIm1heERheXNOb3RSZXBvcnRlZCI6IDUsCiAgImFkdmFuY2VkQmFyY29kZSI6IHRydWUsCiAgIm11bHRpQmFyY29kZSI6IHRydWUsCiAgInN1cHBvcnRlZEJhcmNvZGVGb3JtYXRzIjogWwogICAgIkFMTCIKICBdLAogICJwbGF0Zm9ybSI6IFsKICAgICJpT1MiLAogICAgIkFuZHJvaWQiCiAgXSwKICAic2hvd1dhdGVybWFyayI6IHRydWUsCiAgInRvbGVyYW5jZURheXMiOiAzMCwKICAidmFsaWQiOiAiMjAyMy0xMi0zMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlci5leGFtcGxlcyIKICBdCn0KMUZiOGkyYmM5NW81dmV5NGJxRUR6RVN2eVRia3dYS3pDRFpCbFlIMFUwdWg1eGZ3K0JNNjJ6WXJSNmZ2MUR0RktuVXhDbEhud1V3di9Tenh1dEJ2VjVMdWpXQ1hhRld5TWNXS084RWdsSnJDMGRQckx2NDlCRlF5OHczcXVHaE1Pczk1QVliVU1PT1AyNlV1Z093UmRPYmVuOXlYNlE4MCt4bUFwcW9lTllLcFMrMGFKbndBeDlabmRJTXNDNGp1SlNsZncvSUhLQ2JpV0d5UDdyTktBUG15NzIxZjFKVGNXb2JkY3kzeUp2Mkw4cFBUekViUWFIa1lMMHFYT2ZZVlJ5ckNvcjlKUFg4amJvZm5wWnEyTDM1aWs1bDZBaEZGODRMVzhLd1J1aGF4UlpnUythZ3l3Z2ZQdC91Y25VYlFxVEg5NFVEc1FCZVBMaTNpOERCbnV3PT0=",
+    "cameraConfig": {
+        "captureResolution": "1080p"
     },
-    "flash" : {
-      "mode": "manual",
-      "alignment": "bottom_right",
-      "imageOn": "flash_on",
-      "imageOff": "flash_off"
-    },
-    "viewPlugin" : {
-      "plugin":{
-        "id":"ID",
-        "idPlugin": {
-          "universalIdConfig": {
-            "alphabet" : "arabic",
-            "faceDetection": true,
-            "allowedLayouts": {
-              "mrz": [],
-              "idFront": [],
-              "drivingLicense": []
-            },
-            "idFront": {
-              "fullName": {"scanOption": 0, "minConfidence": 60},
-              "dateOfBirth": {"scanOption": 0, "minConfidence": 60},
-              "placeOfBirth": {"scanOption": 1, "minConfidence": 60},
-              "dateOfExpiry": {"scanOption": 1, "minConfidence": 60},
-              "documentNumber": {"scanOption": 0, "minConfidence": 60},
-              "nationality": {"scanOption": 1, "minConfidence": 60}
-            },
-            "drivingLicense": {
-              "fullName": {"scanOption": 0, "minConfidence": 60},
-              "dateOfBirth": {"scanOption": 0, "minConfidence": 60},
-              "placeOfBirth": {"scanOption": 1, "minConfidence": 60},
-              "dateOfExpiry": {"scanOption": 1, "minConfidence": 60},
-              "documentNumber": {"scanOption": 0, "minConfidence": 60},
-              "nationality": {"scanOption": 0, "minConfidence": 60}
-            }
-          }
+    "flashConfig": {
+        "mode": "manual",
+        "alignment": "bottom_left",
+        "offset": {
+            "x": 0,
+            "y": -40
         }
-      },
-      "cutoutConfig" : {
-        "style": "animated_rect",
-        "maxWidthPercent": "90%",
-        "maxHeightPercent": "90%",
-        "alignment": "center",
-        "strokeWidth": 3,
-        "cornerRadius": 8,
-        "strokeColor": "FFFFFF",
-        "outerColor": "000000",
-        "outerAlpha": 0.3,
-        "ratioFromSize" : {
-          "width": 50,
-          "height": 31
+    },
+    "viewPluginConfig": {
+        "pluginConfig": {
+            "id": "com.anyline.configs.plugin.id_mrz_dl_arabic",
+            "universalIdConfig": {
+                "allowedLayouts": {
+                    "mrz": [],
+                    "drivingLicense": [],
+                    "idFront": []
+                },
+                "alphabet": "arabic",
+                "drivingLicense": {
+                    "surname": {
+                        "scanOption": 0,
+                        "minConfidence": 40
+                    },
+                    "givenNames": {
+                        "scanOption": 0,
+                        "minConfidence": 40
+                    },
+                    "dateOfBirth": {
+                        "scanOption": 0,
+                        "minConfidence": 50
+                    },
+                    "placeOfBirth": {
+                        "scanOption": 1,
+                        "minConfidence": 50
+                    },
+                    "dateOfIssue": {
+                        "scanOption": 0,
+                        "minConfidence": 50
+                    },
+                    "dateOfExpiry": {
+                        "scanOption": 1,
+                        "minConfidence": 50
+                    },
+                    "authority": {
+                        "scanOption": 1,
+                        "minConfidence": 30
+                    },
+                    "documentNumber": {
+                        "scanOption": 0,
+                        "minConfidence": 40
+                    },
+                    "categories": {
+                        "scanOption": 1,
+                        "minConfidence": 30
+                    },
+                    "address": {
+                        "scanOption": 1
+                    }
+                },
+                "idFront": {
+                    "surname": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "givenNames": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "dateOfBirth": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "placeOfBirth": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    },
+                    "dateOfExpiry": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    },
+                    "cardAccessNumber": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    },
+                    "documentNumber": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "nationality": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    }
+                }
+            },
+            "cancelOnResult": true
         },
-        "cropPadding": {
-          "x": -50,
-          "y": -50
+        "cutoutConfig": {
+            "animation": "fade",
+            "maxWidthPercent": "90%",
+            "maxHeightPercent": "90%",
+            "width": 0,
+            "alignment": "top_half",
+            "ratioFromSize": {
+                "width": 86,
+                "height": 54
+            },
+            "offset": {
+                "x": 0,
+                "y": 60
+            },
+            "cropOffset": {
+                "x": 0,
+                "y": 0
+            },
+            "cropPadding": {
+                "x": 0,
+                "y": 0
+            },
+            "cornerRadius": 4,
+            "strokeColor": "0099ff",
+            "strokeWidth": 2,
+            "outerColor": "000000",
+            "feedbackStrokeColor": "0099FF",
+            "outerAlpha": 0.3
         },
-        "cropOffset": {
-          "x": 0,
-          "y": 0
-        },
-        "feedbackStrokeColor": "0099FF"
-      },
-      "scanFeedback" : {
-        "style": "CONTOUR_RECT",
-        "visualFeedbackRedrawTimeout": 100,
-        "strokeColor": "0099FF",
-        "fillColor" : "220099FF",
-        "beepOnResult": true,
-        "vibrateOnResult": true,
-        "strokeWidth": 2
-      },
-      "cancelOnResult" : true
+        "scanFeedbackConfig": {
+            "style": "animated_rect",
+            "strokeWidth": 2,
+            "strokeColor": "50fa7b",
+            "fillColor": "4050fa7b",
+            "cornerRadius": 2,
+            "beepOnResult": true,
+            "vibrateOnResult": true,
+            "blinkAnimationOnResult": true
+        }
     }
-  }
-  
 }
