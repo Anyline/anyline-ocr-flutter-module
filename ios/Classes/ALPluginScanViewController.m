@@ -147,7 +147,22 @@
     return NO;
 }
 
-- (void)handleResult:(id _Nullable)resultObj {
+- (void)handleResult:(NSDictionary * _Nullable)resultDictionary
+        croppedImage:(UIImage * _Nullable)croppedImage
+       fullSizeImage:(UIImage * _Nullable)fullSizeImage {
+
+    CGFloat compressionQuality = self.quality / 100.0f;
+
+    NSMutableDictionary *resultDictMutable = [NSMutableDictionary dictionaryWithDictionary:resultDictionary];
+
+    NSString *imagePath = [ALPluginHelper saveImageToFileSystem:croppedImage
+                                             compressionQuality:compressionQuality];
+    resultDictMutable[@"imagePath"] = imagePath;
+
+    imagePath = [ALPluginHelper saveImageToFileSystem:fullSizeImage
+                                   compressionQuality:compressionQuality];
+
+    resultDictMutable[@"fullImagePath"] = imagePath;
 
     // TODO: give the string version of the result to the self.scannedLabel label (if applicable)
 //    if ([scanResult.result isKindOfClass:[NSString class]]) {
@@ -168,13 +183,13 @@
         // for composites, the cancelOnResult values for each child don't matter
         [self dismissViewControllerAnimated:YES completion:nil];
     }
-    self.callback(resultObj, nil);
+    self.callback(resultDictMutable, nil);
 }
 
 // MARK: - ALScanPluginDelegate
 
 - (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
-    [self handleResult:scanResult.resultDictionary];
+    [self handleResult:scanResult.resultDictionary croppedImage:scanResult.croppedImage fullSizeImage:scanResult.fullSizeImage];
 }
 
 // MARK: - ALViewPluginCompositeDelegate
@@ -184,10 +199,19 @@
 
     // combine all into an array and create a string version of it.
     NSMutableDictionary *results = [NSMutableDictionary dictionaryWithCapacity:scanResults.count];
+
+    // you only choose one image out of the many to pass out.
+    UIImage *croppedImage;
+    UIImage *fullSizedImage;
+
     for (ALScanResult *scanResult in scanResults) {
         results[scanResult.pluginID] = scanResult.resultDictionary;
+
+        croppedImage = scanResult.croppedImage;
+        fullSizedImage = scanResult.fullSizeImage;
     }
-    [self handleResult:results];
+
+    [self handleResult:results croppedImage:croppedImage fullSizeImage:fullSizedImage];
 }
 
 // MARK: - Selector Actions
