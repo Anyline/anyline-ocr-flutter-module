@@ -330,7 +330,7 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'Serial Number',
+              text: 'Meter Serial Number',
               onPressed: () {
                 scan(ScanMode.SerialNumber);
               },

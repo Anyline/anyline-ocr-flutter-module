@@ -38,7 +38,7 @@ extension ScanModeInfo on ScanMode {
       case ScanMode.DigitalMeter:
         return 'Digital Meter';
       case ScanMode.SerialNumber:
-        return 'Serial Number';
+        return 'Meter Serial Number';
       case ScanMode.DialMeter:
         return 'Dial Meter';
       case ScanMode.DotMatrix:
@@ -74,7 +74,7 @@ extension ScanModeInfo on ScanMode {
       case ScanMode.VIN:
         return 'Vehicle Identification Number';
       case ScanMode.USNR:
-        return 'Universal Serial Number';
+        return 'Meter Serial Number';
       case ScanMode.ContainerShip:
         return 'Container';
       case ScanMode.VerticalContainer:
