@@ -330,7 +330,7 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'Serial Number',
+              text: 'Meter Serial Number',
               onPressed: () {
                 scan(ScanMode.SerialNumber);
               },
@@ -341,12 +341,12 @@ class _HomeState extends State<Home> {
                 scan(ScanMode.DialMeter);
               },
             ),
-            ScanButton(
-              text: 'Dot Matrix',
-              onPressed: () {
-                scan(ScanMode.DotMatrix);
-              },
-            ),
+            // ScanButton(
+            //   text: 'Dot Matrix',
+            //   onPressed: () {
+            //     scan(ScanMode.DotMatrix);
+            //   },
+            // ),
           ],
         ),
       ),
@@ -383,14 +383,20 @@ class _HomeState extends State<Home> {
                 scan(ScanMode.MRZ);
               },
             ),
+            // ScanButton(
+            //   text: 'Japanese Landing Permit',
+            //   onPressed: () {
+            //     scan(ScanMode.JapaneseLandingPermit);
+            //   },
+            // ),
             ScanButton(
-              text: 'Japanese Landing Permit',
+              text: 'NFC',
               onPressed: () {
-                scan(ScanMode.JapaneseLandingPermit);
+                scan(ScanMode.NFCAndMRZ);
               },
             ),
             ScanButton(
-              text: 'PDF 417',
+              text: 'PDF 417 (AAMVA)',
               onPressed: () {
                 scan(ScanMode.Barcode_PDF417);
               },
@@ -535,13 +541,10 @@ class ScanButton extends StatelessWidget {
   final Function? onPressed;
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-    padding: EdgeInsets.all(0),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.zero
-    ),
-    foregroundColor: Colors.white,
-    backgroundColor: Styles.anylineBlue
-  );
+      padding: EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      foregroundColor: Colors.white,
+      backgroundColor: Styles.anylineBlue);
 
   @override
   Widget build(BuildContext context) {
@@ -593,12 +596,9 @@ class UseCaseButton extends StatelessWidget {
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
       padding: EdgeInsets.all(0),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       foregroundColor: Colors.white,
-      backgroundColor: Styles.anylineBlue
-  );
+      backgroundColor: Styles.anylineBlue);
 
   @override
   Widget build(BuildContext context) {

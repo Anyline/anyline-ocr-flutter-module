@@ -122,8 +122,8 @@ class ResultDetails extends StatelessWidget {
               itemCount: json!.length,
               itemBuilder: (BuildContext ctx, int index) {
                 return new ListTile(
-                  title: Text(json!.values.toList()[index].toString()),
-                  subtitle: Text(json!.keys.toList()[index].toString()),
+                  title: Text(json!.keys.toList()[index].toString()),
+                  subtitle: Text(json!.values.toList()[index].toString()),
                 );
               }),
           Container(
@@ -134,7 +134,6 @@ class ResultDetails extends StatelessWidget {
                 Navigator.pushNamed(context, FullScreenImage.routeName,
                     arguments: json!['fullImagePath']);
               },
-
             ),
           )
         ],
@@ -148,7 +147,8 @@ class FullScreenImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String fullImagePath = ModalRoute.of(context)!.settings.arguments as String;
+    final String fullImagePath =
+        ModalRoute.of(context)!.settings.arguments as String;
 
     return GestureDetector(
       child: Container(
