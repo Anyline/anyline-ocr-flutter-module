@@ -1,3 +1,7 @@
+# Changelog
+
+Please find the complete and updated changelog at https://documentation.anyline.com/flutter-plugin-component/latest/changelog.html.
+
 # 42.2.0
 
 - Update to using Anyline Android SDK 42.2.0

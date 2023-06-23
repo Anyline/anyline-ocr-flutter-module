@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.anyline2.AnylineSdk;
+import io.anyline2.core.LicenseException;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -33,9 +35,11 @@ public class AnylinePlugin implements
     private MethodChannel channel;
 
     private String licenseKey;
+    private String customModelsPath = "flutter_assets";
+    private String viewConfigsPath = "flutter_assets";
+
     private String configJson;
     private JSONObject configObject;
-    private JSONObject options;
     private Activity activity;
     private MethodChannel.Result result;
 
@@ -59,8 +63,23 @@ public class AnylinePlugin implements
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         this.result = result;
-        if (call.method.equals(Constants.METHOD_GET_SDK_VERSION)) {
+        if (call.method.equals(Constants.METHOD_GET_APPLICATION_CACHE_PATH)) {
+            result.success("");
+        } else if (call.method.equals(Constants.METHOD_GET_SDK_VERSION)) {
             result.success(at.nineyards.anyline.BuildConfig.VERSION_NAME);
+        } else if (call.method.equals(Constants.METHOD_SET_CUSTOM_MODELS_PATH)) {
+            customModelsPath = call.argument(Constants.EXTRA_CUSTOM_MODELS_PATH);
+        } else if (call.method.equals(Constants.METHOD_SET_VIEW_CONFIGS_PATH)) {
+            viewConfigsPath = call.argument(Constants.EXTRA_VIEW_CONFIGS_PATH);
+        } else if (call.method.equals(Constants.METHOD_SET_LICENSE_KEY)) {
+            licenseKey = call.argument(Constants.EXTRA_LICENSE_KEY);
+            try {
+                initSdk(licenseKey, customModelsPath);
+                result.success(true);
+            }
+            catch (LicenseException le) {
+                returnError(Constants.EXCEPTION_LICENSE, le.getLocalizedMessage());
+            }
         } else if (call.method.equals(Constants.METHOD_START_ANYLINE)) {
             this.configJson = call.argument(Constants.EXTRA_CONFIG_JSON);
             scanAnyline4();
@@ -69,72 +88,28 @@ public class AnylinePlugin implements
         }
     }
 
+    private void initSdk(String sdkLicenseKey, String sdkAssetsFolder) throws LicenseException {
+        AnylineSdk.init(sdkLicenseKey, activity, sdkAssetsFolder);
+    }
+
     private void scanAnyline4() {
         try {
             configObject = new JSONObject(this.configJson);
-            JSONObject options = configObject.getJSONObject("options");
-            if (options.has("viewPlugin")) {
-                JSONObject viewPlugin = options.getJSONObject("viewPlugin");
-                if (viewPlugin != null && viewPlugin.has("plugin")) {
-                    JSONObject plugin = viewPlugin.getJSONObject("plugin");
-                    if (plugin != null && plugin.has("documentPlugin")) {
-                        scan(Document4Activity.class);
-                    } else {
-                        scan(Anyline4Activity.class);
-                    }
-                } else {
-                    returnError(Constants.EXCEPTION_CONFIG, "No Plugin in config. Please check your configuration.");
-                }
-            } else if (options.has("serialViewPluginComposite") || options.has("parallelViewPluginComposite")) {
-                scan(Anyline4Activity.class);
-            } else {
-                returnError(Constants.EXCEPTION_CONFIG, "No ViewPlugin in config. Please check your configuration.");
-            }
+            scan();
         } catch (JSONException e) {
             e.printStackTrace();
-            returnError(Constants.EXCEPTION_CONFIG);
+            returnError(Constants.EXCEPTION_CONFIG, e.getLocalizedMessage());
         }
     }
 
-    private void scan(Class<?> activityToStart) {
-
-        Intent intent = new Intent(activity, activityToStart);
-
-        try {
-            configObject = new JSONObject(this.configJson);
-
-            // Hacky -> force cancelOnResult = true
-            options = configObject.getJSONObject("options");
-            options.put("cancelOnResult", true);
-
-            licenseKey = configObject.get("license").toString();
-            if (configObject.has("nativeBarcodeEnabled")) {
-                intent.putExtra(Constants.EXTRA_ENABLE_BARCODE_SCANNING, configObject.getBoolean("nativeBarcodeEnabled"));
-            }
-
-        } catch (JSONException e) {
-            returnError(Constants.EXCEPTION_CONFIG, "JSON ERROR: " + e.getMessage());
-        }
-
-        intent.putExtra(Constants.EXTRA_LICENSE_KEY, licenseKey);
-        intent.putExtra(Constants.EXTRA_CONFIG_JSON, options.toString());
-
-        // Check if OCR
-        if (configObject.has("ocr")) {
-            try {
-                intent.putExtra(Constants.EXTRA_OCR_CONFIG_JSON, configObject.get("ocr").toString());
-            } catch (JSONException e) {
-                returnError(Constants.EXCEPTION_CONFIG, e.getMessage());
-            }
-        }
-
-        if (null != null) {
-            intent.putExtra(Constants.EXTRA_SCAN_MODE, (String) null);
-        }
+    private void scan() {
+        Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(Constants.EXTRA_VIEW_CONFIGS_PATH, viewConfigsPath);
+        intent.putExtra(Constants.EXTRA_CONFIG_JSON, configObject.toString());
         ResultReporter.setListener(this);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        activity.startActivityForResult(intent, Constants.REQUEST_ANYLINE_4, intent.getExtras());
+        activity.startActivityForResult(intent, Constants.SCAN_ACTIVITY_REQUEST_CODE, intent.getExtras());
 
     }
 

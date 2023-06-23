@@ -28,7 +28,7 @@
         "pluginConfig": {
             "id": "meter_auto",
             "meterConfig": {
-                "scanMode": "dial_meter"
+                "scanMode": "auto_analog_digital_meter"
             },
             "cancelOnResult": true
         },

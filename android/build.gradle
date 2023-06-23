@@ -4,8 +4,8 @@ version '1.0'
 
 buildscript {
     ext {
-        anyline_sdk_version = "42.2.0"
-        kotlin_version = "1.6.10"
+        anyline_sdk_version = "48.0.0"
+        kotlin_version = "1.8.0"
     }
     repositories {
         google()
@@ -25,9 +25,11 @@ rootProject.allprojects {
         maven {
             url 'https://anylinesdk.blob.core.windows.net/maven/'
         }
-//        maven {
-//            url 'https://anylinesdk.blob.core.windows.net/testing/'
-//        }
+        /*
+        maven {
+            url 'https://anylinesdk.blob.core.windows.net/testing/'
+        }
+        */
     }
 }
 
@@ -58,4 +60,12 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
 }

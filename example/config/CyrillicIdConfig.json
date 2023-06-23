@@ -1,98 +1,146 @@
 {
-  "license": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6ICIzLjAiLAogICJkZWJ1Z1JlcG9ydGluZyI6ICJwaW5nIiwKICAibWFqb3JWZXJzaW9uIjogIjM3IiwKICAic2NvcGUiOiBbCiAgICAiQUxMIgogIF0sCiAgIm1heERheXNOb3RSZXBvcnRlZCI6IDUsCiAgImFkdmFuY2VkQmFyY29kZSI6IHRydWUsCiAgIm11bHRpQmFyY29kZSI6IHRydWUsCiAgInN1cHBvcnRlZEJhcmNvZGVGb3JtYXRzIjogWwogICAgIkFMTCIKICBdLAogICJwbGF0Zm9ybSI6IFsKICAgICJpT1MiLAogICAgIkFuZHJvaWQiCiAgXSwKICAic2hvd1dhdGVybWFyayI6IHRydWUsCiAgInRvbGVyYW5jZURheXMiOiAzMCwKICAidmFsaWQiOiAiMjAyMy0wMS0wMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlci5leGFtcGxlcyIKICBdCn0KbngwVmNGYW5nTWRBR1grMERKK1l4bXE2aCtkbWJyQmg2OVZFZFIyV0dpNkFpYUYvemhWbkdyNDI5NzdoK1c0dXF6R1I3MUZGOEhjZkh4ZlA0bTkvc3Ywa3F5T2V4UnhIUzJLSWxqNncrT25iakhPa0Z2K1BsN0tVS09oZXNqNTFPVXlEbkdZNlZqbWczeVgyTWdqd3cyZ2N4MTFvUHpBVXdPS3VyeUpBMEZuQndnQXdtVTgzaGFRQlVNTUI2UHZMQnpXYVh4a2x1ZnN0eVl3STY5YVo0dkc3a3lqYXFYOW5mcTM4Kzk0Y2R2ZTFqcE82Zjk3blVwVVhodHdnKytET3FaMjUvQVh6WmhhaXNqU2FaaUxiejJWcWk0MFh3UnVHdzMyYXlRMmcyUTBxMXk2MlppbDcvQUhvalFMNHNTTk93cjdjaGgwVTM1Q0czamNmMUU5RTZBPT0=",
-  "options": {
-    "camera" : {
-      "captureResolution" : "1080p",
-      "zoomGesture": true
+    "options": {
+        "doneButtonConfig": {
+            "offset.y": -88
+        }
     },
-    "flash" : {
-      "mode": "manual",
-      "alignment": "bottom_right",
-      "imageOn": "flash_on",
-      "imageOff": "flash_off"
+    "cameraConfig": {
+        "captureResolution": "1080p"
     },
-    "viewPlugin" : {
-      "plugin":{
-        "id":"ID",
-        "idPlugin": {
-          "universalIdConfig": {
-            "alphabet" : "cyrillic",
-            "faceDetection": true,
-            "allowedLayouts": {
-              "mrz": [],
-              "drivingLicense": [],
-              "idFront": []
-             },
-             "drivingLicense": {
-               "lastName": {"scanOption": 0, "minConfidence": 40},
-               "lastName@cyr": {"scanOption": 0, "minConfidence": 40},
-               "firstName": {"scanOption": 0, "minConfidence": 40},
-               "firstName@cyr": {"scanOption": 0, "minConfidence": 40},
-               "dateOfBirth": {"scanOption": 0, "minConfidence": 50},
-               "placeOfBirth": {"scanOption": 1, "minConfidence": 50},
-               "dateOfIssue": {"scanOption": 0, "minConfidence": 50},
-               "dateOfExpiry": {"scanOption": 1, "minConfidence": 50},
-               "authority": {"scanOption": 1, "minConfidence": 30},
-               "documentNumber": {"scanOption": 0, "minConfidence": 40},
-               "address": {"scanOption": 1},
-               "address@cyr": {"scanOption": 1},
-               "nationality": {"scanOption": 1},
-               "nationality@cyr": {"scanOption": 1}
-              },
-              "idFront": {
-                "lastName": {"scanOption": 0, "minConfidence": 40},
-                "lastName@cyr": {"scanOption": 0, "minConfidence": 40},
-                "firstName": {"scanOption": 0, "minConfidence": 40},
-                "firstName@cyr": {"scanOption": 0, "minConfidence": 40},
-                "dateOfBirth": {"scanOption": 0, "minConfidence": 50},
-                "placeOfBirth": {"scanOption": 1, "minConfidence": 50},
-                "dateOfIssue": {"scanOption": 0, "minConfidence": 50},
-                "dateOfExpiry": {"scanOption": 1, "minConfidence": 50},
-                "authority": {"scanOption": 1, "minConfidence": 30},
-                "documentNumber": {"scanOption": 0, "minConfidence": 40},
-                "address": {"scanOption": 1},
-                "address@cyr": {"scanOption": 1},
-                "nationality": {"scanOption": 1},
-                "nationality@cyr": {"scanOption": 1}
-              }
-            }
-          }
-      },
-      "cutoutConfig" : {
-        "style": "animated_rect",
-        "maxWidthPercent": "90%",
-        "maxHeightPercent": "90%",
-        "alignment": "center",
-        "strokeWidth": 3,
-        "cornerRadius": 8,
-        "strokeColor": "FFFFFF",
-        "outerColor": "000000",
-        "outerAlpha": 0.3,
-        "ratioFromSize" : {
-          "width": 50,
-          "height": 31
+    "flashConfig": {
+        "mode": "manual",
+        "alignment": "bottom_left",
+        "offset": {
+            "x": 0,
+            "y": -40
+        }
+    },
+    "viewPluginConfig": {
+        "pluginConfig": {
+            "id": "id_mrz_dl_cyrillic",
+            "universalIdConfig": {
+                "allowedLayouts": {
+                    "mrz": [],
+                    "drivingLicense": [],
+                    "idFront": []
+                },
+                "alphabet": "cyrillic",
+                "drivingLicense": {
+                    "surname": {
+                        "scanOption": 0,
+                        "minConfidence": 40
+                    },
+                    "givenNames": {
+                        "scanOption": 0,
+                        "minConfidence": 40
+                    },
+                    "dateOfBirth": {
+                        "scanOption": 0,
+                        "minConfidence": 50
+                    },
+                    "placeOfBirth": {
+                        "scanOption": 1,
+                        "minConfidence": 50
+                    },
+                    "dateOfIssue": {
+                        "scanOption": 0,
+                        "minConfidence": 50
+                    },
+                    "dateOfExpiry": {
+                        "scanOption": 1,
+                        "minConfidence": 50
+                    },
+                    "authority": {
+                        "scanOption": 1,
+                        "minConfidence": 30
+                    },
+                    "documentNumber": {
+                        "scanOption": 0,
+                        "minConfidence": 40
+                    },
+                    "categories": {
+                        "scanOption": 1,
+                        "minConfidence": 30
+                    },
+                    "address": {
+                        "scanOption": 1
+                    }
+                },
+                "idFront": {
+                    "surname": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "givenNames": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "dateOfBirth": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "placeOfBirth": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    },
+                    "dateOfExpiry": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    },
+                    "cardAccessNumber": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    },
+                    "documentNumber": {
+                        "scanOption": 0,
+                        "minConfidence": 60
+                    },
+                    "nationality": {
+                        "scanOption": 1,
+                        "minConfidence": 60
+                    }
+                }
+            },
+            "cancelOnResult": true
         },
-        "cropPadding": {
-          "x": -50,
-          "y": -50
+        "cutoutConfig": {
+            "animation": "fade",
+            "maxWidthPercent": "90%",
+            "maxHeightPercent": "90%",
+            "width": 0,
+            "alignment": "top_half",
+            "ratioFromSize": {
+                "width": 86,
+                "height": 54
+            },
+            "offset": {
+                "x": 0,
+                "y": 60
+            },
+            "cropOffset": {
+                "x": 0,
+                "y": 0
+            },
+            "cropPadding": {
+                "x": 0,
+                "y": 0
+            },
+            "cornerRadius": 4,
+            "strokeColor": "0099ff",
+            "strokeWidth": 2,
+            "outerColor": "000000",
+            "feedbackStrokeColor": "0099FF",
+            "outerAlpha": 0.3
         },
-        "cropOffset": {
-          "x": 0,
-          "y": 0
-        },
-        "feedbackStrokeColor": "0099FF"
-      },
-      "scanFeedback" : {
-        "style": "CONTOUR_RECT",
-        "visualFeedbackRedrawTimeout": 100,
-        "strokeColor": "0099FF",
-        "fillColor" : "220099FF",
-        "beepOnResult": true,
-        "vibrateOnResult": true,
-        "strokeWidth": 2
-      },
-      "cancelOnResult" : true
+        "scanFeedbackConfig": {
+            "style": "animated_rect",
+            "strokeWidth": 2,
+            "strokeColor": "ff5555",
+            "fillColor": "40ff5555",
+            "cornerRadius": 4,
+            "beepOnResult": true,
+            "vibrateOnResult": true,
+            "blinkAnimationOnResult": true
+        }
     }
-  }
-  
 }

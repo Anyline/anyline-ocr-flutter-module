@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:anyline_plugin_example/result.dart';
@@ -99,8 +100,61 @@ class CompositeResultDisplay extends StatelessWidget {
 
 class ResultDetails extends StatelessWidget {
   final Map<String, dynamic>? json;
+  late final Map<String, dynamic>? imageMap;
+  late final List<Map<String, dynamic>>? orderedJson;
+  late final List<dynamic>? nativeBarcodesDetected;
 
-  ResultDetails(this.json);
+  ResultDetails(Map<String, dynamic>? json) : this.json = json {
+    this.orderedJson = [];
+    this.imageMap = Map<String, dynamic>();
+    this.nativeBarcodesDetected = [];
+
+    var actualResultMap = Map<String, dynamic>();
+
+    // NOTE: keep xxxResult on top, nativeBarcodesDetected, imagePath and fullImagePath at the bottom
+    json?.forEach((key, value) {
+      if (key.toLowerCase().endsWith('imagepath')) {
+        this.imageMap![key] = value;
+        return;
+      }
+      if (key.toLowerCase().endsWith('result')) {
+        // but not native barcode results
+        actualResultMap[key] = value;
+        return;
+      }
+      if (key.toLowerCase() == 'nativebarcodesdetected') {
+        this.nativeBarcodesDetected?.add(value);
+        return;
+      }
+
+      this.orderedJson!.add({key: value});
+    });
+
+    actualResultMap.forEach((key, value) {
+      var encoder = new JsonEncoder.withIndent(' ' * 2);
+      var prettyJSON = encoder.convert(value);
+      this.orderedJson!.insert(0, {key: prettyJSON});
+    });
+
+    if (this.nativeBarcodesDetected != null &&
+        this.nativeBarcodesDetected!.length > 0) {
+      this
+          .orderedJson!
+          .add({'nativeBarcodesDetected': this.nativeBarcodesDetected});
+    }
+
+    dynamic imagePath;
+
+    imagePath = imageMap?['imagePath'];
+    if (imagePath != null && imagePath.toString().isNotEmpty) {
+      this.orderedJson!.add({'imagePath': imagePath});
+    }
+
+    imagePath = imageMap?['fullImagePath'];
+    if (imagePath != null && imagePath.toString().isNotEmpty) {
+      this.orderedJson!.add({'fullImagePath': imagePath});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +164,7 @@ class ResultDetails extends StatelessWidget {
         children: [
           Container(
               child: Image.file(
-                File(json!['imagePath']),
+                File(imageMap!['imagePath']),
                 fit: BoxFit.scaleDown,
                 height:
                     240, // prevents weird display of tall images (e.g. vertical shipping containers)
@@ -119,11 +173,26 @@ class ResultDetails extends StatelessWidget {
           ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
-              itemCount: json!.length,
+              itemCount: orderedJson!.length,
               itemBuilder: (BuildContext ctx, int index) {
+                Map<String, dynamic> resultMap = orderedJson![index];
+                var title = resultMap.keys.first.toString();
+                var subTitle = resultMap.values.first.toString();
                 return new ListTile(
-                  title: Text(json!.values.toList()[index].toString()),
-                  subtitle: Text(json!.keys.toList()[index].toString()),
+                  title: Text(title),
+                  subtitle: Text(
+                    subTitle,
+                    style: TextStyle(
+                        fontFamily: 'Courier',
+                        fontFamilyFallback: <String>[
+                          // specify a list here that the system
+                          // will try in order
+                          // "American Typewriter",
+                          // "Avenir Book",
+                          "Roboto Mono"
+                        ]),
+                  ),
+                  contentPadding: EdgeInsets.all(4),
                 );
               }),
           Container(
@@ -132,9 +201,8 @@ class ResultDetails extends StatelessWidget {
               child: Text('Show Full Image'),
               onPressed: () {
                 Navigator.pushNamed(context, FullScreenImage.routeName,
-                    arguments: json!['fullImagePath']);
+                    arguments: imageMap!['fullImagePath']);
               },
-
             ),
           )
         ],
@@ -148,7 +216,8 @@ class FullScreenImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String fullImagePath = ModalRoute.of(context)!.settings.arguments as String;
+    final String fullImagePath =
+        ModalRoute.of(context)!.settings.arguments as String;
 
     return GestureDetector(
       child: Container(

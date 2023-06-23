@@ -19,6 +19,27 @@ class AnylinePlugin {
     return version;
   }
 
+  void setCustomModelsPath(String customModelsPath) {
+    final Map<String, String?> params = {Constants.EXTRA_CUSTOM_MODELS_PATH: customModelsPath};
+    _channel.invokeMethod(Constants.METHOD_SET_CUSTOM_MODELS_PATH, params);
+  }
+
+  void setViewConfigsPath(String viewConfigsPath) {
+    final Map<String, String?> params = {Constants.EXTRA_VIEW_CONFIGS_PATH: viewConfigsPath};
+    _channel.invokeMethod(Constants.METHOD_SET_VIEW_CONFIGS_PATH, params);
+  }
+
+  Future<bool?> initSdk(String licenseKey) async {
+    final Map<String, String?> params = {Constants.EXTRA_LICENSE_KEY: licenseKey};
+    try {
+      final bool? result = await _channel.invokeMethod(Constants.METHOD_SET_LICENSE_KEY, params);
+      return result;
+    } on PlatformException catch (e) {
+      print("${e.message}");
+      throw AnylineException.parse(e);
+    }
+  }
+
   /// Starts the Anyline SDK and invokes the scanning process with the given [configJson].
   ///
   /// Returns the result as a JSON string which can be parsed into an object of
@@ -38,6 +59,7 @@ class AnylinePlugin {
             await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
         return result;
       } on PlatformException catch (e) {
+        print("${e.message}");
         throw AnylineException.parse(e);
       }
     } else {

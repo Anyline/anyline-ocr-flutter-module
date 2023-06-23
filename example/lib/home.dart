@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anyline_plugin/exceptions.dart';
 import 'package:anyline_plugin_example/anyline_service.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/styles.dart';
@@ -9,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'result_display.dart';
 import 'result_list.dart';
 import 'scan_modes.dart';
+import 'license_state.dart';
 
 class AnylineDemoApp extends StatelessWidget {
   @override
@@ -43,7 +45,6 @@ class _HomeState extends State<Home> {
   bool _resultsTabBackButtonVisible = false;
 
   Widget? _scanTab;
-  Widget? _resultsTab;
 
   late AnylineService _anylineService;
 
@@ -52,7 +53,6 @@ class _HomeState extends State<Home> {
     super.initState();
     _anylineService = AnylineServiceImpl();
     _scanTab = _buildUseCases();
-    _resultsTab = _buildResultList();
   }
 
   Future<void> scan(ScanMode mode) async {
@@ -61,18 +61,37 @@ class _HomeState extends State<Home> {
       if (result != null) {
         _openResultDisplay(result);
       }
-    } catch (e, s) {
-      print('$e, $s');
+    } catch (e) {
+      var message = '${(e as AnylineException).message}';
+      if (e is AnylineLicenseException) {
+        message = LicenseState.LicenseKeyEmptyErrorMessage;
+      }
+      print(message);
+
       showDialog(
           context: context,
           builder: (_) => AlertDialog(
                 elevation: 0,
-                title: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      'Error',
-                    )),
-                content: FittedBox(fit: BoxFit.fitWidth, child: Text('$e, $s')),
+                title: const Text(
+                  'Error',
+                  style: TextStyle(
+                      fontFamily: "Roboto", fontWeight: FontWeight.bold),
+                ),
+                content: Text(
+                  message,
+                  style: TextStyle(fontFamily: "Roboto"),
+                  textAlign: TextAlign.start,
+                ),
+                actions: [
+                  TextButton(
+                    child: Text("OK",
+                        style: TextStyle(
+                            fontFamily: "Roboto", fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
               ));
     }
   }
@@ -93,9 +112,9 @@ class _HomeState extends State<Home> {
           bool willPopScreen = _scanTabBackButtonVisible ? false : true;
           if (_scanTabBackButtonVisible) {
             setState(() {
-              _bottomSelectedIndex == 0
-                  ? _scanTab = _buildUseCases()
-                  : _resultsTab = _buildResultList();
+              if (_bottomSelectedIndex == 0) {
+                _scanTab = _buildUseCases();
+              }
               _scanTabBackButtonVisible = false;
             });
           }
@@ -139,9 +158,9 @@ class _HomeState extends State<Home> {
                 ),
                 onPressed: () {
                   setState(() {
-                    _bottomSelectedIndex == 0
-                        ? _scanTab = _buildUseCases()
-                        : _resultsTab = _buildResultList();
+                    if (_bottomSelectedIndex == 0) {
+                      _scanTab = _buildUseCases();
+                    }
                     _scanTabBackButtonVisible = false;
                   });
                 },
@@ -237,10 +256,7 @@ class _HomeState extends State<Home> {
                     text: 'Meter\nScanning',
                     image: AssetImage('assets/Meter.png'),
                     onPressed: () {
-                      setState(() {
-                        _scanTab = _buildMeterReading();
-                        _scanTabBackButtonVisible = true;
-                      });
+                      scan(ScanMode.AnalogDigitalMeter);
                     },
                   ),
                   UseCaseButton(
@@ -311,48 +327,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildMeterReading() {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            ScanButton(
-              text: 'Analog Meter',
-              onPressed: () {
-                scan(ScanMode.AnalogMeter);
-              },
-            ),
-            ScanButton(
-              text: 'Digital Meter',
-              onPressed: () {
-                scan(ScanMode.DigitalMeter);
-              },
-            ),
-            ScanButton(
-              text: 'Serial Number',
-              onPressed: () {
-                scan(ScanMode.SerialNumber);
-              },
-            ),
-            ScanButton(
-              text: 'Dial Meter',
-              onPressed: () {
-                scan(ScanMode.DialMeter);
-              },
-            ),
-            ScanButton(
-              text: 'Dot Matrix',
-              onPressed: () {
-                scan(ScanMode.DotMatrix);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildIdentity() {
     return Center(
       child: Container(
@@ -384,13 +358,13 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'Japanese Landing Permit',
+              text: 'NFC',
               onPressed: () {
-                scan(ScanMode.JapaneseLandingPermit);
+                scan(ScanMode.NFCAndMRZ);
               },
             ),
             ScanButton(
-              text: 'PDF 417',
+              text: 'PDF 417 (AAMVA)',
               onPressed: () {
                 scan(ScanMode.Barcode_PDF417);
               },
@@ -414,18 +388,6 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'License Plate US',
-              onPressed: () {
-                scan(ScanMode.LicensePlateUS);
-              },
-            ),
-            ScanButton(
-              text: 'License Plate Africa',
-              onPressed: () {
-                scan(ScanMode.LicensePlateAF);
-              },
-            ),
-            ScanButton(
               text: 'TIN',
               onPressed: () {
                 scan(ScanMode.TIN);
@@ -444,9 +406,21 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
+              text: 'Odometer',
+              onPressed: () {
+                scan(ScanMode.Odometer);
+              },
+            ),
+            ScanButton(
               text: 'VIN',
               onPressed: () {
                 scan(ScanMode.VIN);
+              },
+            ),
+            ScanButton(
+              text: 'Vehicle Registration Certificate',
+              onPressed: () {
+                scan(ScanMode.VRC);
               },
             ),
           ],
@@ -462,7 +436,7 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             ScanButton(
-              text: 'USNR',
+              text: 'Universal Serial Number',
               onPressed: () {
                 scan(ScanMode.USNR);
               },
@@ -480,23 +454,11 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'IBAN',
+              text: 'Cow Tag',
               onPressed: () {
-                scan(ScanMode.Iban);
+                scan(ScanMode.CowTag);
               },
-            ),
-            ScanButton(
-              text: 'Voucher Code',
-              onPressed: () {
-                scan(ScanMode.Voucher);
-              },
-            ),
-            ScanButton(
-              text: 'Cattle Tag',
-              onPressed: () {
-                scan(ScanMode.CattleTag);
-              },
-            ),
+            )
           ],
         ),
       ),
@@ -510,13 +472,13 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             ScanButton(
-              text: 'Serial Scanning (LP>DL>VIN)',
+              text: 'Serial Scanning (LP → DL → VIN)',
               onPressed: () {
                 scan(ScanMode.SerialScanning);
               },
             ),
             ScanButton(
-              text: 'Parallel Scanning (Meter/USRN)',
+              text: 'Parallel Scanning (Meter + SerialNr)',
               onPressed: () {
                 scan(ScanMode.ParallelScanning);
               },
@@ -535,13 +497,10 @@ class ScanButton extends StatelessWidget {
   final Function? onPressed;
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-    padding: EdgeInsets.all(0),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.zero
-    ),
-    foregroundColor: Colors.white,
-    backgroundColor: Styles.anylineBlue
-  );
+      padding: EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      foregroundColor: Colors.white,
+      backgroundColor: Styles.anylineBlue);
 
   @override
   Widget build(BuildContext context) {
@@ -593,12 +552,9 @@ class UseCaseButton extends StatelessWidget {
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
       padding: EdgeInsets.all(0),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       foregroundColor: Colors.white,
-      backgroundColor: Styles.anylineBlue
-  );
+      backgroundColor: Styles.anylineBlue);
 
   @override
   Widget build(BuildContext context) {

@@ -43,6 +43,38 @@ android {
         versionName flutterVersionName
     }
 
+    packagingOptions {
+        aaptOptions {
+            // Enter any modules into "used_modules" you would like to keep and use
+            def used_modules = [
+                    "module_anyline_ocr",
+                    "module_barcode",
+                    "module_document",
+                    "module_energy",
+                    "module_id",
+                    "module_license_plate",
+                    "module_tire"
+            ].toList()
+
+            // Below is the full list of modules
+            def all_modules = [
+                    "module_anyline_ocr",
+                    "module_barcode",
+                    "module_document",
+                    "module_energy",
+                    "module_id",
+                    "module_license_plate",
+                    "module_tire"
+            ].toList()
+
+            // All used modules are kept, the rest are discarded (to shrink your app)
+            all_modules.removeAll(used_modules)
+
+            def all_removed_modules = all_modules.join(":")
+            ignoreAssetsPattern all_removed_modules
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
