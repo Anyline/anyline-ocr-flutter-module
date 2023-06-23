@@ -1,28 +1,17 @@
-//
-//  ALPluginScanViewController.h
-//  Anyline React-Native Example
-//
-//  Created by Daniel Albertini on 30.10.18.
-//
-
 #import <UIKit/UIKit.h>
-#import "ALJsonUIConfiguration.h"
+#import "ALPluginHelper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ALPluginScanViewController : UIViewController
 
-typedef void (^ALPluginCallback)(id _Nullable callbackObj, NSString * _Nullable errorString);
-
-@property (nonatomic, assign) BOOL nativeBarcodeEnabled;
-
 @property (nonatomic, strong) NSString *cropAndTransformErrorMessage;
 
 @property (nonatomic, assign) NSUInteger quality;
 
-- (instancetype)initWithLicensekey:(NSString*)licensekey
-                     configuration:(NSDictionary *)anylineConfig
-                   uiConfiguration:(ALJsonUIConfiguration*)jsonUIConfig
+- (instancetype)initWithLicensekey:(NSString *)licenseKey
+                     configuration:(NSDictionary *)config
+                   uiConfiguration:(ALJSONUIConfiguration *)JSONUIConfig
                           finished:(ALPluginCallback)callback;
 
 @end

@@ -12,12 +12,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" />
         <activity
-            android:name=".Anyline4Activity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
-            android:name=".Document4Activity"
+            android:name=".ScanActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation"
             android:theme="@style/Theme.AppCompat"/>

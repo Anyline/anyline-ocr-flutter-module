@@ -1,7 +1,21 @@
 {
     "options": {
         "doneButtonConfig": {
-            "offset.y": -88
+            "offset.y": -96
+        },
+        "rotateButton": {
+            "alignment": "top_right",
+            "offset": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "defaultOrientation": "landscape",
+        "segmentConfig": {
+            "titles": ["Universal", "DOT"],
+            "viewConfigs": ["TINConfig.json", "TINDOTConfig.json"],
+            "offset.y": -24,
+            "tintColor": "0099ff"
         }
     },
     "cameraConfig": {
@@ -14,21 +28,23 @@
     },
     "viewPluginConfig": {
         "pluginConfig": {
-            "id": "tire_commercial_id",
+            "id": "tire_tin",
             "cancelOnResult": true,
-            "commercialTireIdConfig": {}
+            "tinConfig": {
+                "scanMode": "DOT"
+            }
         },
         "cutoutConfig": {
             "style": "animated_rect",
             "maxWidthPercent": "80%",
             "maxHeightPercent": "80%",
-            "alignment": "center",
+            "alignment": "top_half",
             "strokeWidth": 2,
             "cornerRadius": 4,
             "strokeColor": "0099FF",
             "outerColor": "000000",
             "outerAlpha": 0.3,
-            "width": 720,
+            "width": 800,
             "ratioFromSize": {
                 "width": 720,
                 "height": 144

@@ -11,16 +11,17 @@ import java.util.ArrayList;
 
 public class AnylineUIConfig {
 
-    public static final String SEGMENT = "segment";
+    public static final String SEGMENT = "segmentConfig";
     public static final String SEGMENT_TITLES = "titles";
-    public static final String SEGMENT_MODES = "modes";
+    public static final String SEGMENT_VIEWCONFIGS = "viewConfigs";
     public static final String SEGMENT_TINT_COLOR = "tintColor";
     public static final String SEGMENT_OFFSET = "offset";
     public static final String SEGMENT_X = "x";
     public static final String SEGMENT_Y = "y";
 
+    public boolean hasSegmentConfig = false;
     private ArrayList<String> titles = null;
-    private ArrayList<String> modes = null;
+    private ArrayList<String> viewConfigs = null;
 
     private int tintColor = 0;
 
@@ -41,15 +42,16 @@ public class AnylineUIConfig {
         JSONObject segment = json.optJSONObject(SEGMENT);
 
         if (segment != null) {
+            hasSegmentConfig = true;
             try {
                 JSONArray titlesJson = segment.getJSONArray(SEGMENT_TITLES);
-                JSONArray modesJson = segment.getJSONArray(SEGMENT_MODES);
+                JSONArray viewConfigsJson = segment.getJSONArray(SEGMENT_VIEWCONFIGS);
 
                 titles = new ArrayList<String>();
-                modes = new ArrayList<String>();
+                viewConfigs = new ArrayList<String>();
                 for (int i = 0; i < titlesJson.length(); i++) {
                     titles.add(titlesJson.get(i).toString());
-                    modes.add(modesJson.get(i).toString());
+                    viewConfigs.add(viewConfigsJson.get(i).toString());
                 }
 
                 tintColor = Color.parseColor("#" + segment.optString(SEGMENT_TINT_COLOR));
@@ -70,8 +72,8 @@ public class AnylineUIConfig {
         return titles;
     }
 
-    public ArrayList<String> getModes() {
-        return modes;
+    public ArrayList<String> getViewConfigs() {
+        return viewConfigs;
     }
 
     public int getTintColor() {

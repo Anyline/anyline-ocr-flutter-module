@@ -23,7 +23,7 @@ class ResultList extends StatelessWidget {
     return Container(
       child: results.length > 0
           ? ListView.builder(
-          padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               itemCount: results.length,
               itemBuilder: (BuildContext ctx, int index) {
                 DateTime timestamp = results[index].timestamp;
@@ -35,18 +35,18 @@ class ResultList extends StatelessWidget {
 
                 return results[index].scanMode.isCompositeScan()
                     ? CompositeResultListItem(results[index], timestampString)
-                : ResultListItem(results[index], timestampString);
-          })
+                    : ResultListItem(results[index], timestampString);
+              })
           : ListView(children: [
-        Container(
-          alignment: Alignment.topCenter,
-          padding: EdgeInsets.only(top: 35),
-          child: Text(
-            'Empty history',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-      ]),
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(top: 35),
+                child: Text(
+                  'Empty history',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ]),
     );
   }
 }
@@ -70,7 +70,7 @@ class CompositeResultListItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10),
       child: TextButton(
-        style: flatButtonStyle,
+          style: flatButtonStyle,
           onPressed: () {
             Navigator.pushNamed(context, CompositeResultDisplay.routeName,
                 arguments: result);
@@ -125,10 +125,10 @@ class ResultListItem extends StatelessWidget {
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(0),
-    ),
+        borderRadius: BorderRadius.circular(5),
+        side: BorderSide(width: 0, color: Styles.anylineBlue)),
     padding: EdgeInsets.zero,
-    foregroundColor: Styles.anylineBlue,
+    backgroundColor: Styles.anylineBlue,
   );
 
   @override
@@ -136,7 +136,7 @@ class ResultListItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10),
       child: TextButton(
-        style: flatButtonStyle,
+          style: flatButtonStyle,
           onPressed: () {
             Navigator.pushNamed(context, ResultDisplay.routeName,
                 arguments: result);
@@ -147,7 +147,7 @@ class ResultListItem extends StatelessWidget {
                 bottom: -15,
                 right: -5,
                 child: Opacity(
-                  opacity: 0.25,
+                  opacity: 0.2,
                   child: Text('Result',
                       style: TextStyle(
                         fontWeight: FontWeight.w800,

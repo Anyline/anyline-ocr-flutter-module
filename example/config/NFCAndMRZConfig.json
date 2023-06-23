@@ -1,63 +1,65 @@
 {
-  "license": "ewogICJsaWNlbnNlS2V5VmVyc2lvbiI6ICIzLjAiLAogICJkZWJ1Z1JlcG9ydGluZyI6ICJwaW5nIiwKICAibWFqb3JWZXJzaW9uIjogIjM3IiwKICAic2NvcGUiOiBbCiAgICAiQUxMIgogIF0sCiAgIm1heERheXNOb3RSZXBvcnRlZCI6IDUsCiAgImFkdmFuY2VkQmFyY29kZSI6IHRydWUsCiAgIm11bHRpQmFyY29kZSI6IHRydWUsCiAgInN1cHBvcnRlZEJhcmNvZGVGb3JtYXRzIjogWwogICAgIkFMTCIKICBdLAogICJwbGF0Zm9ybSI6IFsKICAgICJpT1MiLAogICAgIkFuZHJvaWQiCiAgXSwKICAic2hvd1dhdGVybWFyayI6IHRydWUsCiAgInRvbGVyYW5jZURheXMiOiAzMCwKICAidmFsaWQiOiAiMjAyMy0wMS0wMSIsCiAgImlvc0lkZW50aWZpZXIiOiBbCiAgICAiaW8uYW55bGluZS5mbHV0dGVyLmV4YW1wbGVzIgogIF0sCiAgImFuZHJvaWRJZGVudGlmaWVyIjogWwogICAgImlvLmFueWxpbmUuZmx1dHRlci5leGFtcGxlcyIKICBdCn0KbngwVmNGYW5nTWRBR1grMERKK1l4bXE2aCtkbWJyQmg2OVZFZFIyV0dpNkFpYUYvemhWbkdyNDI5NzdoK1c0dXF6R1I3MUZGOEhjZkh4ZlA0bTkvc3Ywa3F5T2V4UnhIUzJLSWxqNncrT25iakhPa0Z2K1BsN0tVS09oZXNqNTFPVXlEbkdZNlZqbWczeVgyTWdqd3cyZ2N4MTFvUHpBVXdPS3VyeUpBMEZuQndnQXdtVTgzaGFRQlVNTUI2UHZMQnpXYVh4a2x1ZnN0eVl3STY5YVo0dkc3a3lqYXFYOW5mcTM4Kzk0Y2R2ZTFqcE82Zjk3blVwVVhodHdnKytET3FaMjUvQVh6WmhhaXNqU2FaaUxiejJWcWk0MFh3UnVHdzMyYXlRMmcyUTBxMXk2MlppbDcvQUhvalFMNHNTTk93cjdjaGgwVTM1Q0czamNmMUU5RTZBPT0=",
-  "options": {
-    "camera": {
-      "captureResolution": "1080p"
-    },
-    "flash": {
-      "mode": "manual",
-      "alignment": "bottom_left"
-    },
-    "viewPlugin": {
-      "plugin": {
-        "id": "ID_NFC",
-        "nfcPlugin": {
-          "mrzConfig": {
-            "strictMode": false,
-            "cropAndTransformID": false,
-            "mrzFieldScanOptions": {
-            }
-          }
+    "options": {
+        "enableNFCWithMRZ": true,
+        "labelConfig": {
+            "text": "Scan Passport",
+            "size": 22,
+            "offset.x": 0,
+            "offset.y": -10
+        },
+        "doneButtonConfig": {
+            "offset.y": -88
         }
-      },
-      "cutoutConfig": {
-        "style": "rect",
-        "maxWidthPercent": "90%",
-        "maxHeightPercent": "90%",
-        "alignment": "center",
-        "ratioFromSize": {
-          "width": 125,
-          "height": 85
-        },
-        "strokeWidth": 2,
-        "cornerRadius": 4,
-        "strokeColor": "FFFFFF",
-        "outerColor": "000000",
-        "outerAlpha": 0.3,
-        "cropPadding": {
-          "x": 0,
-          "y": 0
-        },
-        "cropOffset": {
-          "x": 0,
-          "y": 0
-        },
-        "feedbackStrokeColor": "0099FF",
-        "offset": {
-          "x": 0,
-          "y": 30
-        }
-      },
-      "scanFeedback": {
-        "style": "rect",
-        "strokeColor": "0099FF",
-        "strokeWidth": 2,
-        "blinkOnResult": true,
-        "beepOnResult": true,
-        "vibrateOnResult": true
-      },
-      "cancelOnResult": true
     },
-    "cropAndTransformErrorMessage": "Edges are not detected"
-  }
+    "cameraConfig": {
+        "captureResolution": "1080p"
+    },
+    "flashConfig": {
+        "mode": "manual",
+        "alignment": "bottom_left"
+    },
+    "viewPluginConfig": {
+        "pluginConfig": {
+            "id": "mrz_nfc",
+            "mrzConfig": {
+                "strictMode": false,
+                "cropAndTransformID": false
+            },
+            "cancelOnResult": true
+        },
+        "cutoutConfig": {
+            "animation": "none",
+            "maxWidthPercent": "85%",
+            "maxHeightPercent": "70%",
+            "width": 0,
+            "alignment": "top_half",
+            "ratioFromSize": {
+                "width": 86,
+                "height": 54
+            },
+            "offset": {
+                "x": 0,
+                "y": 20
+            },
+            "cropPadding": {
+                "x": 25,
+                "y": 25
+            },
+            "outerColor": "000000",
+            "outerAlpha": 0.3,
+            "strokeWidth": 2,
+            "strokeColor": "0099FF",
+            "cornerRadius": 4,
+            "feedbackStrokeColor": "0099FF"
+        },
+        "scanFeedbackConfig": {
+            "style": "rect",
+            "strokeWidth": 2,
+            "strokeColor": "0099FF",
+            "fillColor": "220099FF",
+            "beepOnResult": true,
+            "vibrateOnResult": true,
+            "blinkAnimationOnResult": false
+        }
+    }
 }

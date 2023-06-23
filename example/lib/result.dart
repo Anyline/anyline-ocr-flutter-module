@@ -26,7 +26,7 @@ class Result {
       };
 
   Result.fromJson(Map<String, dynamic> json)
-      : timestamp = DateTime.fromMicrosecondsSinceEpoch(json['timestamp']),
+      : timestamp = DateTime.fromMillisecondsSinceEpoch(json['timestamp']),
         scanMode = ScanMode.values
             .firstWhere((element) => element.key == json['scanMode']),
         jsonMap = json['jsonMap'];
