@@ -71,28 +71,28 @@ class _HomeState extends State<Home> {
       showDialog(
           context: context,
           builder: (_) => AlertDialog(
-                elevation: 0,
-                title: const Text(
-                  'Error',
-                  style: TextStyle(
-                      fontFamily: "Roboto", fontWeight: FontWeight.bold),
-                ),
-                content: Text(
-                  message,
-                  style: TextStyle(fontFamily: "Roboto"),
-                  textAlign: TextAlign.start,
-                ),
-                actions: [
-                  TextButton(
-                    child: Text("OK",
-                        style: TextStyle(
-                            fontFamily: "Roboto", fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ));
+            elevation: 0,
+            title: const Text(
+              'Error',
+              style: TextStyle(
+                  fontFamily: "Roboto", fontWeight: FontWeight.bold),
+            ),
+            content: Text(
+              message,
+              style: TextStyle(fontFamily: "Roboto"),
+              textAlign: TextAlign.start,
+            ),
+            actions: [
+              TextButton(
+                child: Text("OK",
+                    style: TextStyle(
+                        fontFamily: "Roboto", fontWeight: FontWeight.bold)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ));
     }
   }
 
@@ -188,18 +188,18 @@ class _HomeState extends State<Home> {
                 showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                          elevation: 0,
-                          title: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                'Anyline Flutter Demo App',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                          content: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                  'SDK Version ${_anylineService.getSdkVersion()}')),
-                        ));
+                      elevation: 0,
+                      title: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            'Anyline Flutter Demo App',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )),
+                      content: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                              'SDK Version ${_anylineService.getSdkVersion()}')),
+                    ));
               },
             ),
           )
@@ -521,7 +521,7 @@ class ScanButton extends StatelessWidget {
                   left: 10,
                   child: Text(text,
                       style:
-                          TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                      TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
                 ),
                 Positioned(
                   bottom: -15,
@@ -581,7 +581,7 @@ class UseCaseButton extends StatelessWidget {
                   left: 10,
                   child: Text(text,
                       style:
-                          TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                      TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
                 ),
                 Positioned(
                   bottom: -15,

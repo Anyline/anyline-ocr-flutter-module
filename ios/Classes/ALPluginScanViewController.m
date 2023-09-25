@@ -182,7 +182,7 @@
     if ([scanViewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
         [self dismissViewControllerAnimated:YES completion:nil];
         ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)scanViewPluginBase;
-        BOOL cancelOnResult = scanViewPlugin.scanPlugin.scanPluginConfig.cancelOnResult;
+        BOOL cancelOnResult = scanViewPlugin.scanPlugin.pluginConfig.cancelOnResult;
         if (cancelOnResult) {
             self.callback(resultDictionary, nil);
         }

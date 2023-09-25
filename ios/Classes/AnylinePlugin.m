@@ -21,11 +21,16 @@
 
     } else if ([@"METHOD_SET_VIEW_CONFIGS_PATH" isEqualToString:call.method]) {
         // iOS doesn't implement this call, but it needs to be present (MSDK-19)
-
     } else if ([@"METHOD_SET_LICENSE_KEY" isEqualToString:call.method]) {
         NSString *licenseKey = call.arguments[@"EXTRA_LICENSE_KEY"];
         NSError *error;
-        BOOL success = [AnylineSDK setupWithLicenseKey:licenseKey error:&error];
+
+        ALCacheConfig *cacheConfig;
+        if ([call.arguments[@"EXTRA_ENABLE_OFFLINE_CACHE"] boolValue] == true) {
+            cacheConfig = [ALCacheConfig offlineLicenseCachingEnabled];
+        }
+
+        BOOL success = [AnylineSDK setupWithLicenseKey:licenseKey cacheConfig:cacheConfig error:&error];
         if (!success) {
             result([FlutterError errorWithCode:@"AnylineLicenseException"
                                        message:error.localizedDescription
@@ -63,6 +68,14 @@
         }];
     } else if ([@"METHOD_GET_APPLICATION_CACHE_PATH" isEqualToString:call.method]) {
         result([ALPluginHelper applicationCachePath]);
+    } else if ([@"METHOD_EXPORT_CACHED_EVENTS" isEqualToString:call.method]) {
+        NSError *error;
+        NSString *path = [AnylineSDK exportCachedEvents:&error];
+        if (!path) {
+            result([FlutterError errorWithCode:@"AnylineCacheException" message:error.localizedDescription details:nil]);
+            return;
+        }
+        result(path);
     } else {
         result(FlutterMethodNotImplemented);
     }

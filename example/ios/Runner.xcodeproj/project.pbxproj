@@ -405,7 +405,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 48.0.1;
+				MARKETING_VERSION = 51.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.anyline.flutter.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";

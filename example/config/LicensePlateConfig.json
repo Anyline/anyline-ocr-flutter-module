@@ -29,9 +29,10 @@
             "animation": "none",
             "maxWidthPercent": "80%",
             "maxHeightPercent": "80%",
+            "width": 550,
             "alignment": "top_half",
             "ratioFromSize": {
-                "width": 4,
+                "width": 2,
                 "height": 1
             },
             "offset": {

@@ -23,8 +23,8 @@
             "maxHeightPercent": "70%",
             "alignment": "top_half",
             "ratioFromSize": {
-                "width": 62,
-                "height": 9
+                "width": 689,
+                "height": 100
             },
             "outerColor": "000000",
             "outerAlpha": 0.3,
