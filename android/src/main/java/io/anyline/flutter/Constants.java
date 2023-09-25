@@ -7,9 +7,11 @@ public class Constants {
     public static final String METHOD_SET_VIEW_CONFIGS_PATH = "METHOD_SET_VIEW_CONFIGS_PATH";
     public static final String METHOD_SET_LICENSE_KEY = "METHOD_SET_LICENSE_KEY";
     public static final String METHOD_START_ANYLINE = "METHOD_START_ANYLINE";
+    public static final String METHOD_EXPORT_CACHED_EVENTS = "METHOD_EXPORT_CACHED_EVENTS";
 
     public static final String EXTRA_CONFIG_JSON = "EXTRA_CONFIG_JSON";
     public static final String EXTRA_LICENSE_KEY = "EXTRA_LICENSE_KEY";
+    public static final String EXTRA_ENABLE_OFFLINE_CACHE = "EXTRA_ENABLE_OFFLINE_CACHE";
     public static final String EXTRA_CUSTOM_MODELS_PATH = "EXTRA_CUSTOM_MODELS_PATH";
     public static final String EXTRA_VIEW_CONFIGS_PATH = "EXTRA_VIEW_CONFIGS_PATH";
 

@@ -9,7 +9,10 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import io.anyline2.AnylineSdk;
+import io.anyline2.CacheConfig;
 import io.anyline2.core.LicenseException;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -35,6 +38,7 @@ public class AnylinePlugin implements
     private MethodChannel channel;
 
     private String licenseKey;
+    private boolean enableOfflineCache = false;
     private String customModelsPath = "flutter_assets";
     private String viewConfigsPath = "flutter_assets";
 
@@ -73,8 +77,9 @@ public class AnylinePlugin implements
             viewConfigsPath = call.argument(Constants.EXTRA_VIEW_CONFIGS_PATH);
         } else if (call.method.equals(Constants.METHOD_SET_LICENSE_KEY)) {
             licenseKey = call.argument(Constants.EXTRA_LICENSE_KEY);
+            enableOfflineCache = Boolean.TRUE.equals(call.argument(Constants.EXTRA_ENABLE_OFFLINE_CACHE));
             try {
-                initSdk(licenseKey, customModelsPath);
+                initSdk(licenseKey, customModelsPath, enableOfflineCache);
                 result.success(true);
             }
             catch (LicenseException le) {
@@ -83,13 +88,20 @@ public class AnylinePlugin implements
         } else if (call.method.equals(Constants.METHOD_START_ANYLINE)) {
             this.configJson = call.argument(Constants.EXTRA_CONFIG_JSON);
             scanAnyline4();
+        } else if (call.method.equals(Constants.METHOD_EXPORT_CACHED_EVENTS)) {
+            exportCachedEvents();
         } else {
             result.notImplemented();
         }
     }
 
-    private void initSdk(String sdkLicenseKey, String sdkAssetsFolder) throws LicenseException {
-        AnylineSdk.init(sdkLicenseKey, activity, sdkAssetsFolder);
+    private void initSdk(String sdkLicenseKey, String sdkAssetsFolder, boolean enableOfflineCache)
+            throws LicenseException {
+        CacheConfig.Preset cacheConfig = CacheConfig.Preset.Default.INSTANCE;
+        if (enableOfflineCache) {
+            cacheConfig = CacheConfig.Preset.OfflineLicenseEventCachingEnabled.INSTANCE;
+        }
+        AnylineSdk.init(sdkLicenseKey, activity, sdkAssetsFolder, cacheConfig);
     }
 
     private void scanAnyline4() {
@@ -111,6 +123,20 @@ public class AnylinePlugin implements
 
         activity.startActivityForResult(intent, Constants.SCAN_ACTIVITY_REQUEST_CODE, intent.getExtras());
 
+    }
+
+    private void exportCachedEvents() {
+        try {
+            String exportedFile = AnylineSdk.exportCachedEvents();
+            if (exportedFile != null) {
+                result.success(exportedFile);
+            } else {
+                returnError(Constants.EXCEPTION_DEFAULT, "Event cache is empty.");
+            }
+        }
+        catch (IOException e) {
+            returnError(Constants.EXCEPTION_DEFAULT, e.getLocalizedMessage());
+        }
     }
 
     @Override

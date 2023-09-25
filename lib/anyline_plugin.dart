@@ -20,19 +20,28 @@ class AnylinePlugin {
   }
 
   void setCustomModelsPath(String customModelsPath) {
-    final Map<String, String?> params = {Constants.EXTRA_CUSTOM_MODELS_PATH: customModelsPath};
+    final Map<String, String?> params = {
+      Constants.EXTRA_CUSTOM_MODELS_PATH: customModelsPath
+    };
     _channel.invokeMethod(Constants.METHOD_SET_CUSTOM_MODELS_PATH, params);
   }
 
   void setViewConfigsPath(String viewConfigsPath) {
-    final Map<String, String?> params = {Constants.EXTRA_VIEW_CONFIGS_PATH: viewConfigsPath};
+    final Map<String, String?> params = {
+      Constants.EXTRA_VIEW_CONFIGS_PATH: viewConfigsPath
+    };
     _channel.invokeMethod(Constants.METHOD_SET_VIEW_CONFIGS_PATH, params);
   }
 
-  Future<bool?> initSdk(String licenseKey) async {
-    final Map<String, String?> params = {Constants.EXTRA_LICENSE_KEY: licenseKey};
+  Future<bool?> initSdk(String licenseKey,
+      {bool enableOfflineCache = false}) async {
+    final Map<String, dynamic> params = {
+      Constants.EXTRA_LICENSE_KEY: licenseKey,
+      Constants.EXTRA_ENABLE_OFFLINE_CACHE: enableOfflineCache
+    };
     try {
-      final bool? result = await _channel.invokeMethod(Constants.METHOD_SET_LICENSE_KEY, params);
+      final bool? result =
+          await _channel.invokeMethod(Constants.METHOD_SET_LICENSE_KEY, params);
       return result;
     } on PlatformException catch (e) {
       print("${e.message}");
@@ -75,6 +84,22 @@ class AnylinePlugin {
     Map<String, dynamic> licenseMap =
         _decodeBase64LicenseToJsonMap(base64License)!;
     return licenseMap['valid'];
+  }
+
+  // Export all cached events and return the created zip file path.
+  // The zip archive will be stored in a temporary folder in order to be copied afterwards.
+  //
+  // Return null if there are no events.
+  //
+  static Future<String?> exportCachedEvents() async {
+    try {
+      final String? result = await _channel.invokeMethod(
+          Constants.METHOD_EXPORT_CACHED_EVENTS, null);
+      return result;
+    } on PlatformException catch (e) {
+      print("${e.message}");
+      throw AnylineException.parse(e);
+    }
   }
 
   static Map<String, dynamic>? _decodeBase64LicenseToJsonMap(
