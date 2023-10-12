@@ -29,7 +29,6 @@
             "animation": "none",
             "maxWidthPercent": "80%",
             "maxHeightPercent": "80%",
-            "width": 550,
             "alignment": "top_half",
             "ratioFromSize": {
                 "width": 2,

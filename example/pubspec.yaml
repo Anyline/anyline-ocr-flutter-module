@@ -1,13 +1,13 @@
 name: anyline_plugin_example
 description: Demonstrates how to use the anyline_plugin plugin.
-version: 51.0.1
+version: 51.1.0
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
 
 dependencies:
   flutter:

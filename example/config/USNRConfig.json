@@ -24,7 +24,6 @@
         "cutoutConfig": {
             "animation": "none",
             "maxWidthPercent": "80%",
-            "width": 720,
             "alignment": "top_half",
             "ratioFromSize": {
                 "width": 2,

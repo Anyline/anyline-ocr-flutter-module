@@ -33,7 +33,7 @@
             "cancelOnResult": true
         },
         "cutoutConfig": {
-            "maxWidthPercent": "80%",
+            "maxWidthPercent": "85%",
             "alignment": "top",
             "ratioFromSize": {
                 "width": 2,
