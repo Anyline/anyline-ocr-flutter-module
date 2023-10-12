@@ -31,7 +31,6 @@
             "animation": "none",
             "maxWidthPercent": "90%",
             "maxHeightPercent": "90%",
-            "width": 0,
             "alignment": "center",
             "ratioFromSize": {
                 "width": 161,

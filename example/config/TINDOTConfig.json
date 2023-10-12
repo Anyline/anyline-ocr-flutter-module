@@ -35,9 +35,8 @@
             }
         },
         "cutoutConfig": {
-            "maxWidthPercent": "80%",
-            "maxHeightPercent": "80%",
-            "width": 720,
+            "maxWidthPercent": "60%",
+            "maxHeightPercent": "60%",
             "alignment": "center",
             "strokeWidth": 2,
             "cornerRadius": 4,

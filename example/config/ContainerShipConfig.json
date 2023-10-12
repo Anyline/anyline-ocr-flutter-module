@@ -25,7 +25,6 @@
             "animation": "none",
             "maxWidthPercent": "80%",
             "alignment": "top_half",
-            "width": 720,
             "ratioFromSize": {
                 "width": 5,
                 "height": 1
