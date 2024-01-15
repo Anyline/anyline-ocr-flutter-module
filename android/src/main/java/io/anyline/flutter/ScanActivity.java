@@ -28,15 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.anyline.camera.CameraController;
-import io.anyline.camera.CameraOpenListener;
-import io.anyline.models.AnylineYuvImage;
 import io.anyline.plugin.barcode.BarcodeFormat;
 import io.anyline.plugin.result.Barcode;
 import io.anyline.plugin.result.BarcodeResult;
 import io.anyline2.Event;
 import io.anyline2.ScanResult;
+import io.anyline2.camera.CameraController;
+import io.anyline2.camera.CameraOpenListener;
+import io.anyline2.model.AnylineYuvImage;
 import io.anyline2.view.ScanView;
 import io.anyline2.viewplugin.ScanViewPlugin;
 import io.anyline2.viewplugin.ViewPluginBase;
@@ -300,10 +299,12 @@ public class ScanActivity extends Activity implements CameraOpenListener,
 
             setDefaultOrientation();
 
-            radioGroup.setVisibility(View.GONE);
             if (optionsJson.has("segmentConfig")) {
                 // create the radio button for the UI
                 addSegmentRadioButtonUI(optionsJson, viewConfigAssetFileName);
+            }
+            else {
+                radioGroup.setVisibility(View.GONE);
             }
         }
     }

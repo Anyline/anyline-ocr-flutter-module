@@ -7,6 +7,7 @@ enum ScanMode {
   ContainerShip,
   CyrillicId,
   LicensePlate,
+  JapaneseLandingPermission,
   MRZ,
   NFCAndMRZ,
   Odometer,
@@ -42,6 +43,8 @@ extension ScanModeInfo on ScanMode {
         return 'Universal ID';
       case ScanMode.LicensePlate:
         return 'License Plate';
+      case ScanMode.JapaneseLandingPermission:
+        return 'Japanese Landing Permission';
       case ScanMode.Odometer:
         return 'Odometer';
       case ScanMode.TIN:

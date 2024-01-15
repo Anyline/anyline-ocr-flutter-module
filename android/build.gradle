@@ -4,7 +4,7 @@ version '1.0'
 
 buildscript {
     ext {
-        anyline_sdk_version = "51.1.0"
+        anyline_sdk_version = "51.2.2"
         kotlin_version = "1.8.0"
     }
     repositories {
@@ -23,7 +23,7 @@ rootProject.allprojects {
         google()
         jcenter()
         maven {
-            url 'https://anylinesdk.blob.core.windows.net/maven/'
+            url 'https://mobile-sdk-android.anyline.io/release/'
         }
     }
 }

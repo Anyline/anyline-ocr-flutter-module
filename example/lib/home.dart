@@ -369,6 +369,12 @@ class _HomeState extends State<Home> {
                 scan(ScanMode.Barcode_PDF417);
               },
             ),
+            ScanButton(
+              text: 'Japanese Landing Permission',
+              onPressed: () {
+                scan(ScanMode.JapaneseLandingPermission);
+              },
+            ),
           ],
         ),
       ),
