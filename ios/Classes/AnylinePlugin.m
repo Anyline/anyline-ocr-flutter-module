@@ -30,7 +30,14 @@
             cacheConfig = [ALCacheConfig offlineLicenseCachingEnabled];
         }
 
-        BOOL success = [AnylineSDK setupWithLicenseKey:licenseKey cacheConfig:cacheConfig error:&error];
+        // wrapper information
+        ALWrapperConfig *wrapperConfig = [ALWrapperConfig none];
+        NSString *pluginVersion = call.arguments[@"EXTRA_PLUGIN_VERSION"];
+        if (pluginVersion) {
+            wrapperConfig = [ALWrapperConfig flutter:pluginVersion];
+        }
+
+        BOOL success = [AnylineSDK setupWithLicenseKey:licenseKey cacheConfig:cacheConfig wrapperConfig:wrapperConfig error:&error];
         if (!success) {
             result([FlutterError errorWithCode:@"AnylineLicenseException"
                                        message:error.localizedDescription

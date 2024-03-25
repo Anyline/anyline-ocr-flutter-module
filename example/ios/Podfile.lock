@@ -1,13 +1,13 @@
 PODS:
-  - Anyline (51.3.1)
-  - anyline_plugin (51.3.1):
+  - Anyline (51.4.0)
+  - anyline_plugin (51.4.0):
     - Anyline (~> 51)
     - Flutter
   - Flutter (1.0.0)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - permission_handler_apple (9.1.1):
+  - permission_handler_apple (9.3.0):
     - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -21,7 +21,7 @@ DEPENDENCIES:
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
-  trunk:
+  https://github.com/CocoaPods/Specs.git:
     - Anyline
 
 EXTERNAL SOURCES:
@@ -37,13 +37,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
-  Anyline: c3240b4176f947254b6e2c8ea4e168a75c9c9e7f
-  anyline_plugin: 70c78cf6dcef1e575f7acd6bd7f1f5f99dbdf3f5
+  Anyline: 007428dc62f87f4ef25c93eb4f00b6a49eeea5fd
+  anyline_plugin: e9b5f89816bacb68aa791ad3e02cebca45136708
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
-  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
+  permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
 
-PODFILE CHECKSUM: 8f522979e3f0c708f1d45db223b2aecbf369433f
+PODFILE CHECKSUM: 1ba8e470e8138e872af9577a0e261e59d83eaf57
 
 COCOAPODS: 1.15.2

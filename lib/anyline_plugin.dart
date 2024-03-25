@@ -5,6 +5,7 @@ import 'package:anyline_plugin/constants.dart';
 import 'package:anyline_plugin/exceptions.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pubspec_parse/pubspec_parse.dart';
 
 /// Entrypoint for perfoming any scans using the Anyline OCR library.
 class AnylinePlugin {
@@ -17,6 +18,13 @@ class AnylinePlugin {
     final String? version =
         await _channel.invokeMethod(Constants.METHOD_GET_SDK_VERSION);
     return version;
+  }
+
+  /// Returns the Anyline Plugin version.
+  static Future<String> get pluginVersion async {
+    final fileContent = await rootBundle.loadString('packages/anyline_plugin/pubspec.yaml');
+    final pubspec = Pubspec.parse(fileContent);
+    return pubspec.version?.canonicalizedVersion ??"";
   }
 
   void setCustomModelsPath(String customModelsPath) {
@@ -35,11 +43,15 @@ class AnylinePlugin {
 
   Future<bool?> initSdk(String licenseKey,
       {bool enableOfflineCache = false}) async {
+    final String pluginVersion = await AnylinePlugin.pluginVersion;
+
     final Map<String, dynamic> params = {
       Constants.EXTRA_LICENSE_KEY: licenseKey,
-      Constants.EXTRA_ENABLE_OFFLINE_CACHE: enableOfflineCache
+      Constants.EXTRA_ENABLE_OFFLINE_CACHE: enableOfflineCache,
+      Constants.EXTRA_PLUGIN_VERSION: pluginVersion
     };
     try {
+
       final bool? result =
           await _channel.invokeMethod(Constants.METHOD_SET_LICENSE_KEY, params);
       return result;

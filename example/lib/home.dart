@@ -198,7 +198,10 @@ class _HomeState extends State<Home> {
                       content: FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
-                              'SDK Version ${_anylineService.getSdkVersion()}')),
+                              'SDK Version ${_anylineService.getSdkVersion()}' +
+                                  '\n' +
+                                  'Plugin Version ${_anylineService.getPluginVersion()}'
+                          )),
                     ));
               },
             ),
@@ -397,6 +400,12 @@ class _HomeState extends State<Home> {
               text: 'TIN',
               onPressed: () {
                 scan(ScanMode.TIN);
+              },
+            ),
+            ScanButton(
+              text: 'TIN DOT with UI Feedback',
+              onPressed: () {
+                scan(ScanMode.TINDOTWithUIFeedback);
               },
             ),
             ScanButton(
