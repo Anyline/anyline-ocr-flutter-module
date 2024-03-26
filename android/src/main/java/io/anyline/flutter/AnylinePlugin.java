@@ -13,6 +13,8 @@ import java.io.IOException;
 
 import io.anyline2.AnylineSdk;
 import io.anyline2.CacheConfig;
+import io.anyline2.WrapperConfig;
+import io.anyline2.WrapperInfo;
 import io.anyline2.core.LicenseException;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -38,6 +40,7 @@ public class AnylinePlugin implements
     private MethodChannel channel;
 
     private String licenseKey;
+    private String pluginVersion = "";
     private boolean enableOfflineCache = false;
     private String customModelsPath = "flutter_assets";
     private String viewConfigsPath = "flutter_assets";
@@ -77,9 +80,10 @@ public class AnylinePlugin implements
             viewConfigsPath = call.argument(Constants.EXTRA_VIEW_CONFIGS_PATH);
         } else if (call.method.equals(Constants.METHOD_SET_LICENSE_KEY)) {
             licenseKey = call.argument(Constants.EXTRA_LICENSE_KEY);
+            pluginVersion = call.argument(Constants.EXTRA_PLUGIN_VERSION);
             enableOfflineCache = Boolean.TRUE.equals(call.argument(Constants.EXTRA_ENABLE_OFFLINE_CACHE));
             try {
-                initSdk(licenseKey, customModelsPath, enableOfflineCache);
+                initSdk(licenseKey, customModelsPath, pluginVersion, enableOfflineCache);
                 result.success(true);
             }
             catch (LicenseException le) {
@@ -95,13 +99,20 @@ public class AnylinePlugin implements
         }
     }
 
-    private void initSdk(String sdkLicenseKey, String sdkAssetsFolder, boolean enableOfflineCache)
+    private void initSdk(String sdkLicenseKey,
+                         String sdkAssetsFolder,
+                         String pluginVersion,
+                         boolean enableOfflineCache)
             throws LicenseException {
+        WrapperConfig wrapperConfig = new WrapperConfig.Wrapper(
+                new WrapperInfo(WrapperInfo.WrapperType.Flutter, pluginVersion));
+
         CacheConfig.Preset cacheConfig = CacheConfig.Preset.Default.INSTANCE;
         if (enableOfflineCache) {
             cacheConfig = CacheConfig.Preset.OfflineLicenseEventCachingEnabled.INSTANCE;
         }
-        AnylineSdk.init(sdkLicenseKey, activity, sdkAssetsFolder, cacheConfig);
+
+        AnylineSdk.init(sdkLicenseKey, activity, sdkAssetsFolder, cacheConfig, wrapperConfig);
     }
 
     private void scanAnyline4() {

@@ -15,6 +15,7 @@ abstract class AnylineService {
   List<Result> getResultList();
 
   String? getSdkVersion();
+  String? getPluginVersion();
 }
 
 class AnylineServiceImpl implements AnylineService {
@@ -26,6 +27,7 @@ class AnylineServiceImpl implements AnylineService {
   LicenseState licenseState = new LicenseState(false, 'Sdk not initialised');
   List<Result> _results = [];
   String? _sdkVersion = 'Unknown';
+  String? _pluginVersion = 'Unknown';
 
   AnylineServiceImpl() {
     _initAnylinePlugin();
@@ -60,6 +62,10 @@ class AnylineServiceImpl implements AnylineService {
     return _sdkVersion;
   }
 
+  String? getPluginVersion() {
+    return _pluginVersion;
+  }
+
   _initAnylinePlugin() async {
     String? sdkVersion;
     try {
@@ -68,6 +74,7 @@ class AnylineServiceImpl implements AnylineService {
       sdkVersion = 'Failed to get SDK version.';
     }
     _sdkVersion = sdkVersion;
+    _pluginVersion = await AnylinePlugin.pluginVersion;
 
     anylinePlugin = AnylinePlugin();
     anylinePlugin.setCustomModelsPath("flutter_assets/custom_scripts");

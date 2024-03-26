@@ -15,6 +15,7 @@ enum ScanMode {
   SerialNumber,
   SerialScanning,
   TIN,
+  TINDOTWithUIFeedback,
   TireSize,
   UniversalId,
   USNR,
@@ -49,6 +50,8 @@ extension ScanModeInfo on ScanMode {
         return 'Odometer';
       case ScanMode.TIN:
         return 'TIN';
+      case ScanMode.TINDOTWithUIFeedback:
+        return 'TIN DOT With UI Feedback';
       case ScanMode.TireSize:
         return 'Tire Size';
       case ScanMode.CommercialTireId:

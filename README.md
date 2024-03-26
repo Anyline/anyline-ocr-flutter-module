@@ -13,7 +13,7 @@
 ## Documentation Resources
 
 - [Getting Started](https://documentation.anyline.com/flutter-plugin-component/latest/index.html)
-- [Changelog](https://documentation.anyline.com/flutter-plugin-component/latest/changelog.html)
+- [Release Notes](https://documentation.anyline.com/flutter-plugin-component/latest/release-notes.html)
 
 ## Get Help (Support)
 
