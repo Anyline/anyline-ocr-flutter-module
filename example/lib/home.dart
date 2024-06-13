@@ -498,6 +498,12 @@ class _HomeState extends State<Home> {
                 scan(ScanMode.ParallelScanning);
               },
             ),
+            ScanButton(
+              text: 'Parallel First Scanning (VIN + Barcode)',
+              onPressed: () {
+                scan(ScanMode.ParallelFirstScanning);
+              },
+            ),
           ],
         ),
       ),

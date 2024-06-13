@@ -12,6 +12,7 @@ enum ScanMode {
   NFCAndMRZ,
   Odometer,
   ParallelScanning,
+  ParallelFirstScanning,
   SerialNumber,
   SerialScanning,
   TIN,
@@ -68,6 +69,8 @@ extension ScanModeInfo on ScanMode {
         return 'Barcode';
       case ScanMode.ParallelScanning:
         return 'Parallel Scanning (Meter/USRN)';
+      case ScanMode.ParallelFirstScanning:
+        return 'Parallel First Scanning (VIN/Barcode)';
       case ScanMode.SerialScanning:
         return 'Serial Scanning (LP>DL>VIN)';
       case ScanMode.NFCAndMRZ:
@@ -84,6 +87,8 @@ extension ScanModeInfo on ScanMode {
   }
 
   bool isCompositeScan() {
-    return this == ScanMode.ParallelScanning || this == ScanMode.SerialScanning;
+    return this == ScanMode.ParallelScanning
+        || this == ScanMode.ParallelFirstScanning
+        || this == ScanMode.SerialScanning;
   }
 }
