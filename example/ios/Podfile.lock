@@ -1,7 +1,7 @@
 PODS:
-  - Anyline (52.0.1)
-  - anyline_plugin (52.0.1):
-    - Anyline (~> 52)
+  - Anyline (53.0.0)
+  - anyline_plugin (53.0.0):
+    - Anyline (~> 53)
     - Flutter
   - Flutter (1.0.0)
   - path_provider_foundation (0.0.1):
@@ -37,8 +37,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
-  Anyline: 7bcb18673910593e0bf41304adc8be4d3df5b52a
-  anyline_plugin: 1d5bcfd3fc3499f4bb58cdb30824d58435d95287
+  Anyline: 24167878dda34930abdf3f0d8665cbcc4204b3cb
+  anyline_plugin: 1f62863478c6660d2f40144e31e1b74b215ac721
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
@@ -46,4 +46,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 1ba8e470e8138e872af9577a0e261e59d83eaf57
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

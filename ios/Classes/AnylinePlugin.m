@@ -18,25 +18,25 @@
         result([AnylineSDK versionNumber]);
     } else if ([@"METHOD_SET_CUSTOM_MODELS_PATH" isEqualToString:call.method]) {
         // iOS doesn't implement this call, but it needs to be present (MSDK-19)
-
+        
     } else if ([@"METHOD_SET_VIEW_CONFIGS_PATH" isEqualToString:call.method]) {
         // iOS doesn't implement this call, but it needs to be present (MSDK-19)
     } else if ([@"METHOD_SET_LICENSE_KEY" isEqualToString:call.method]) {
         NSString *licenseKey = call.arguments[@"EXTRA_LICENSE_KEY"];
         NSError *error;
-
+        
         ALCacheConfig *cacheConfig;
         if ([call.arguments[@"EXTRA_ENABLE_OFFLINE_CACHE"] boolValue] == true) {
             cacheConfig = [ALCacheConfig offlineLicenseCachingEnabled];
         }
-
+        
         // wrapper information
         ALWrapperConfig *wrapperConfig = [ALWrapperConfig none];
         NSString *pluginVersion = call.arguments[@"EXTRA_PLUGIN_VERSION"];
         if (pluginVersion) {
             wrapperConfig = [ALWrapperConfig flutter:pluginVersion];
         }
-
+        
         BOOL success = [AnylineSDK setupWithLicenseKey:licenseKey cacheConfig:cacheConfig wrapperConfig:wrapperConfig error:&error];
         if (!success) {
             result([FlutterError errorWithCode:@"AnylineLicenseException"
@@ -45,12 +45,12 @@
             return;
         }
         result(@(YES));
-
+        
     } else if ([@"METHOD_START_ANYLINE" isEqualToString:call.method]) {
-
+        
         NSString *configJSONStr = call.arguments[@"EXTRA_CONFIG_JSON"];
         NSError *error;
-
+        
         NSDictionary *dictConfig = [configJSONStr toJSONObject:&error];
         if (!dictConfig) {
             result([FlutterError errorWithCode:@"AnylineConfigException"
@@ -58,20 +58,32 @@
                                        details:nil]);
             return;
         }
-        [ALPluginHelper startScan:dictConfig finished:^(id  _Nonnull callbackObj, NSString * _Nonnull errorString) {
+        [ALPluginHelper startScan:dictConfig finished:^(NSDictionary * _Nullable callbackObj, NSError * _Nullable error) {
             NSString *resultStr;
-            NSError *error;
-            if (errorString) {
-                resultStr = errorString;
+            NSError *errorObj;
+            if (error != nil) {
+                if(error.code == -1){
+                    result(@"Canceled");
+                }
+                else{
+                    result([FlutterError errorWithCode:@"AnylineConfigException"
+                                               message:error.localizedDescription
+                                               details:error.userInfo]);
+                }
             } else if ([NSJSONSerialization isValidJSONObject:callbackObj]) {
-                resultStr = [(NSDictionary *)callbackObj toJSONStringPretty:YES error:&error];
-                if (error) {
-                    resultStr = error.debugDescription;
+                resultStr = [(NSDictionary *)callbackObj toJSONStringPretty:YES error:&errorObj];
+                if (errorObj) {
+                    result([FlutterError errorWithCode:@"AnylineConfigException"
+                                               message:errorObj.debugDescription
+                                               details:nil]);
+                }else{
+                    result(resultStr);
                 }
             } else {
-                resultStr = @"callback object should be of JSON type";
+                result([FlutterError errorWithCode:@"AnylineConfigException"
+                                           message:@"callback object should be of JSON type"
+                                           details:nil]);
             }
-            result(resultStr);
         }];
     } else if ([@"METHOD_GET_APPLICATION_CACHE_PATH" isEqualToString:call.method]) {
         result([ALPluginHelper applicationCachePath]);
