@@ -28,7 +28,7 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
         if (@available(iOS 13.0, *)) {
             
             if (![ALNFCDetector readingAvailable]) {
-                callback(nil, @"NFC passport reading is not supported on this device or app.");
+                callback(nil,  [NSError errorWithDomain:ALFlutterDomain code:100 userInfo:@{@"Error reason": @"NFC passport reading is not supported on this device or app."}]);
                 return;
             }
             
@@ -43,7 +43,7 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
                                                      completion:nil];
             }
         } else {
-            callback(nil, @"NFC passport reading is only supported on iOS 13 and later.");
+            callback(nil, [NSError errorWithDomain:ALFlutterDomain code:100 userInfo:@{@"Error reason": @"NFC passport reading is only supported on iOS 13 and later."}]);
             return;
         }
     } else {
@@ -291,7 +291,7 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
                                                    handler:^(UIAlertAction * _Nonnull action) {
 
         [fromViewController dismissViewControllerAnimated:YES completion:^{
-            callback(nil, @"Canceled");
+            callback(nil, [NSError errorWithDomain:@"" code:-1 userInfo:@{@"Error reason": @"Canceled"}]);
         }];
     }];
 

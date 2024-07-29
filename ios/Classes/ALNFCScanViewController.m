@@ -105,7 +105,7 @@ API_AVAILABLE(ios(13.0))
         return;
     }
 
-    self.mrzScanViewPlugin = (ALScanViewPlugin *)self.scanView.scanViewPlugin;
+    self.mrzScanViewPlugin = (ALScanViewPlugin *)self.scanView.viewPlugin;
 
     self.scanView.supportedNativeBarcodeFormats = self.uiConfig.nativeBarcodeFormats;
     self.scanView.delegate = self;
@@ -151,42 +151,17 @@ API_AVAILABLE(ios(13.0))
 
 - (void)configureMRZPlugin {
 
-    ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)self.scanView.scanViewPlugin;
+    ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)self.scanView.viewPlugin;
     if (![scanViewPlugin isKindOfClass:ALScanViewPlugin.class]) {
         return;
     }
 
-    ALCutoutConfig *cutoutConfig = scanViewPlugin.scanViewPluginConfig.cutoutConfig;
-    ALScanFeedbackConfig *scanFeedbackConfig = scanViewPlugin.scanViewPluginConfig.scanFeedbackConfig;
-
-    ALPluginConfig *pluginConfig = scanViewPlugin.scanPlugin.pluginConfig;
-    ALMrzConfig *mrzConfig = pluginConfig.mrzConfig;
-
-    // a bit lengthy but this is how you properly change the config (mrzFieldScanOptions and mrzMinFieldConfidences)
-    // taking into account the readonly config fields
-    mrzConfig.mrzFieldScanOptions = [[ALMrzFieldScanOptions alloc] init];
-
-    mrzConfig.mrzFieldScanOptions.vizAddress = ALMrzScanOption.mrzScanOptionDefault;
-    mrzConfig.mrzFieldScanOptions.vizDateOfIssue = ALMrzScanOption.mrzScanOptionDefault;
-    mrzConfig.mrzFieldScanOptions.vizSurname = ALMrzScanOption.mrzScanOptionDefault;
-    mrzConfig.mrzFieldScanOptions.vizGivenNames = ALMrzScanOption.mrzScanOptionDefault;
-    mrzConfig.mrzFieldScanOptions.vizDateOfBirth = ALMrzScanOption.mrzScanOptionDefault;
-    mrzConfig.mrzFieldScanOptions.vizDateOfExpiry = ALMrzScanOption.mrzScanOptionDefault;
-
-    mrzConfig.mrzMinFieldConfidences = [[ALMrzMinFieldConfidences alloc] init];
-    mrzConfig.mrzMinFieldConfidences.documentNumber = @(90);
-    mrzConfig.mrzMinFieldConfidences.dateOfBirth = @(90);
-    mrzConfig.mrzMinFieldConfidences.dateOfExpiry = @(90);
-
+    ALViewPluginConfig *scanViewPluginConfig = scanViewPlugin.scanViewPluginConfig;
     NSError *error;
-    ALScanViewPluginConfig *scanViewPluginConfig = [ALScanViewPluginConfig withPluginConfig:pluginConfig
-                                                                               cutoutConfig:cutoutConfig
-                                                                         scanFeedbackConfig:scanFeedbackConfig];
-    ALScanViewPlugin *updatedScanViewPlugin = [[ALScanViewPlugin alloc] initWithConfig:scanViewPluginConfig error:&error];
-    [self.scanView setScanViewPlugin:updatedScanViewPlugin error:&error];
+    [self.scanView setViewPluginConfig:scanViewPluginConfig error:&error];
 
     // the delegate binding was lost when you recreated the ScanPlugin it so you have to bring it back here
-    scanViewPlugin = (ALScanViewPlugin *)self.scanView.scanViewPlugin;
+    scanViewPlugin = (ALScanViewPlugin *)self.scanView.viewPlugin;
     scanViewPlugin.scanPlugin.delegate = self;
 }
 
@@ -239,7 +214,7 @@ API_AVAILABLE(ios(13.0))
         resultDictionary[@"nativeBarcodesDetected"] = self.detectedBarcodes;
     }
 
-    NSObject<ALScanViewPluginBase> *scanViewPluginBase = self.scanView.scanViewPlugin;
+    NSObject<ALViewPluginBase> *scanViewPluginBase = self.scanView.viewPlugin;
     // TODO: handle this for composites: cancelOnResult = true? dismiss
     if ([scanViewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
         ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)scanViewPluginBase;
@@ -259,7 +234,7 @@ API_AVAILABLE(ios(13.0))
 
     __weak __block typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
-        weakSelf.callback(nil, @"Canceled");
+        weakSelf.callback(nil,  [NSError errorWithDomain:@"ALFlutterDomain" code:-1 userInfo:@{@"Error reason": @"Canceled"}]);
     }];
 }
 

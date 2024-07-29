@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import io.anyline.plugin.barcode.BarcodeFormat;
+import io.anyline.plugin.config.BarcodeFormat;
 import io.anyline.plugin.result.Barcode;
 import io.anyline.plugin.result.BarcodeResult;
 import io.anyline2.Event;
@@ -136,7 +136,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
     }
 
     protected void setResult(ScanViewPlugin scanViewPlugin, String jsonResult) {
-        boolean isCancelOnResult = scanViewPlugin.scanPlugin.getScanPluginConfig().shouldCancelOnResult();
+        boolean isCancelOnResult = scanViewPlugin.scanPlugin.getScanPluginConfig().getCancelOnResult();
 
         if (scanViewPlugin != null && isCancelOnResult) {
             ResultReporter.onResult(jsonResult, true);
@@ -157,14 +157,18 @@ public class ScanActivity extends Activity implements CameraOpenListener,
     @Override
     protected void onResume() {
         super.onResume();
-        // start scanning
-        anylineScanView.start();
+        if (anylineScanView.isInitialized()) {
+            // start scanning
+            anylineScanView.start();
+        }
     }
 
     @Override
     protected void onPause() {
-        // stop scanning
-        anylineScanView.stop();
+        if (anylineScanView.isInitialized()) {
+            // stop scanning
+            anylineScanView.stop();
+        }
         super.onPause();
     }
 

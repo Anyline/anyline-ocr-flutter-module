@@ -31,6 +31,8 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *labelVerticalOffsetConstraint;
 
+@property (nonatomic, strong) NSError *scanViewError;
+
 @end
 
 
@@ -69,6 +71,7 @@
                                                     error:&error];
 
     if ([self showErrorAlertIfNeeded:error]) {
+        self.scanViewError = error;
         return;
     }
 
@@ -105,8 +108,15 @@
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     NSError *error;
-    [self.scanView.scanViewPlugin startWithError:&error];
-    [self showErrorAlertIfNeeded:error];
+    if(!self.scanViewError){
+        [self.scanView.viewPlugin startWithError:&error];
+        [self showErrorAlertIfNeeded:error];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:^{
+            self.callback(nil, self.scanViewError);
+        }];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -178,15 +188,15 @@
     }
 
     // dismiss the view controller, if cancelOnResult for the config is true
-    NSObject<ALScanViewPluginBase> *scanViewPluginBase = self.scanView.scanViewPlugin;
-    if ([scanViewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
+    NSObject<ALViewPluginBase> *viewPluginBase = self.scanView.viewPlugin;
+    if ([viewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
         [self dismissViewControllerAnimated:YES completion:nil];
-        ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)scanViewPluginBase;
+        ALScanViewPlugin *scanViewPlugin = (ALScanViewPlugin *)viewPluginBase;
         BOOL cancelOnResult = scanViewPlugin.scanPlugin.pluginConfig.cancelOnResult;
         if (cancelOnResult) {
             self.callback(resultDictionary, nil);
         }
-    } else if ([scanViewPluginBase isKindOfClass:ALViewPluginComposite.class]) {
+    } else if ([viewPluginBase isKindOfClass:ALViewPluginComposite.class]) {
         // for composites, the cancelOnResult values for each child don't matter
         [self dismissViewControllerAnimated:YES completion:nil];
         self.callback(resultDictionary, nil);
@@ -264,11 +274,11 @@
 // MARK: - Selector Actions
 
 - (void)doneButtonPressed:(id)sender {
-    [self.scanView.scanViewPlugin stop];
+    [self.scanView.viewPlugin stop];
 
     __weak __block typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
-        weakSelf.callback(nil, @"Canceled");
+        weakSelf.callback(nil, [NSError errorWithDomain:@"ALFlutterDomain" code:-1 userInfo:@{@"Error reason": @"Canceled"}]);
     }];
 }
 
@@ -279,7 +289,7 @@
 
 // MARK: - Handle scan mode switching
 
-- (NSObject<ALScanViewPluginBase> *)scanViewPluginFromFileName:(NSString *)filename error:(NSError **)error {
+- (ALViewPluginConfig *)scanViewPluginConfigFromFileName:(NSString *)filename error:(NSError **)error {
     NSObject<FlutterPluginRegistrar> *registrar = [AnylinePlugin sharedInstance].registrar;
 
     NSString *extension = filename.pathExtension;
@@ -318,7 +328,7 @@
     if (!fileURL) {
         if (error) {
             NSString *errorMsg = [NSString stringWithFormat:@"Config file not found: %@", filename];
-            *(error) = [NSError errorWithDomain:@"AnylineErrorDomain" code:1000 userInfo:@{ NSLocalizedDescriptionKey: errorMsg }];
+            *(error) = [NSError errorWithDomain:@"ALFlutterDomain" code:1000 userInfo:@{ NSLocalizedDescriptionKey: errorMsg }];
         }
         return nil;
     }
@@ -333,33 +343,38 @@
         return nil;
     }
 
-    ALScanViewPlugin *newScanViewPlugin = [[ALScanViewPlugin alloc] initWithJSONDictionary:configDict error:error];
-    if (!newScanViewPlugin) {
+    ALScanViewConfig *newScanViewConfig = [[ALScanViewConfig alloc] initWithJSONDictionary:configDict error:error];
+    if (!newScanViewConfig) {
         return nil;
     }
 
-    return newScanViewPlugin;
+    return newScanViewConfig.viewPluginConfig;
 }
 
 - (void)updateViewConfig:(NSString *)filename {
 
     NSError *error;
-    ALScanViewPlugin *newScanViewPlugin = (ALScanViewPlugin *)[self scanViewPluginFromFileName:filename error:&error];
-    if (!newScanViewPlugin) {
-        [self showErrorAlertIfNeeded:error];
+    ALViewPluginConfig *newViewPluginConfig = [self scanViewPluginConfigFromFileName:filename error:&error];
+    if (!newViewPluginConfig) {
+        if([self showErrorAlertIfNeeded:error]){
+            [self dismissOnError: error];
+        }
         return;
     }
     
-    newScanViewPlugin.scanPlugin.delegate = self;
-
-    BOOL success = [self.scanView setScanViewPlugin:newScanViewPlugin error:&error];
+    BOOL success = [self.scanView setViewPluginConfig:newViewPluginConfig error:&error];
     if (!success) {
-        [self showErrorAlertIfNeeded:error];
+        if([self showErrorAlertIfNeeded:error]){
+            [self dismissOnError: error];
+        }
         return;
     }
-    success = [[self.scanView scanViewPlugin] startWithError:&error];
+    ((ALScanViewPlugin *)self.scanView.viewPlugin).scanPlugin.delegate = self;
+    success = [self.scanView.viewPlugin startWithError:&error];
     if (!success) {
-        [self showErrorAlertIfNeeded:error];
+        if([self showErrorAlertIfNeeded:error]){
+            [self dismissOnError: error];
+        }
         return;
     }
 }
@@ -381,7 +396,17 @@
 // MARK: - Miscellaneous
 
 - (BOOL)showErrorAlertIfNeeded:(NSError *)error {
-    return [ALPluginHelper showErrorAlertIfNeeded:error pluginCallback:self.callback];
+    if (!error) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+-(void)dismissOnError:(NSError *)error{
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.callback(nil, error);
+    }];
 }
 
 @end

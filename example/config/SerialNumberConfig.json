@@ -17,8 +17,8 @@
         "pluginConfig": {
             "id": "serial_number",
             "ocrConfig": {
-                "scanMode": "AUTO",
-                "model": "USNr.any"
+                "scanMode": "auto",
+                "models": ["USNr.any"]
             },
             "cancelOnResult": true
         },
