@@ -49,6 +49,7 @@
     } else if ([@"METHOD_START_ANYLINE" isEqualToString:call.method]) {
         
         NSString *configJSONStr = call.arguments[@"EXTRA_CONFIG_JSON"];
+        NSString *initializationParamsStr = call.arguments[@"EXTRA_INITIALIZATION_PARAMETERS"];
         NSError *error;
         
         NSDictionary *dictConfig = [configJSONStr toJSONObject:&error];
@@ -58,7 +59,7 @@
                                        details:nil]);
             return;
         }
-        [ALPluginHelper startScan:dictConfig finished:^(NSDictionary * _Nullable callbackObj, NSError * _Nullable error) {
+        [ALPluginHelper startScan:dictConfig initializationParamsStr:initializationParamsStr finished:^(NSDictionary * _Nullable callbackObj, NSError * _Nullable error) {
             NSString *resultStr;
             NSError *errorObj;
             if (error != nil) {

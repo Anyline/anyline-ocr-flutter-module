@@ -1,5 +1,5 @@
 PODS:
-  - Anyline (53.0.0)
+  - Anyline (53.3.0)
   - anyline_plugin (53.0.0):
     - Anyline (~> 53)
     - Flutter
@@ -37,7 +37,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
-  Anyline: 24167878dda34930abdf3f0d8665cbcc4204b3cb
+  Anyline: d076ffac04ccf43a281ac6a6dd5230630c7e260c
   anyline_plugin: 1f62863478c6660d2f40144e31e1b74b215ac721
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c

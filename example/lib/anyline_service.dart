@@ -15,6 +15,7 @@ abstract class AnylineService {
   List<Result> getResultList();
 
   String? getSdkVersion();
+
   String? getPluginVersion();
 }
 

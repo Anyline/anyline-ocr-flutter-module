@@ -33,6 +33,8 @@
 
 @property (nonatomic, strong) NSError *scanViewError;
 
+@property (nonatomic, strong) NSString *initializationParamsStr;
+
 @end
 
 
@@ -45,13 +47,15 @@
 - (instancetype)initWithLicensekey:(NSString *)licenseKey
                      configuration:(NSDictionary *)config
                    uiConfiguration:(ALJSONUIConfiguration *)JSONUIConfig
+           initializationParamsStr:(NSString *)initializationParamsStr
                           finished:(ALPluginCallback)callback {
-
+    
     if (self = [super init]) {
         _licenseKey = licenseKey;
         _callback = callback;
         _config = config;
         _uiConfig = JSONUIConfig;
+        _initializationParamsStr = initializationParamsStr;
         
         self.quality = 100;
         self.cropAndTransformErrorMessage = @"";
@@ -63,36 +67,47 @@
     [super viewDidLoad];
     
     NSError *error = nil;
-
+    
     self.view.backgroundColor = [UIColor blackColor];
-
-    self.scanView = [ALScanViewFactory withJSONDictionary:self.config
-                                                 delegate:self
-                                                    error:&error];
-
+    
+    ALScanViewInitializationParameters *initializationParams = nil;
+    if(![self isStringEmpty:_initializationParamsStr]){
+        initializationParams = [ALScanViewInitializationParameters withJSONString: _initializationParamsStr error:&error];
+    }
+    
     if ([self showErrorAlertIfNeeded:error]) {
         self.scanViewError = error;
         return;
     }
+        self.scanView = [ALScanViewFactory withJSONDictionary:self.config
+                                         initializationParams:initializationParams
+                                                     delegate:self
+                                                        error:&error];
 
+    
+    if ([self showErrorAlertIfNeeded:error]) {
+        self.scanViewError = error;
+        return;
+    }
+    
     [self.view addSubview:self.scanView];
-
+    
     self.scanView.translatesAutoresizingMaskIntoConstraints = false;
     [self.scanView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
     [self.scanView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
     [self.scanView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor].active = YES;
     [self.scanView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
-
+    
     self.scanView.supportedNativeBarcodeFormats = self.uiConfig.nativeBarcodeFormats;
     self.scanView.delegate = self;
     self.detectedBarcodes = [NSMutableArray array];
-
+    
     self.doneButton = [ALPluginHelper createButtonForViewController:self config:self.uiConfig];
-
+    
     self.scannedLabel = [ALPluginHelper createLabelForView:self.view];
-
+    
     [self configureLabel:self.scannedLabel config:self.uiConfig];
-
+    
     [self configureSegmentControl];
 }
 
@@ -103,10 +118,10 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
+    
     // avoid allowing the app to be put to sleep after a long period without touch events
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-
+    
     NSError *error;
     if(!self.scanViewError){
         [self.scanView.viewPlugin startWithError:&error];
@@ -131,62 +146,62 @@
 /// The segment control contains a list of scan modes each of which, when selected, reloads the scan view with
 /// the appropriate scan mode for the active plugin (keeping everything else the same)
 - (void)configureSegmentControl {
-
+    
     // At this point, you can safely create segment controls.
     if (!self.uiConfig.segmentViewConfigs) {
         return;
     }
-
+    
     if (![self segmentModesAreValid]) {
         return;
     }
-
+    
     // Give it the current scanmode that's initially defined already in the config JSON
     self.segment = [ALPluginHelper createSegmentForViewController:self
                                                            config:self.uiConfig];
-
+    
     self.segment.hidden = NO;
     self.segment.translatesAutoresizingMaskIntoConstraints = NO;
     [self.segment.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
     [self.segment.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor
                                               constant:self.uiConfig.segmentYPositionOffset].active = YES;
-
+    
     // NOTE: uncomment this to show the segment full width
     [self.segment.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:10].active = YES;
 }
 
 - (void)configureLabel:(UILabel *)label config:(ALJSONUIConfiguration *)config {
-
+    
     if (config.labelText.length < 1) {
         return;
     }
-
+    
     label.alpha = 1;
     label.text = config.labelText;
     label.font = [UIFont fontWithName:@"HelveticaNeue" size:config.labelSize];
     label.textColor = config.labelColor;
     label.translatesAutoresizingMaskIntoConstraints = NO;
-
+    
     [label.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:10].active = YES;
-
+    
     self.labelHorizontalOffsetConstraint = [label.centerXAnchor
                                             constraintEqualToAnchor:self.view.centerXAnchor constant:0];
     self.labelVerticalOffsetConstraint = [label.bottomAnchor
                                           constraintEqualToAnchor:self.view.topAnchor
                                           constant:0];
-
+    
     self.labelHorizontalOffsetConstraint.active = YES;
     self.labelVerticalOffsetConstraint.active = YES;
 }
 
 - (void)handleResult:(id _Nullable)resultObj {
-
+    
     NSMutableDictionary *resultDictionary = [NSMutableDictionary dictionaryWithDictionary:resultObj];
-
+    
     if (self.detectedBarcodes.count) {
         resultDictionary[@"nativeBarcodesDetected"] = self.detectedBarcodes;
     }
-
+    
     // dismiss the view controller, if cancelOnResult for the config is true
     NSObject<ALViewPluginBase> *viewPluginBase = self.scanView.viewPlugin;
     if ([viewPluginBase isKindOfClass:ALScanViewPlugin.class]) {
@@ -206,20 +221,20 @@
 // MARK: - ALScanPluginDelegate
 
 - (void)scanPlugin:(ALScanPlugin *)scanPlugin resultReceived:(ALScanResult *)scanResult {
-
+    
     CGFloat compressionQuality = self.quality / 100.0f;
-
+    
     NSMutableDictionary *resultDictMutable = [NSMutableDictionary dictionaryWithDictionary:scanResult.resultDictionary];
-
+    
     NSString *imagePath = [ALPluginHelper saveImageToFileSystem:scanResult.croppedImage
                                              compressionQuality:compressionQuality];
     resultDictMutable[@"imagePath"] = imagePath;
-
+    
     imagePath = [ALPluginHelper saveImageToFileSystem:scanResult.fullSizeImage
                                    compressionQuality:compressionQuality];
-
+    
     resultDictMutable[@"fullImagePath"] = imagePath;
-
+    
     [self handleResult:resultDictMutable];
 }
 
@@ -231,7 +246,7 @@
     // combine all into an array and create a string version of it.
     NSMutableDictionary *results = [NSMutableDictionary dictionaryWithCapacity:scanResults.count];
     CGFloat compressionQuality = self.quality / 100.0f;
-
+    
     for (ALScanResult *scanResult in scanResults) {
         NSMutableDictionary *resultDictMutable = [NSMutableDictionary dictionaryWithDictionary:scanResult.resultDictionary];
         NSString *imagePath = [ALPluginHelper saveImageToFileSystem:scanResult.croppedImage
@@ -248,20 +263,20 @@
 // MARK: - ALScanViewDelegate
 
 - (void)scanView:(ALScanView *)scanView updatedCutoutWithPluginID:(NSString *)pluginID frame:(CGRect)frame {
-
+    
     if (CGRectIsEmpty(frame)) {
         return;
     }
-
+    
     CGFloat xOffset = self.uiConfig.labelXPositionOffset;
     CGFloat yOffset = self.uiConfig.labelYPositionOffset;
-
+    
     // takes into account that frame reported for a cutout is in relation to
     // its scan view's coordinate system
     yOffset += [self.scanView convertRect:frame toView:self.scanView.superview].origin.y;
-
+    
     self.labelHorizontalOffsetConstraint.constant = xOffset;
-
+    
     self.labelVerticalOffsetConstraint.constant = yOffset;
 }
 
@@ -275,7 +290,7 @@
 
 - (void)doneButtonPressed:(id)sender {
     [self.scanView.viewPlugin stop];
-
+    
     __weak __block typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         weakSelf.callback(nil, [NSError errorWithDomain:@"ALFlutterDomain" code:-1 userInfo:@{@"Error reason": @"Canceled"}]);
@@ -291,26 +306,26 @@
 
 - (ALViewPluginConfig *)scanViewPluginConfigFromFileName:(NSString *)filename error:(NSError **)error {
     NSObject<FlutterPluginRegistrar> *registrar = [AnylinePlugin sharedInstance].registrar;
-
+    
     NSString *extension = filename.pathExtension;
     if (extension.length < 1) {
         extension = @"json";
     }
-
+    
     NSString *resourcePath = [[registrar lookupKeyForAsset:filename] stringByDeletingPathExtension];
-
+    
     // trying to directly access config by just appending filename to the main bundle path
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:resourcePath withExtension:extension];
-
+    
     if (!fileURL) {
         // going to recursively search for the filename in the param
         // if the filename param includes a relative path, they are not going to be used here!
-
+        
         NSMutableArray *potentialFilePaths = [NSMutableArray array];
         NSString *assetsRootPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:[registrar lookupKeyForAsset:@""]];
         NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:assetsRootPath];
         NSString *filePath;
-
+        
         // best-effort, potentially imprecise
         while ((filePath = [enumerator nextObject]) != nil) {
             if ([filePath.pathExtension isEqualToString:extension]) {
@@ -324,7 +339,7 @@
             fileURL = [NSURL fileURLWithPath:potentialFilePaths[0]];
         }
     }
-
+    
     if (!fileURL) {
         if (error) {
             NSString *errorMsg = [NSString stringWithFormat:@"Config file not found: %@", filename];
@@ -332,27 +347,27 @@
         }
         return nil;
     }
-
+    
     NSString *configStr = [NSString stringWithContentsOfURL:fileURL encoding:NSUTF8StringEncoding error:error];
     if (!configStr) {
         return nil;
     }
-
+    
     NSDictionary *configDict = [configStr toJSONObject:error];
     if (!configDict) {
         return nil;
     }
-
+    
     ALScanViewConfig *newScanViewConfig = [[ALScanViewConfig alloc] initWithJSONDictionary:configDict error:error];
     if (!newScanViewConfig) {
         return nil;
     }
-
+    
     return newScanViewConfig.viewPluginConfig;
 }
 
 - (void)updateViewConfig:(NSString *)filename {
-
+    
     NSError *error;
     ALViewPluginConfig *newViewPluginConfig = [self scanViewPluginConfigFromFileName:filename error:&error];
     if (!newViewPluginConfig) {
@@ -408,5 +423,12 @@
         self.callback(nil, error);
     }];
 }
+
+-(BOOL)isStringEmpty:(NSString *)str {
+     if(str == nil || [str isKindOfClass:[NSNull class]] || str.length==0) {
+            return YES;
+       }
+      return NO;
+  }
 
 @end

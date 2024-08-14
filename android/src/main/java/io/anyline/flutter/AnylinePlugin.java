@@ -91,7 +91,8 @@ public class AnylinePlugin implements
             }
         } else if (call.method.equals(Constants.METHOD_START_ANYLINE)) {
             this.configJson = call.argument(Constants.EXTRA_CONFIG_JSON);
-            scanAnyline4();
+            String initializationParametersString = call.argument(Constants.EXTRA_INITIALIZATION_PARAMETERS);
+            scanAnyline4(initializationParametersString);
         } else if (call.method.equals(Constants.METHOD_EXPORT_CACHED_EVENTS)) {
             exportCachedEvents();
         } else {
@@ -115,20 +116,21 @@ public class AnylinePlugin implements
         AnylineSdk.init(sdkLicenseKey, activity, sdkAssetsFolder, cacheConfig, wrapperConfig);
     }
 
-    private void scanAnyline4() {
+    private void scanAnyline4(String initializationParametersString) {
         try {
             configObject = new JSONObject(this.configJson);
-            scan();
+            scan(initializationParametersString);
         } catch (JSONException e) {
             e.printStackTrace();
             returnError(Constants.EXCEPTION_CONFIG, e.getLocalizedMessage());
         }
     }
 
-    private void scan() {
+    private void scan(String initializationParameters) {
         Intent intent = new Intent(activity, ScanActivity.class);
         intent.putExtra(Constants.EXTRA_VIEW_CONFIGS_PATH, viewConfigsPath);
         intent.putExtra(Constants.EXTRA_CONFIG_JSON, configObject.toString());
+        intent.putExtra(Constants.EXTRA_INITIALIZATION_PARAMETERS, initializationParameters);
         ResultReporter.setListener(this);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

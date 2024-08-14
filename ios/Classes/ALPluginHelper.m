@@ -10,12 +10,12 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
 
 #pragma mark - Launch Anyline
 
-+ (void)startScan:(NSDictionary *)config finished:(ALPluginCallback)callback {
++ (void)startScan:(NSDictionary *)config initializationParamsStr:(NSString *)initializationParamsStr finished:(ALPluginCallback)callback {
     
     NSDictionary *pluginConf = config;
     
     NSString *licenseKey = [config objectForKey:@"licenseKey"];
-
+    
     UIViewController *presentingViewController = [self.class topMostViewController];
     presentingViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     
@@ -35,7 +35,8 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
             ALNFCScanViewController *nfcScanViewController = [[ALNFCScanViewController alloc] initWithLicensekey:licenseKey
                                                                                                    configuration:pluginConf
                                                                                                         uiConfig:jsonUIConf
-                                                                                                        finished:callback];            
+                                                                                         initializationParamsStr:initializationParamsStr
+                                                                                                        finished:callback];
             if (nfcScanViewController != nil) {
                 [nfcScanViewController setModalPresentationStyle:UIModalPresentationFullScreen];
                 [presentingViewController presentViewController:nfcScanViewController
@@ -50,6 +51,7 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
         ALPluginScanViewController *pluginScanViewController = [[ALPluginScanViewController alloc] initWithLicensekey:licenseKey
                                                                                                         configuration:pluginConf
                                                                                                       uiConfiguration:jsonUIConf
+                                                                                              initializationParamsStr:initializationParamsStr
                                                                                                              finished:callback];
         
         // TODO: should remove these extras
@@ -61,7 +63,7 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
             NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
             pluginScanViewController.cropAndTransformErrorMessage = str;
         }
-
+        
         if (pluginScanViewController) {
             [pluginScanViewController setModalPresentationStyle:UIModalPresentationFullScreen];
             [presentingViewController presentViewController:pluginScanViewController
@@ -112,15 +114,15 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
 + (UISegmentedControl *)createSegmentForViewController:(UIViewController *)viewController
                                                 config:(ALJSONUIConfiguration *)config {
     UISegmentedControl *segment = [[UISegmentedControl alloc] initWithItems:config.segmentTitles];
-
+    
     // This doesn't appear to be changing the color
     // segment.tintColor = ...
-
+    
     segment.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
     if (@available(iOS 13.0, *)) {
         segment.selectedSegmentTintColor = config.segmentTintColor;
     }
-
+    
     segment.hidden = YES;
     
     // [segment setSelectedSegmentIndex:index];
@@ -264,7 +266,7 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
 + (void)showErrorAlertWithTitle:(NSString *)title
                         message:(NSString *)message
        presentingViewController:(UIViewController *)presentingViewController {
-
+    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -275,26 +277,26 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
 
 + (BOOL)showErrorAlertIfNeeded:(NSError *)error
                 pluginCallback:(ALPluginCallback)callback {
-
+    
     if (!error) {
         return NO;
     }
-
+    
     UIViewController *fromViewController = [self.class topMostViewController];
-
+    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could not start scanning"
                                                                    message:error.localizedDescription
                                                             preferredStyle:UIAlertControllerStyleAlert];
-
+    
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"Ok"
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * _Nonnull action) {
-
+        
         [fromViewController dismissViewControllerAnimated:YES completion:^{
             callback(nil, [NSError errorWithDomain:@"" code:-1 userInfo:@{@"Error reason": @"Canceled"}]);
         }];
     }];
-
+    
     [alert addAction:action];
     [fromViewController presentViewController:alert animated:YES completion:NULL];
     return YES;
