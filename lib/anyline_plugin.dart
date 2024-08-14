@@ -22,9 +22,10 @@ class AnylinePlugin {
 
   /// Returns the Anyline Plugin version.
   static Future<String> get pluginVersion async {
-    final fileContent = await rootBundle.loadString('packages/anyline_plugin/pubspec.yaml');
+    final fileContent =
+        await rootBundle.loadString('packages/anyline_plugin/pubspec.yaml');
     final pubspec = Pubspec.parse(fileContent);
-    return pubspec.version?.canonicalizedVersion ??"";
+    return pubspec.version?.canonicalizedVersion ?? "";
   }
 
   void setCustomModelsPath(String customModelsPath) {
@@ -51,7 +52,6 @@ class AnylinePlugin {
       Constants.EXTRA_PLUGIN_VERSION: pluginVersion
     };
     try {
-
       final bool? result =
           await _channel.invokeMethod(Constants.METHOD_SET_LICENSE_KEY, params);
       return result;
@@ -68,12 +68,14 @@ class AnylinePlugin {
   /// and how to parse it, visit the [Anyline Documentation](https://documentation.anyline.com).
   ///
   /// Uses the third-party-package `permission_handler` to request camera permissions.
-  Future<String?> startScanning(String configJson) async {
+  Future<String?> startScanning(String configJson,
+      [String? initializationParams]) async {
     if (await Permission.camera.isPermanentlyDenied) {
       openAppSettings();
     } else if (await Permission.camera.request().isGranted) {
-      final Map<String, String> config = {
-        Constants.EXTRA_CONFIG_JSON: configJson
+      final Map<String, String?> config = {
+        Constants.EXTRA_CONFIG_JSON: configJson,
+        Constants.EXTRA_INITIALIZATION_PARAMETERS: initializationParams
       };
       try {
         final String? result =

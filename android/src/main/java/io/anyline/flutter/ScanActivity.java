@@ -1,5 +1,7 @@
 package io.anyline.flutter;
 
+import static io.anyline2.sdk.extension.ScanViewInitializationParametersExtensionKt.getScanViewInitializationParametersFromJsonObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -28,7 +30,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import io.anyline.plugin.config.BarcodeFormat;
+import io.anyline.plugin.config.ScanViewInitializationParameters;
 import io.anyline.plugin.result.Barcode;
 import io.anyline.plugin.result.BarcodeResult;
 import io.anyline2.Event;
@@ -48,6 +52,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
 
     protected String viewConfigsPath = "";
     protected String configString;
+    protected String initializationParametersString;
 
     private ScanView anylineScanView;
     private RadioGroup radioGroup = null;
@@ -69,6 +74,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
 
         viewConfigsPath = getIntent().getStringExtra(Constants.EXTRA_VIEW_CONFIGS_PATH);
         configString = getIntent().getStringExtra(Constants.EXTRA_CONFIG_JSON);
+        initializationParametersString = getIntent().getStringExtra(Constants.EXTRA_INITIALIZATION_PARAMETERS);
 
         setContentView(R.layout.activity_scan_scanview);
 
@@ -80,12 +86,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
             defaultOrientationApplied = savedInstanceState.getBoolean(KEY_DEFAULT_ORIENTATION_APPLIED);
         }
 
-        try {
-            initScanView();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+        initScanView();
         setDebugListener();
     }
 
@@ -204,7 +205,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
         if (nativeBarcodeMap == null) {
             nativeBarcodeMap = new HashMap<>();
         }
-        for (Barcode barcode: anylineYuvImageBarcodeResultPair.second.getBarcodes()) {
+        for (Barcode barcode : anylineYuvImageBarcodeResultPair.second.getBarcodes()) {
             nativeBarcodeMap.put(barcode.getValue(), barcode);
         }
     }
@@ -227,89 +228,100 @@ public class ScanActivity extends Activity implements CameraOpenListener,
     }
 
     private void setScanConfig(JSONObject scanConfigJson, String viewConfigAssetFileName) {
-        configJson = scanConfigJson;
-        optionsJson = configJson.optJSONObject("options");
 
-        anylineScanView.getCameraView().removeNativeBarcodeReceivedEventListener(this);
-        nativeBarcodeMap = null;
+        try {
+            configJson = scanConfigJson;
+            optionsJson = configJson.optJSONObject("options");
 
-        anylineScanView.init(scanConfigJson);
+            anylineScanView.getCameraView().removeNativeBarcodeReceivedEventListener(this);
+            nativeBarcodeMap = null;
 
-        ViewPluginBase viewPluginBase = anylineScanView.getScanViewPlugin();
-        if (viewPluginBase != null) {
+            if (initializationParametersString != null) {
+                ScanViewInitializationParameters scanViewInitializationParameters = getScanViewInitializationParametersFromJsonObject(this, new JSONObject(initializationParametersString));
+                anylineScanView.init(scanConfigJson, scanViewInitializationParameters);
+            } else {
+                anylineScanView.init(scanConfigJson);
+            }
 
-            ScanViewPlugin scanViewPlugin = viewPluginBase.getFirstActiveScanViewPlugin();
 
-            viewPluginBase.resultReceived = scanResult -> {
-                setResult(scanViewPlugin, AnylinePluginHelper.jsonHelper(scanResult, nativeBarcodeMap).toString());
-            };
+            ViewPluginBase viewPluginBase = anylineScanView.getScanViewPlugin();
+            if (viewPluginBase != null) {
 
-            viewPluginBase.resultsReceived = scanResults -> {
-                JSONObject jsonResult = new JSONObject();
-                for (ScanResult scanResult: scanResults) {
-                    try {
-                        jsonResult.put(scanResult.getPluginId(), AnylinePluginHelper.jsonHelper(scanResult, nativeBarcodeMap));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                setResult(scanViewPlugin, jsonResult.toString());
-            };
+                ScanViewPlugin scanViewPlugin = viewPluginBase.getFirstActiveScanViewPlugin();
 
-            anylineScanView.onCutoutChanged = pairs -> {
-                if (anylineUIConfig != null && anylineUIConfig.hasSegmentConfig) {
-                    if (!pairs.isEmpty()) {
-                        Rect rect = pairs.get(0).second;
+                viewPluginBase.resultReceived = scanResult -> {
+                    setResult(scanViewPlugin, AnylinePluginHelper.jsonHelper(scanResult, nativeBarcodeMap).toString());
+                };
 
-                        CoordinatorLayout.LayoutParams segmentLayoutParams =
-                                new CoordinatorLayout.LayoutParams(rect.width(),  anylineScanView.getHeight() - rect.bottom);
-                        segmentLayoutParams.setMargins(rect.left, rect.bottom, rect.right, anylineScanView.getBottom());
-                        radioGroup.setLayoutParams(segmentLayoutParams);
-
-                        radioGroup.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        radioGroup.setVisibility(View.GONE);
-                    }
-                }
-            };
-
-            if (optionsJson != null) {
-                if (optionsJson.has("nativeBarcodeScanningFormats")) {
-                    List<BarcodeFormat> barcodeFormatsList = new ArrayList<>();
-                    JSONArray barcodeFormatsJsonArray = optionsJson.optJSONArray("nativeBarcodeScanningFormats");
-                    for (int i = 0; i < barcodeFormatsJsonArray.length(); i++) {
+                viewPluginBase.resultsReceived = scanResults -> {
+                    JSONObject jsonResult = new JSONObject();
+                    for (ScanResult scanResult : scanResults) {
                         try {
-                            barcodeFormatsList.add(BarcodeFormat.valueOf(barcodeFormatsJsonArray.getString(i)));
-                        } catch (Exception e) {
-
+                            jsonResult.put(scanResult.getPluginId(), AnylinePluginHelper.jsonHelper(scanResult, nativeBarcodeMap));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
                     }
-                    anylineScanView.getCameraView().addNativeBarcodeReceivedEventListener(this, barcodeFormatsList);
+                    setResult(scanViewPlugin, jsonResult.toString());
+                };
+
+                anylineScanView.onCutoutChanged = pairs -> {
+                    if (anylineUIConfig != null && anylineUIConfig.hasSegmentConfig) {
+                        if (!pairs.isEmpty()) {
+                            Rect rect = pairs.get(0).second;
+
+                            CoordinatorLayout.LayoutParams segmentLayoutParams =
+                                    new CoordinatorLayout.LayoutParams(rect.width(), anylineScanView.getHeight() - rect.bottom);
+                            segmentLayoutParams.setMargins(rect.left, rect.bottom, rect.right, anylineScanView.getBottom());
+                            radioGroup.setLayoutParams(segmentLayoutParams);
+
+                            radioGroup.setVisibility(View.VISIBLE);
+                        } else {
+                            radioGroup.setVisibility(View.GONE);
+                        }
+                    }
+                };
+
+                if (optionsJson != null) {
+                    if (optionsJson.has("nativeBarcodeScanningFormats")) {
+                        List<BarcodeFormat> barcodeFormatsList = new ArrayList<>();
+                        JSONArray barcodeFormatsJsonArray = optionsJson.optJSONArray("nativeBarcodeScanningFormats");
+                        for (int i = 0; i < barcodeFormatsJsonArray.length(); i++) {
+                            try {
+                                barcodeFormatsList.add(BarcodeFormat.valueOf(barcodeFormatsJsonArray.getString(i)));
+                            } catch (Exception e) {
+
+                            }
+                        }
+                        anylineScanView.getCameraView().addNativeBarcodeReceivedEventListener(this, barcodeFormatsList);
+                    }
                 }
             }
-        }
 
-        layoutChangeOrientation.setVisibility(View.GONE);
-        if (optionsJson != null) {
-            if (shouldShowRotateButton(optionsJson)) {
-                try {
-                    RotateButtonConfig rotateButtonConfig = new RotateButtonConfig(optionsJson.getJSONObject("rotateButton"));
-                    configRotateButtonInView(rotateButtonConfig);
-                } catch (JSONException e) {
+            layoutChangeOrientation.setVisibility(View.GONE);
+            if (optionsJson != null) {
+                if (shouldShowRotateButton(optionsJson)) {
+                    try {
+                        RotateButtonConfig rotateButtonConfig = new RotateButtonConfig(optionsJson.getJSONObject("rotateButton"));
+                        configRotateButtonInView(rotateButtonConfig);
+                    } catch (JSONException e) {
 
+                    }
+                }
+
+                setDefaultOrientation();
+
+                if (optionsJson.has("segmentConfig")) {
+                    // create the radio button for the UI
+                    addSegmentRadioButtonUI(optionsJson, viewConfigAssetFileName);
+                } else {
+                    radioGroup.setVisibility(View.GONE);
                 }
             }
-
-            setDefaultOrientation();
-
-            if (optionsJson.has("segmentConfig")) {
-                // create the radio button for the UI
-                addSegmentRadioButtonUI(optionsJson, viewConfigAssetFileName);
-            }
-            else {
-                radioGroup.setVisibility(View.GONE);
-            }
+        } catch (Exception e) {
+            finishWithError(
+                    getString(getResources().getIdentifier("error_invalid_initialization_parameters", "string", getPackageName()))
+                            + "\n" + e.getLocalizedMessage());
         }
     }
 
