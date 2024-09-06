@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
 
-import 'scan_modes.dart';
+import 'package:anyline_plugin_example/scan_modes.dart';
 
 class ResultDisplay extends StatelessWidget {
+  const ResultDisplay({Key? key}) : super(key: key);
+
   static const routeName = '/resultDisplay';
 
   @override
@@ -22,7 +24,7 @@ class ResultDisplay extends StatelessWidget {
         backgroundColor: Styles.backgroundBlack,
         centerTitle: true,
         title: Text(
-          "${result.scanMode.label} Result",
+          '${result.scanMode.label} Result',
           style: GoogleFonts.montserrat(fontWeight: FontWeight.w400),
         ),
         elevation: 0,
@@ -39,6 +41,8 @@ class ResultDisplay extends StatelessWidget {
 }
 
 class CompositeResultDisplay extends StatelessWidget {
+  const CompositeResultDisplay({Key? key}) : super(key: key);
+
   static const routeName = '/compositeResultDisplay';
 
   @override
@@ -47,7 +51,8 @@ class CompositeResultDisplay extends StatelessWidget {
 
     var subResults = result.jsonMap!.values.take(3);
 
-    List<Map<String, dynamic>> results = [for (var j in subResults) j];
+    List<Map<String, dynamic>> results = [
+      for (final j in subResults) j as Map<String, dynamic>];
 
     return DefaultTabController(
       length: results.length,
@@ -65,7 +70,7 @@ class CompositeResultDisplay extends StatelessWidget {
           title: FittedBox(
               fit: BoxFit.fitWidth,
               child: Text(
-                "${result.scanMode.label}",
+                '${result.scanMode.label}',
                 style: GoogleFonts.montserrat(fontWeight: FontWeight.w400),
               )),
         ),
@@ -99,22 +104,20 @@ class CompositeResultDisplay extends StatelessWidget {
 }
 
 class ResultDetails extends StatelessWidget {
-  final Map<String, dynamic>? json;
-  late final Map<String, dynamic>? imageMap;
-  late final List<Map<String, dynamic>>? orderedJson;
-  late final List<dynamic>? nativeBarcodesDetected;
 
-  ResultDetails(Map<String, dynamic>? json) : this.json = json {
-    this.orderedJson = [];
-    this.imageMap = Map<String, dynamic>();
-    this.nativeBarcodesDetected = [];
+  ResultDetails(Map<String, dynamic>? json, {Key? key})
+      : json = json,
+        super(key: key) {
+    orderedJson = [];
+    imageMap = Map<String, dynamic>();
+    nativeBarcodesDetected = [];
 
     var actualResultMap = Map<String, dynamic>();
 
     // NOTE: keep xxxResult on top, nativeBarcodesDetected, imagePath and fullImagePath at the bottom
     json?.forEach((key, value) {
       if (key.toLowerCase().endsWith('imagepath')) {
-        this.imageMap![key] = value;
+        imageMap![key] = value;
         return;
       }
       if (key.toLowerCase().endsWith('result')) {
@@ -123,38 +126,41 @@ class ResultDetails extends StatelessWidget {
         return;
       }
       if (key.toLowerCase() == 'nativebarcodesdetected') {
-        this.nativeBarcodesDetected?.add(value);
+        nativeBarcodesDetected?.add(value);
         return;
       }
 
-      this.orderedJson!.add({key: value});
+      orderedJson!.add({key: value});
     });
 
     actualResultMap.forEach((key, value) {
       var encoder = new JsonEncoder.withIndent(' ' * 2);
       var prettyJSON = encoder.convert(value);
-      this.orderedJson!.insert(0, {key: prettyJSON});
+      orderedJson!.insert(0, {key: prettyJSON});
     });
 
-    if (this.nativeBarcodesDetected != null &&
-        this.nativeBarcodesDetected!.length > 0) {
-      this
-          .orderedJson!
-          .add({'nativeBarcodesDetected': this.nativeBarcodesDetected});
+    if (nativeBarcodesDetected != null &&
+        nativeBarcodesDetected!.length > 0) {
+      orderedJson!
+          .add({'nativeBarcodesDetected': nativeBarcodesDetected});
     }
 
     dynamic imagePath;
 
     imagePath = imageMap?['imagePath'];
     if (imagePath != null && imagePath.toString().isNotEmpty) {
-      this.orderedJson!.add({'imagePath': imagePath});
+      orderedJson!.add({'imagePath': imagePath});
     }
 
     imagePath = imageMap?['fullImagePath'];
     if (imagePath != null && imagePath.toString().isNotEmpty) {
-      this.orderedJson!.add({'fullImagePath': imagePath});
+      orderedJson!.add({'fullImagePath': imagePath});
     }
   }
+  final Map<String, dynamic>? json;
+  late final Map<String, dynamic>? imageMap;
+  late final List<Map<String, dynamic>>? orderedJson;
+  late final List<dynamic>? nativeBarcodesDetected;
 
   @override
   Widget build(BuildContext context) {
@@ -163,13 +169,13 @@ class ResultDetails extends StatelessWidget {
       child: ListView(
         children: [
           Container(
+              color: Colors.black87,
               child: Image.file(
-                File(imageMap!['imagePath']),
+                File(imageMap!['imagePath'] as String),
                 fit: BoxFit.scaleDown,
                 height:
                     240, // prevents weird display of tall images (e.g. vertical shipping containers)
-              ),
-              color: Colors.black87),
+              )),
           ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
@@ -189,7 +195,7 @@ class ResultDetails extends StatelessWidget {
                           // will try in order
                           // "American Typewriter",
                           // "Avenir Book",
-                          "Roboto Mono"
+                          'Roboto Mono'
                         ]),
                   ),
                   contentPadding: EdgeInsets.all(4),
@@ -212,6 +218,8 @@ class ResultDetails extends StatelessWidget {
 }
 
 class FullScreenImage extends StatelessWidget {
+  const FullScreenImage({Key? key}) : super(key: key);
+
   static const routeName = '/resultDisplay/fullImage';
 
   @override
@@ -220,10 +228,8 @@ class FullScreenImage extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as String;
 
     return GestureDetector(
-      child: Container(
-        child: PhotoView(
-          imageProvider: FileImage(File(fullImagePath)),
-        ),
+      child: PhotoView(
+        imageProvider: FileImage(File(fullImagePath)),
       ),
       onTap: () {
         Navigator.pop(context);

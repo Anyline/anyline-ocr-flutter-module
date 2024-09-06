@@ -4,19 +4,19 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'anyline_plugin'
-  s.version          = '53.0.0'
+  s.version          = '54.0.0'
   s.summary          = 'Anyline SDK'
   s.description      = <<-DESC
 Anyline OCR Module
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Anyline GmbH' => 'daniel@anyline.com' }
+  s.author           = { 'Anyline GmbH' => 'capture-team@anyline.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Anyline', '~> 53'
+  s.dependency 'Anyline', '54.0.0'
   s.static_framework = true
   s.platform = :ios, '12.0'
   s.ios.deployment_target = '12.0'

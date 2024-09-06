@@ -4,15 +4,18 @@ import 'package:anyline_plugin/exceptions.dart';
 import 'package:anyline_plugin_example/anyline_service.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/styles.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'result_display.dart';
-import 'result_list.dart';
-import 'scan_modes.dart';
-import 'license_state.dart';
+import 'package:anyline_plugin_example/result_display.dart';
+import 'package:anyline_plugin_example/result_list.dart';
+import 'package:anyline_plugin_example/scan_modes.dart';
+import 'package:anyline_plugin_example/license_state.dart';
 
 class AnylineDemoApp extends StatelessWidget {
+  const AnylineDemoApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,6 +37,8 @@ class AnylineDemoApp extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -66,37 +71,39 @@ class _HomeState extends State<Home> {
       if (e is AnylineLicenseException) {
         message = LicenseState.LicenseKeyEmptyErrorMessage;
       }
-      print(message);
+      if (kDebugMode) {
+        print(message);
+      }
 
-      showDialog(
+      showDialog<void>(
           context: context,
           builder: (_) => AlertDialog(
-            elevation: 0,
-            title: const Text(
-              'Error',
-              style: TextStyle(
-                  fontFamily: "Roboto", fontWeight: FontWeight.bold),
-            ),
-            content: Text(
-              message,
-              style: TextStyle(fontFamily: "Roboto"),
-              textAlign: TextAlign.start,
-            ),
-            actions: [
-              TextButton(
-                child: Text("OK",
-                    style: TextStyle(
-                        fontFamily: "Roboto", fontWeight: FontWeight.bold)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          ));
+                elevation: 0,
+                title: const Text(
+                  'Error',
+                  style: TextStyle(
+                      fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+                ),
+                content: Text(
+                  message,
+                  style: TextStyle(fontFamily: 'Roboto'),
+                  textAlign: TextAlign.start,
+                ),
+                actions: [
+                  TextButton(
+                    child: Text('OK',
+                        style: TextStyle(
+                            fontFamily: 'Roboto', fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ));
     }
   }
 
-  _openResultDisplay(Result result) {
+  void _openResultDisplay(Result result) {
     Navigator.pushNamed(
         context,
         result.scanMode.isCompositeScan()
@@ -185,24 +192,23 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
               ),
               onPressed: () {
-                showDialog(
+                showDialog<void>(
                     context: context,
                     builder: (_) => AlertDialog(
-                      elevation: 0,
-                      title: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Text(
-                            'Anyline Flutter Demo App',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )),
-                      content: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Text(
-                              'SDK Version ${_anylineService.getSdkVersion()}' +
-                                  '\n' +
-                                  'Plugin Version ${_anylineService.getPluginVersion()}'
-                          )),
-                    ));
+                          elevation: 0,
+                          title: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                'Anyline Flutter Demo App',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
+                          content: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                  'SDK Version ${_anylineService.getSdkVersion()}' +
+                                      '\n' +
+                                      'Plugin Version ${_anylineService.getPluginVersion()}')),
+                        ));
               },
             ),
           )
@@ -361,12 +367,6 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'NFC',
-              onPressed: () {
-                scan(ScanMode.NFCAndMRZ);
-              },
-            ),
-            ScanButton(
               text: 'PDF 417 (AAMVA)',
               onPressed: () {
                 scan(ScanMode.Barcode_PDF417);
@@ -512,7 +512,7 @@ class _HomeState extends State<Home> {
 }
 
 class ScanButton extends StatelessWidget {
-  ScanButton({required this.text, this.onPressed});
+  ScanButton({Key? key, required this.text, this.onPressed}) : super(key: key);
 
   final String text;
   final Function? onPressed;
@@ -530,9 +530,8 @@ class ScanButton extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: TextButton(
           style: flatButtonStyle,
-          child: Container(
-            height: double.infinity,
-            width: double.infinity,
+          onPressed: onPressed as void Function()?,
+          child: SizedBox.expand(
             child: Stack(
               clipBehavior: Clip.hardEdge,
               alignment: Alignment.bottomLeft,
@@ -542,7 +541,7 @@ class ScanButton extends StatelessWidget {
                   left: 10,
                   child: Text(text,
                       style:
-                      TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
                 ),
                 Positioned(
                   bottom: -15,
@@ -557,7 +556,6 @@ class ScanButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed as void Function()?,
         ),
       ),
     );
@@ -565,7 +563,7 @@ class ScanButton extends StatelessWidget {
 }
 
 class UseCaseButton extends StatelessWidget {
-  UseCaseButton({this.image, required this.text, this.onPressed});
+  UseCaseButton({Key? key, this.image, required this.text, this.onPressed}) : super(key: key);
 
   final ImageProvider? image;
   final String text;
@@ -584,9 +582,8 @@ class UseCaseButton extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: TextButton(
           style: flatButtonStyle,
-          child: Container(
-            height: double.infinity,
-            width: double.infinity,
+          onPressed: onPressed as void Function()?,
+          child: SizedBox.expand(
             child: Stack(
               alignment: Alignment.bottomLeft,
               children: [
@@ -602,7 +599,7 @@ class UseCaseButton extends StatelessWidget {
                   left: 10,
                   child: Text(text,
                       style:
-                      TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
                 ),
                 Positioned(
                   bottom: -15,
@@ -617,7 +614,6 @@ class UseCaseButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: onPressed as void Function()?,
         ),
       ),
     );

@@ -9,7 +9,6 @@ enum ScanMode {
   LicensePlate,
   JapaneseLandingPermission,
   MRZ,
-  NFCAndMRZ,
   Odometer,
   ParallelScanning,
   ParallelFirstScanning,
@@ -73,8 +72,6 @@ extension ScanModeInfo on ScanMode {
         return 'Parallel First Scanning (VIN/Barcode)';
       case ScanMode.SerialScanning:
         return 'Serial Scanning (LP>DL>VIN)';
-      case ScanMode.NFCAndMRZ:
-        return 'MRZ and NFC';
       case ScanMode.VRC:
         return 'Vehicle Registration Certificate';
       case ScanMode.CowTag:
@@ -83,7 +80,7 @@ extension ScanModeInfo on ScanMode {
   }
 
   String get key {
-    return this.toString().split('.').last;
+    return toString().split('.').last;
   }
 
   bool isCompositeScan() {

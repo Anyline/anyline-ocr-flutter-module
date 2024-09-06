@@ -31,14 +31,13 @@ public class AnylineUIConfig {
     /**
      * Create config from the given json object.
      *
-     * @param context    the context
      * @param jsonObject the json object with the settings
      */
-    public AnylineUIConfig(Context context, JSONObject jsonObject) {
-        initFromJsonObject(context, jsonObject);
+    public AnylineUIConfig(JSONObject jsonObject) {
+        initFromJsonObject(jsonObject);
     }
 
-    private void initFromJsonObject(Context context, JSONObject json) {
+    private void initFromJsonObject(JSONObject json) {
         JSONObject segment = json.optJSONObject(SEGMENT);
 
         if (segment != null) {
@@ -47,8 +46,8 @@ public class AnylineUIConfig {
                 JSONArray titlesJson = segment.getJSONArray(SEGMENT_TITLES);
                 JSONArray viewConfigsJson = segment.getJSONArray(SEGMENT_VIEWCONFIGS);
 
-                titles = new ArrayList<String>();
-                viewConfigs = new ArrayList<String>();
+                titles = new ArrayList<>();
+                viewConfigs = new ArrayList<>();
                 for (int i = 0; i < titlesJson.length(); i++) {
                     titles.add(titlesJson.get(i).toString());
                     viewConfigs.add(viewConfigsJson.get(i).toString());

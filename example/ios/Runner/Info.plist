@@ -28,8 +28,6 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NFCReaderUsageDescription</key>
-	<string>NFC Usage</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow Camera Access to scan with Anyline</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -51,9 +49,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-	<array>
-		<string>A0000002471001</string>
-	</array>
 </dict>
 </plist>

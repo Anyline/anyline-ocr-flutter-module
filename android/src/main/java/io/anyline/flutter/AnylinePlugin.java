@@ -39,9 +39,6 @@ public class AnylinePlugin implements
 
     private MethodChannel channel;
 
-    private String licenseKey;
-    private String pluginVersion = "";
-    private boolean enableOfflineCache = false;
     private String customModelsPath = "flutter_assets";
     private String viewConfigsPath = "flutter_assets";
 
@@ -79,9 +76,9 @@ public class AnylinePlugin implements
         } else if (call.method.equals(Constants.METHOD_SET_VIEW_CONFIGS_PATH)) {
             viewConfigsPath = call.argument(Constants.EXTRA_VIEW_CONFIGS_PATH);
         } else if (call.method.equals(Constants.METHOD_SET_LICENSE_KEY)) {
-            licenseKey = call.argument(Constants.EXTRA_LICENSE_KEY);
-            pluginVersion = call.argument(Constants.EXTRA_PLUGIN_VERSION);
-            enableOfflineCache = Boolean.TRUE.equals(call.argument(Constants.EXTRA_ENABLE_OFFLINE_CACHE));
+            String licenseKey = call.argument(Constants.EXTRA_LICENSE_KEY);
+            String pluginVersion = call.argument(Constants.EXTRA_PLUGIN_VERSION);
+            boolean enableOfflineCache = Boolean.TRUE.equals(call.argument(Constants.EXTRA_ENABLE_OFFLINE_CACHE));
             try {
                 initSdk(licenseKey, customModelsPath, pluginVersion, enableOfflineCache);
                 result.success(true);

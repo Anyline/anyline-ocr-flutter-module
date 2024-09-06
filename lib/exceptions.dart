@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 /// Custom exception including parser to correctly interpret and propagate errors
 /// coming from the native SDK.
 class AnylineException implements Exception {
-  final String? message;
 
   const AnylineException(this.message);
+  final String? message;
 
   static AnylineException parse(Exception e) {
     if (e is PlatformException) {

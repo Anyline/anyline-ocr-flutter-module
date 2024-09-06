@@ -39,7 +39,7 @@ typedef void (^ALPluginCallback)(NSDictionary * _Nullable callbackObj, NSError *
 
 + (NSError *)errorWithMessage:(NSString *)message;
 
-+ (NSDate *)formattedStringToDate:(NSString *)formattedStr;
++ (NSDate * _Nullable)formattedStringToDate:(NSString *)formattedStr;
 
 + (NSString *)stringForDate:(NSDate *)date;
 

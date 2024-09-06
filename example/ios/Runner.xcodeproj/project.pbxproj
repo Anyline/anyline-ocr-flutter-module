@@ -169,7 +169,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					97C146ED1CF9000F007C117D = {
@@ -407,7 +407,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 53.3.0;
+				MARKETING_VERSION = 53.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.anyline.flutter.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -545,7 +545,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 53.3.0;
+				MARKETING_VERSION = 53.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.anyline.flutter.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -578,7 +578,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 53.3.0;
+				MARKETING_VERSION = 53.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.anyline.flutter.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

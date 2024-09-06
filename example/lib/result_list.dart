@@ -5,18 +5,17 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:intl/intl.dart';
-import 'date_helpers.dart';
+import 'package:anyline_plugin_example/date_helpers.dart';
 
-import 'result_display.dart';
+import 'package:anyline_plugin_example/result_display.dart';
 
 class ResultList extends StatelessWidget {
+  ResultList(this.results, {Key? key}) : super(key: key);
   static const routeName = '/resultList';
   final fullDate = DateFormat('d/M/y, HH:mm');
   final time = DateFormat('HH:mm');
 
   final List<Result> results;
-
-  ResultList(this.results);
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +51,10 @@ class ResultList extends StatelessWidget {
 }
 
 class CompositeResultListItem extends StatelessWidget {
+  CompositeResultListItem(this.result, this.timestamp, {Key? key})
+      : super(key: key);
   final Result result;
   final String timestamp;
-
-  CompositeResultListItem(this.result, this.timestamp);
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
     shape: RoundedRectangleBorder(
@@ -118,10 +117,9 @@ class CompositeResultListItem extends StatelessWidget {
 }
 
 class ResultListItem extends StatelessWidget {
+  ResultListItem(this.result, this.timestamp, {Key? key}) : super(key: key);
   final Result result;
   final String timestamp;
-
-  ResultListItem(this.result, this.timestamp);
 
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
     shape: RoundedRectangleBorder(
@@ -161,7 +159,7 @@ class ResultListItem extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  Image.file(File(result.jsonMap!['imagePath'])),
+                  Image.file(File(result.jsonMap!['imagePath'] as String)),
                   ListTile(
                       dense: true,
                       title: Text(
