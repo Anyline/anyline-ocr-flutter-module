@@ -1,5 +1,5 @@
 #import "ALPluginHelper.h"
-#import "ALNFCScanViewController.h" // because NFC-specific code is there
+#import "ALPluginScanViewController.h"
 #import <Anyline/Anyline.h>
 #import <objc/runtime.h>
 
@@ -21,55 +21,28 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
     
     NSDictionary *optionsDict = [config objectForKey:@"options"];
     ALJSONUIConfiguration *jsonUIConf = [[ALJSONUIConfiguration alloc] initWithDictionary:optionsDict];
-    
-    BOOL isNFC = [optionsDict[@"enableNFCWithMRZ"] boolValue];
-    
-    if (isNFC) {
-        if (@available(iOS 13.0, *)) {
-            
-            if (![ALNFCDetector readingAvailable]) {
-                callback(nil,  [NSError errorWithDomain:ALFlutterDomain code:100 userInfo:@{@"Error reason": @"NFC passport reading is not supported on this device or app."}]);
-                return;
-            }
-            
-            ALNFCScanViewController *nfcScanViewController = [[ALNFCScanViewController alloc] initWithLicensekey:licenseKey
-                                                                                                   configuration:pluginConf
-                                                                                                        uiConfig:jsonUIConf
-                                                                                         initializationParamsStr:initializationParamsStr
-                                                                                                        finished:callback];
-            if (nfcScanViewController != nil) {
-                [nfcScanViewController setModalPresentationStyle:UIModalPresentationFullScreen];
-                [presentingViewController presentViewController:nfcScanViewController
-                                                       animated:YES
-                                                     completion:nil];
-            }
-        } else {
-            callback(nil, [NSError errorWithDomain:ALFlutterDomain code:100 userInfo:@{@"Error reason": @"NFC passport reading is only supported on iOS 13 and later."}]);
-            return;
-        }
-    } else {
-        ALPluginScanViewController *pluginScanViewController = [[ALPluginScanViewController alloc] initWithLicensekey:licenseKey
-                                                                                                        configuration:pluginConf
-                                                                                                      uiConfiguration:jsonUIConf
-                                                                                              initializationParamsStr:initializationParamsStr
-                                                                                                             finished:callback];
-        
-        // TODO: should remove these extras
-        if ([pluginConf valueForKey:@"quality"]){
-            pluginScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
-        }
-        
-        if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]) {
-            NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
-            pluginScanViewController.cropAndTransformErrorMessage = str;
-        }
-        
-        if (pluginScanViewController) {
-            [pluginScanViewController setModalPresentationStyle:UIModalPresentationFullScreen];
-            [presentingViewController presentViewController:pluginScanViewController
-                                                   animated:YES
-                                                 completion:nil];
-        }
+
+    ALPluginScanViewController *pluginScanViewController = [[ALPluginScanViewController alloc] initWithLicensekey:licenseKey
+                                                                                                    configuration:pluginConf
+                                                                                                  uiConfiguration:jsonUIConf
+                                                                                          initializationParamsStr:initializationParamsStr
+                                                                                                         finished:callback];
+
+    // TODO: should remove these extras
+    if ([pluginConf valueForKey:@"quality"]){
+        pluginScanViewController.quality = [[pluginConf valueForKey:@"quality"] integerValue];
+    }
+
+    if ([pluginConf valueForKey:@"cropAndTransformErrorMessage"]) {
+        NSString *str = [pluginConf objectForKey:@"cropAndTransformErrorMessage"];
+        pluginScanViewController.cropAndTransformErrorMessage = str;
+    }
+
+    if (pluginScanViewController) {
+        [pluginScanViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        [presentingViewController presentViewController:pluginScanViewController
+                                               animated:YES
+                                             completion:nil];
     }
 }
 
@@ -316,7 +289,7 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
     return vc;
 }
 
-+ (NSDate *)formattedStringToDate:(NSString *)formattedStr {
++ (NSDate * _Nullable)formattedStringToDate:(NSString *)formattedStr {
     // From this: "Sun Apr 12 00:00:00 UTC 1977" to this: "04/12/1977"
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0:00"]];

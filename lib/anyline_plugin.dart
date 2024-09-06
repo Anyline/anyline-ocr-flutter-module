@@ -3,15 +3,16 @@ import 'dart:convert';
 
 import 'package:anyline_plugin/constants.dart';
 import 'package:anyline_plugin/exceptions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pubspec_parse/pubspec_parse.dart';
 
-/// Entrypoint for perfoming any scans using the Anyline OCR library.
+/// Entrypoint for performing any scans using the Anyline OCR library.
 class AnylinePlugin {
-  static const MethodChannel _channel = const MethodChannel('anyline_plugin');
 
   AnylinePlugin();
+  static const MethodChannel _channel = MethodChannel('anyline_plugin');
 
   /// Returns the Anyline SDK version the plugin currently is powered by.
   static Future<String?> get sdkVersion async {
@@ -25,7 +26,7 @@ class AnylinePlugin {
     final fileContent =
         await rootBundle.loadString('packages/anyline_plugin/pubspec.yaml');
     final pubspec = Pubspec.parse(fileContent);
-    return pubspec.version?.canonicalizedVersion ?? "";
+    return pubspec.version?.canonicalizedVersion ?? '';
   }
 
   void setCustomModelsPath(String customModelsPath) {
@@ -56,7 +57,9 @@ class AnylinePlugin {
           await _channel.invokeMethod(Constants.METHOD_SET_LICENSE_KEY, params);
       return result;
     } on PlatformException catch (e) {
-      print("${e.message}");
+      if (kDebugMode) {
+        print('${e.message}');
+      }
       throw AnylineException.parse(e);
     }
   }
@@ -82,7 +85,9 @@ class AnylinePlugin {
             await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
         return result;
       } on PlatformException catch (e) {
-        print("${e.message}");
+        if (kDebugMode) {
+          print('${e.message}');
+        }
         throw AnylineException.parse(e);
       }
     } else {
@@ -97,7 +102,7 @@ class AnylinePlugin {
   static String? getLicenseExpiryDate(String base64License) {
     Map<String, dynamic> licenseMap =
         _decodeBase64LicenseToJsonMap(base64License)!;
-    return licenseMap['valid'];
+    return licenseMap['valid'] as String?;
   }
 
   // Export all cached events and return the created zip file path.
@@ -111,7 +116,9 @@ class AnylinePlugin {
           Constants.METHOD_EXPORT_CACHED_EVENTS, null);
       return result;
     } on PlatformException catch (e) {
-      print("${e.message}");
+      if (kDebugMode) {
+        print('${e.message}');
+      }
       throw AnylineException.parse(e);
     }
   }
@@ -121,7 +128,7 @@ class AnylinePlugin {
     Codec<String, String> base64ToString = ascii.fuse(base64);
     String licenseString = base64ToString.decode(base64License);
     String licenseJson = _extractJsonFromLicenseString(licenseString);
-    return jsonDecode(licenseJson);
+    return jsonDecode(licenseJson) as Map<String, dynamic>?;
   }
 
   static String _extractJsonFromLicenseString(String licenseJson) {

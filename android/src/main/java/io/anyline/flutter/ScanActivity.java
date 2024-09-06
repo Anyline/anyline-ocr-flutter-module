@@ -61,7 +61,6 @@ public class ScanActivity extends Activity implements CameraOpenListener,
     private boolean defaultOrientationApplied;
     private static final String KEY_DEFAULT_ORIENTATION_APPLIED = "default_orientation_applied";
 
-    private JSONObject configJson;
     private JSONObject optionsJson = null;
 
     private Map<String, Barcode> nativeBarcodeMap = null;
@@ -176,15 +175,9 @@ public class ScanActivity extends Activity implements CameraOpenListener,
     private void setDebugListener() {
         ViewPluginBase scanViewPlugin = anylineScanView.getScanViewPlugin();
         if (scanViewPlugin != null) {
-            scanViewPlugin.scanInfoReceived = jsonObject -> {
-                Log.d(TAG, "info received: " + jsonObject.toString());
-            };
-            scanViewPlugin.runSkippedReceived = jsonObject -> {
-                Log.d(TAG, "run skipped: " + jsonObject.toString());
-            };
-            scanViewPlugin.errorReceived = jsonObject -> {
-                Log.w(TAG, "error received: " + jsonObject.toString());
-            };
+            scanViewPlugin.scanInfoReceived = jsonObject -> Log.d(TAG, "info received: " + jsonObject.toString());
+            scanViewPlugin.runSkippedReceived = jsonObject -> Log.d(TAG, "run skipped: " + jsonObject.toString());
+            scanViewPlugin.errorReceived = jsonObject -> Log.w(TAG, "error received: " + jsonObject.toString());
         }
     }
 
@@ -230,8 +223,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
     private void setScanConfig(JSONObject scanConfigJson, String viewConfigAssetFileName) {
 
         try {
-            configJson = scanConfigJson;
-            optionsJson = configJson.optJSONObject("options");
+            optionsJson = scanConfigJson.optJSONObject("options");
 
             anylineScanView.getCameraView().removeNativeBarcodeReceivedEventListener(this);
             nativeBarcodeMap = null;
@@ -249,9 +241,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
 
                 ScanViewPlugin scanViewPlugin = viewPluginBase.getFirstActiveScanViewPlugin();
 
-                viewPluginBase.resultReceived = scanResult -> {
-                    setResult(scanViewPlugin, AnylinePluginHelper.jsonHelper(scanResult, nativeBarcodeMap).toString());
-                };
+                viewPluginBase.resultReceived = scanResult -> setResult(scanViewPlugin, AnylinePluginHelper.jsonHelper(scanResult, nativeBarcodeMap).toString());
 
                 viewPluginBase.resultsReceived = scanResults -> {
                     JSONObject jsonResult = new JSONObject();
@@ -337,7 +327,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
     }
 
     private void addSegmentRadioButtonUI(JSONObject optionsJson, String currentSegment) {
-        anylineUIConfig = new AnylineUIConfig(this, optionsJson);
+        anylineUIConfig = new AnylineUIConfig(optionsJson);
         setupRadioGroup(anylineUIConfig, currentSegment);
     }
 
@@ -345,7 +335,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
         ArrayList<String> titles = anylineUIConfig.getTitles();
         final ArrayList<String> viewConfigs = anylineUIConfig.getViewConfigs();
 
-        if (titles != null && titles.size() > 0) {
+        if (titles != null && !titles.isEmpty()) {
 
             if (titles.size() != viewConfigs.size()) {
                 finishWithError(getString(getResources().getIdentifier("error_invalid_segment_config", "string",
@@ -395,7 +385,7 @@ public class ScanActivity extends Activity implements CameraOpenListener,
 
         buttonLayoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
         String alignment = rotateButtonConfig.getAlignment();
-        if (alignment.length() > 0) {
+        if (!alignment.isEmpty()) {
             if (alignment.equals("top_left")) {
                 buttonLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
             }

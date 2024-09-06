@@ -48,11 +48,7 @@
 
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    
-    //CGContextRef context = UIGraphicsGetCurrentContext();
-    //CGContextSaveGState(context);
-    //CGContextSetBlendMode(context, kCGBlendModeDestinationOut);
-    
+   
     CGRect frame = CGRectInset(self.bounds, 0, 0);
     
     CGRect mainRect = frame;
@@ -78,8 +74,6 @@
         
         mainRect = CGRectInset(frame, _borderWidth, _borderWidth);
     }
-    
-    //CGContextRestoreGState(context);
 }
 
 - (void)setBorderColor:(UIColor *)borderColor {

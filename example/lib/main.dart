@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:anyline_plugin/anyline_plugin.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'home.dart';
+import 'package:anyline_plugin_example/home.dart';
 
 void main() {
   runApp(AnylineDemoApp());
@@ -20,7 +21,7 @@ void scanWithAnyline() async {
 
   /// Load the config file which also includes the license key (for more info
   /// visit documentation.anyline.com).
-  var config = await rootBundle.loadString("config/AnalogMeterConfig.json");
+  var config = await rootBundle.loadString('config/AnalogMeterConfig.json');
 
   /// Start the scanning process.
   var stringResult =
@@ -29,7 +30,10 @@ void scanWithAnyline() async {
   /// Convert the stringResult to a Map to access the result fields. It is
   /// recommended to create result classes that fit your use case. For more
   /// information on that, visit the Flutter Guide on documentation.anyline.com.
-  Map<String, dynamic>? result = jsonDecode(stringResult);
+  Map<String, dynamic>? result =
+      jsonDecode(stringResult) as Map<String, dynamic>;
 
-  print(result);
+  if (kDebugMode) {
+    print(result);
+  }
 }

@@ -5,6 +5,7 @@ import 'package:anyline_plugin/constants.dart';
 import 'package:anyline_plugin_example/license_state.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/scan_modes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as path;
@@ -20,7 +21,12 @@ abstract class AnylineService {
 }
 
 class AnylineServiceImpl implements AnylineService {
-  static const MethodChannel _channel = const MethodChannel('anyline_plugin');
+  AnylineServiceImpl() {
+    _initAnylinePlugin();
+    _initResultListFromSharedPreferences();
+  }
+
+  static const MethodChannel _channel = MethodChannel('anyline_plugin');
 
   late String? _cachePath;
 
@@ -30,18 +36,13 @@ class AnylineServiceImpl implements AnylineService {
   String? _sdkVersion = 'Unknown';
   String? _pluginVersion = 'Unknown';
 
-  AnylineServiceImpl() {
-    _initAnylinePlugin();
-    _initResultListFromSharedPreferences();
-  }
-
   Future<LicenseState> _initSdk(String licenseKey) async {
     try {
       await anylinePlugin.initSdk(licenseKey);
-      licenseState = new LicenseState(true, "");
+      licenseState = new LicenseState(true, '');
     } catch (anylineException) {
       licenseState = new LicenseState(false, anylineException.toString());
-      throw anylineException;
+      rethrow;
     }
     return licenseState;
   }
@@ -67,7 +68,7 @@ class AnylineServiceImpl implements AnylineService {
     return _pluginVersion;
   }
 
-  _initAnylinePlugin() async {
+  void _initAnylinePlugin() async {
     String? sdkVersion;
     try {
       sdkVersion = await AnylinePlugin.sdkVersion;
@@ -78,11 +79,11 @@ class AnylineServiceImpl implements AnylineService {
     _pluginVersion = await AnylinePlugin.pluginVersion;
 
     anylinePlugin = AnylinePlugin();
-    anylinePlugin.setCustomModelsPath("flutter_assets/custom_scripts");
-    anylinePlugin.setViewConfigsPath("flutter_assets/config");
+    anylinePlugin.setCustomModelsPath('flutter_assets/custom_scripts');
+    anylinePlugin.setViewConfigsPath('flutter_assets/config');
   }
 
-  _initResultListFromSharedPreferences() async {
+  void _initResultListFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> list = prefs.getStringList('results') ?? [];
 
@@ -90,7 +91,7 @@ class AnylineServiceImpl implements AnylineService {
         .invokeMethod(Constants.METHOD_GET_APPLICATION_CACHE_PATH);
 
     List<Result> modifiedResults = [];
-    for (String result in list) {
+    for (final String result in list) {
       Result? res = resultFromJSONString(result);
       if (res != null) {
         modifiedResults.add(res);
@@ -102,7 +103,7 @@ class AnylineServiceImpl implements AnylineService {
   // ACO: get the 2 image file paths for each result. If their directories are
   // different from the current cache directory, fix their paths.
   Result? resultFromJSONString(String result) {
-    Result res = Result.fromJson(json.decode(result));
+    Result res = Result.fromJson(json.decode(result) as Map<String, dynamic>);
     if (_cachePath == null) {
       return res;
     }
@@ -116,10 +117,11 @@ class AnylineServiceImpl implements AnylineService {
       return null;
     }
 
-    var savedImageDirectory = path.dirname(res.jsonMap!['fullImagePath']);
+    var savedImageDirectory =
+        path.dirname(res.jsonMap!['fullImagePath'] as String);
 
-    var fullImageName = path.basename(res.jsonMap!['fullImagePath']);
-    var croppedImageName = path.basename(res.jsonMap!['imagePath']);
+    var fullImageName = path.basename(res.jsonMap!['fullImagePath'] as String);
+    var croppedImageName = path.basename(res.jsonMap!['imagePath'] as String);
 
     if (savedImageDirectory != _cachePath) {
       res.jsonMap!['fullImagePath'] = path.join(_cachePath!, fullImageName);
@@ -138,33 +140,39 @@ class AnylineServiceImpl implements AnylineService {
 
     String? stringResult = await anylinePlugin.startScanning(configJson);
 
-    print(stringResult);
+    if (kDebugMode) {
+      print(stringResult);
+    }
 
     if (stringResult == 'Canceled') {
       return null;
     }
 
-    Map<String, dynamic>? jsonResult = jsonDecode(stringResult!);
+    Map<String, dynamic>? jsonResult =
+        jsonDecode(stringResult!) as Map<String, dynamic>;
 
     return Result(jsonResult, mode, DateTime.now());
   }
 
   Future<String> _loadJsonConfigFromFile(String config) async {
-    return await rootBundle.loadString("config/${config}Config.json");
+    return rootBundle.loadString('config/${config}Config.json');
   }
 
   /// Returns the licenseKey stored in associated file from the config folder.
   Future<String> _getExternalLicenseKey() async {
     Map<String, dynamic>? licenseKeyMap;
-    String externalLicenseKeyJson = "";
+    String externalLicenseKeyJson = '';
     try {
       externalLicenseKeyJson =
-          await rootBundle.loadString("config/license.json");
-      licenseKeyMap = jsonDecode(externalLicenseKeyJson);
+          await rootBundle.loadString('config/license.json');
+      licenseKeyMap =
+          jsonDecode(externalLicenseKeyJson) as Map<String, dynamic>;
     } catch (e) {
-      print("exception: $e");
+      if (kDebugMode) {
+        print('exception: $e');
+      }
     }
-    return licenseKeyMap?["licenseKey"] ?? "";
+    return licenseKeyMap?['licenseKey'] as String;
   }
 
   /// Returns the config string for a given scan mode in JSON format, reading the
@@ -174,14 +182,14 @@ class AnylineServiceImpl implements AnylineService {
     return configJson;
   }
 
-  _saveResultToResultList(Result result) {
+  void _saveResultToResultList(Result result) {
     _results.insert(0, result);
     _saveResultListToSharedPreferences(_results);
   }
 
-  _saveResultListToSharedPreferences(List<Result> results) async {
+  void _saveResultListToSharedPreferences(List<Result> results) async {
     List<String> results = [
-      for (Result result in _results) json.encode(result.toJson())
+      for (final Result result in _results) json.encode(result.toJson())
     ];
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
