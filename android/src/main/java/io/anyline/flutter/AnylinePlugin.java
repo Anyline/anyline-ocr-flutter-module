@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 
 import io.anyline2.AnylineSdk;
@@ -46,6 +47,7 @@ public class AnylinePlugin implements
     private JSONObject configObject;
     private Activity activity;
     private MethodChannel.Result result;
+    private Context context;
 
     /**
      * Plugin registration
@@ -58,6 +60,7 @@ public class AnylinePlugin implements
     private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
         channel = new MethodChannel(messenger, "anyline_plugin");
         channel.setMethodCallHandler(this);
+        context = applicationContext;
     }
 
     public AnylinePlugin() {
@@ -115,6 +118,7 @@ public class AnylinePlugin implements
 
     private void scanAnyline4(String initializationParametersString) {
         try {
+            deleteAllPreviousScanResultImages(context);
             configObject = new JSONObject(this.configJson);
             scan(initializationParametersString);
         } catch (JSONException e) {
@@ -211,4 +215,34 @@ public class AnylinePlugin implements
     public void onDetachedFromActivity() {
 
     }
+
+    /**
+     * This function removes all previous scan result images from disk, either from external
+     * or internal files dir, e.g.:
+     * /sdcard/Android/[applicationId]/files/results/image1729849635965
+     */
+    private void deleteAllPreviousScanResultImages(Context context) {
+        String imagePath = "";
+        if (context.getExternalFilesDir(null) != null) {
+            imagePath = context
+                    .getExternalFilesDir(null)
+                    .toString() + "/results/";
+
+        } else if (context.getFilesDir() != null) {
+            imagePath = context
+                    .getFilesDir()
+                    .toString() + "/results/";
+        }
+
+        File resultFolder = new File(imagePath);
+        File[] files = resultFolder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().startsWith("image")) {
+                    file.delete();
+                }
+            }
+        }
+    }
+
 }
