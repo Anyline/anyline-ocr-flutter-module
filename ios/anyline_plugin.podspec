@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'anyline_plugin'
-  s.version          = '54.2.1'
+  s.version          = '54.2.2'
   s.summary          = 'Anyline SDK'
   s.description      = <<-DESC
 Anyline OCR Module
