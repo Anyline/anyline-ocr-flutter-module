@@ -26,12 +26,19 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "io.anyline.flutter.examples"
     compileSdkVersion 34
 
-    ndkVersion '24.0.8215888' // Replace this with the version you're using
+    ndkVersion '25.1.8937393' // Replace this with the version you're using
 
     lintOptions {
         disable 'InvalidPackage'
+    }
+
+    compileOptions{
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
@@ -81,10 +88,15 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
             shrinkResources false
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles 'proguard-rules.pro'
         }
     }
+}
+
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }
 
 flutter {
