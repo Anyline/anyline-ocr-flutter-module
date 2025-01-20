@@ -10,7 +10,6 @@ import 'package:pubspec_parse/pubspec_parse.dart';
 
 /// Entrypoint for performing any scans using the Anyline OCR library.
 class AnylinePlugin {
-
   AnylinePlugin();
   static const MethodChannel _channel = MethodChannel('anyline_plugin');
 
@@ -26,7 +25,7 @@ class AnylinePlugin {
     final fileContent =
         await rootBundle.loadString('packages/anyline_plugin/pubspec.yaml');
     final pubspec = Pubspec.parse(fileContent);
-    return pubspec.version?.canonicalizedVersion ?? '';
+    return pubspec.version?.toString() ?? '';
   }
 
   void setCustomModelsPath(String customModelsPath) {
