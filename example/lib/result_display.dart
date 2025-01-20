@@ -52,7 +52,8 @@ class CompositeResultDisplay extends StatelessWidget {
     var subResults = result.jsonMap!.values.take(3);
 
     List<Map<String, dynamic>> results = [
-      for (final j in subResults) j as Map<String, dynamic>];
+      for (final j in subResults) j as Map<String, dynamic>
+    ];
 
     return DefaultTabController(
       length: results.length,
@@ -104,7 +105,6 @@ class CompositeResultDisplay extends StatelessWidget {
 }
 
 class ResultDetails extends StatelessWidget {
-
   ResultDetails(Map<String, dynamic>? json, {Key? key})
       : json = json,
         super(key: key) {
@@ -139,10 +139,8 @@ class ResultDetails extends StatelessWidget {
       orderedJson!.insert(0, {key: prettyJSON});
     });
 
-    if (nativeBarcodesDetected != null &&
-        nativeBarcodesDetected!.length > 0) {
-      orderedJson!
-          .add({'nativeBarcodesDetected': nativeBarcodesDetected});
+    if (nativeBarcodesDetected != null && nativeBarcodesDetected!.length > 0) {
+      orderedJson!.add({'nativeBarcodesDetected': nativeBarcodesDetected});
     }
 
     dynamic imagePath;

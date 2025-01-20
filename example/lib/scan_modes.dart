@@ -84,8 +84,8 @@ extension ScanModeInfo on ScanMode {
   }
 
   bool isCompositeScan() {
-    return this == ScanMode.ParallelScanning
-        || this == ScanMode.ParallelFirstScanning
-        || this == ScanMode.SerialScanning;
+    return this == ScanMode.ParallelScanning ||
+        this == ScanMode.ParallelFirstScanning ||
+        this == ScanMode.SerialScanning;
   }
 }

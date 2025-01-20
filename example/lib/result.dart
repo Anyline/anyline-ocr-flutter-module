@@ -1,12 +1,12 @@
 import 'package:anyline_plugin_example/scan_modes.dart';
 
 class Result {
-
   Result.fromJson(Map<String, dynamic> json)
-      : timestamp = DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
+      : timestamp =
+            DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
         scanMode = ScanMode.values
             .firstWhere((element) => element.key == json['scanMode']),
-        jsonMap = json['jsonMap'] as Map<String,dynamic>;
+        jsonMap = json['jsonMap'] as Map<String, dynamic>;
 
   Result(this.jsonMap, this.scanMode, this.timestamp);
   DateTime timestamp;

@@ -563,7 +563,8 @@ class ScanButton extends StatelessWidget {
 }
 
 class UseCaseButton extends StatelessWidget {
-  UseCaseButton({Key? key, this.image, required this.text, this.onPressed}) : super(key: key);
+  UseCaseButton({Key? key, this.image, required this.text, this.onPressed})
+      : super(key: key);
 
   final ImageProvider? image;
   final String text;
