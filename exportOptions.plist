@@ -9,16 +9,16 @@
 	<key>uploadSymbols</key>
 	<true/>
 	<key>method</key>
-	<string>app-store</string>
+	<string>app-store-connect</string>
 	<key>signingStyle</key>
 	<string>manual</string>
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>io.anyline.flutter.examples</key>
-		<string>Anyline Flutter Examples</string>
+		<string>Anyline Flutter Examples - Distribution</string>
 	</dict>
 	<key>signingCertificate</key>
-	<string>iOS Distribution</string>
+	<string>Apple Distribution</string>
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>

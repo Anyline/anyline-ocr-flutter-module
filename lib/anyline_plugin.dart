@@ -5,7 +5,6 @@ import 'package:anyline_plugin/constants.dart';
 import 'package:anyline_plugin/exceptions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pubspec_parse/pubspec_parse.dart';
 
 /// Entrypoint for performing any scans using the Anyline OCR library.
@@ -72,25 +71,19 @@ class AnylinePlugin {
   /// Uses the third-party-package `permission_handler` to request camera permissions.
   Future<String?> startScanning(String configJson,
       [String? initializationParams]) async {
-    if (await Permission.camera.isPermanentlyDenied) {
-      openAppSettings();
-    } else if (await Permission.camera.request().isGranted) {
-      final Map<String, String?> config = {
-        Constants.EXTRA_CONFIG_JSON: configJson,
-        Constants.EXTRA_INITIALIZATION_PARAMETERS: initializationParams
-      };
-      try {
-        final String? result =
-            await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
-        return result;
-      } on PlatformException catch (e) {
-        if (kDebugMode) {
-          print('${e.message}');
-        }
-        throw AnylineException.parse(e);
+    final Map<String, String?> config = {
+      Constants.EXTRA_CONFIG_JSON: configJson,
+      Constants.EXTRA_INITIALIZATION_PARAMETERS: initializationParams
+    };
+    try {
+      final String? result =
+      await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
+      return result;
+    } on PlatformException catch (e) {
+      if (kDebugMode) {
+        print('${e.message}');
       }
-    } else {
-      throw AnylineCameraPermissionException('Camera permission missing.');
+      throw AnylineException.parse(e);
     }
     return null;
   }
