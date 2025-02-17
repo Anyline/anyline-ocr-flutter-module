@@ -88,9 +88,9 @@ public class ScanActivity extends AppCompatActivity implements CameraOpenListene
         }
 
         anylineScanView.setOnScanViewLoaded(scanViewLoadResult -> {
-            if(scanViewLoadResult instanceof ScanViewLoadResult.Succeeded){
+            if (scanViewLoadResult instanceof ScanViewLoadResult.Succeeded) {
                 initScanView();
-            }else{
+            } else {
                 ScanViewLoadResult.Failed scanViewLoadFailed = (ScanViewLoadResult.Failed) scanViewLoadResult;
                 finishWithError(scanViewLoadFailed.getErrorMessage());
             }
