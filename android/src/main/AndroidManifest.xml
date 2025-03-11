@@ -8,10 +8,6 @@
 
     <application android:allowBackup="true">
         <activity
-            android:name=".AnylineBaseActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat" />
-        <activity
             android:name=".ScanActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat"/>
