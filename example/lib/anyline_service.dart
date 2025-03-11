@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:anyline_plugin/anyline_plugin.dart';
 import 'package:anyline_plugin/constants.dart';
+import 'package:anyline_plugin_example/env_info.dart';
 import 'package:anyline_plugin_example/license_state.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/scan_modes.dart';
@@ -160,19 +161,7 @@ class AnylineServiceImpl implements AnylineService {
 
   /// Returns the licenseKey stored in associated file from the config folder.
   Future<String> _getExternalLicenseKey() async {
-    Map<String, dynamic>? licenseKeyMap;
-    String externalLicenseKeyJson = '';
-    try {
-      externalLicenseKeyJson =
-          await rootBundle.loadString('config/license.json');
-      licenseKeyMap =
-          jsonDecode(externalLicenseKeyJson) as Map<String, dynamic>;
-    } catch (e) {
-      if (kDebugMode) {
-        print('exception: $e');
-      }
-    }
-    return licenseKeyMap?['licenseKey'] as String;
+    return EnvInfo.licenseKey ?? '';
   }
 
   /// Returns the config string for a given scan mode in JSON format, reading the

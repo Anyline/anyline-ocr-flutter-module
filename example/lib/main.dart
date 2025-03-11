@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:anyline_plugin/anyline_plugin.dart';
+import 'package:anyline_plugin_example/env_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:anyline_plugin_example/home.dart';
 
 void main() {
+  EnvInfo.initialize();
   runApp(AnylineDemoApp());
 }
 
