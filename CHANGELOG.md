@@ -1,6 +1,6 @@
 # Changelog
 
-# 54.6.0
+# 54.7.0-alpha.1
 
 Please find the complete and updated release notes at https://documentation.anyline.com/flutter-plugin-component/latest/release-notes.html.
 
