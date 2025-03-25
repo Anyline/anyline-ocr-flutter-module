@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       releaseNotes:
-        description: 'Release Notes'
+        description: 'Enter link to Release Notes, e.g. https://documentation.anyline.com/flutter-plugin-component/latest/release-notes.html#54-6-0-2025-02-17'
         required: true
         default: ''
 
