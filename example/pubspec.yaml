@@ -1,6 +1,6 @@
 name: anyline_plugin_example
 description: Demonstrates how to use the anyline_plugin plugin.
-version: 54.6.0
+version:  54.8.0
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
