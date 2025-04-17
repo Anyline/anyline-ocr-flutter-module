@@ -4,7 +4,7 @@ version '1.0'
 
 buildscript {
     ext {
-        anyline_sdk_version = "54.6.0"
+        anyline_sdk_version = '54.8.0'
         kotlin_version = "1.8.0"
     }
     repositories {
