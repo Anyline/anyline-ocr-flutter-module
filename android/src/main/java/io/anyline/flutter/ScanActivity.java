@@ -2,7 +2,6 @@ package io.anyline.flutter;
 
 import static io.anyline2.sdk.extension.ScanViewInitializationParametersExtensionKt.getScanViewInitializationParametersFromJsonObject;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
@@ -40,7 +39,7 @@ import io.anyline2.Event;
 import io.anyline2.ScanResult;
 import io.anyline2.camera.CameraController;
 import io.anyline2.camera.CameraOpenListener;
-import io.anyline2.model.AnylineYuvImage;
+import io.anyline2.model.AbstractAnylineImage;
 import io.anyline2.view.ScanView;
 import io.anyline2.view.ScanViewLoadResult;
 import io.anyline2.viewplugin.ScanViewPlugin;
@@ -49,7 +48,7 @@ import io.anyline2.viewplugin.ViewPluginBase;
 
 public class ScanActivity extends AppCompatActivity implements CameraOpenListener,
         Thread.UncaughtExceptionHandler,
-        Event<Pair<AnylineYuvImage, BarcodeResult>> {
+        Event<Pair<AbstractAnylineImage, BarcodeResult>> {
     private static final String TAG = ScanActivity.class.getSimpleName();
 
     protected String viewConfigsPath = "";
@@ -204,7 +203,7 @@ public class ScanActivity extends AppCompatActivity implements CameraOpenListene
     }
 
     @Override
-    public void eventReceived(Pair<AnylineYuvImage, BarcodeResult> anylineYuvImageBarcodeResultPair) {
+    public void eventReceived(Pair<AbstractAnylineImage, BarcodeResult> anylineYuvImageBarcodeResultPair) {
         if (nativeBarcodeMap == null) {
             nativeBarcodeMap = new HashMap<>();
         }

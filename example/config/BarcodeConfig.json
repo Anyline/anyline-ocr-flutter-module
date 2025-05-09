@@ -3,6 +3,7 @@
         "pluginConfig": {
             "id": "barcode_all",
             "barcodeConfig": {
+                "fastProcessMode": true,
                 "parseAAMVA": false,
                 "barcodeFormats": [
                     "ALL"
