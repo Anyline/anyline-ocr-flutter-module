@@ -3,6 +3,7 @@
         "pluginConfig": {
             "id": "barcode_pdf417_aamva",
             "barcodeConfig": {
+                "fastProcessMode": true,
                 "barcodeFormats": [
                     "PDF_417"
                 ],
