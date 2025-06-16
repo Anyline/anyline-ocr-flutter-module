@@ -21,7 +21,11 @@ typedef NS_ENUM(NSUInteger, ALButtonType) {
 
 @interface ALJSONUIConfiguration : NSObject
 
+// Toolbar
+@property (nonatomic, copy) NSString *toolbarTitle;
+
 // Done Button
+@property (nonatomic, assign) bool   shouldUseDoneButton;
 @property (nonatomic, strong) NSString   *buttonDoneTitle;
 @property (nonatomic, assign) CGFloat    buttonDoneFontSize;
 @property (nonatomic, strong) NSString   *buttonDoneFontName;
@@ -34,6 +38,12 @@ typedef NS_ENUM(NSUInteger, ALButtonType) {
 @property (nonatomic, assign) ALButtonYAlignment buttonDoneYAlignment;
 @property (nonatomic, assign) CGFloat buttonDoneXPositionOffset;
 @property (nonatomic, assign) CGFloat buttonDoneYPositionOffset;
+
+@property (nonatomic, assign) bool   shouldUseButtonRotate;
+@property (nonatomic, assign) ALButtonXAlignment buttonRotateXAlignment;
+@property (nonatomic, assign) ALButtonYAlignment buttonRotateYAlignment;
+@property (nonatomic, assign) CGFloat buttonRotateXPositionOffset;
+@property (nonatomic, assign) CGFloat buttonRotateYPositionOffset;
 
 @property (nonatomic, strong) NSArray<NSString *> *segmentTitles;
 @property (nonatomic, strong) NSArray<NSString *> *segmentViewConfigs;
@@ -48,6 +58,8 @@ typedef NS_ENUM(NSUInteger, ALButtonType) {
 @property (nonatomic, assign) CGFloat labelYPositionOffset;
 
 @property (nonatomic, strong) NSArray<NSString *> *nativeBarcodeFormats;
+
+@property (nonatomic, assign) UIInterfaceOrientation defaultOrientation;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 

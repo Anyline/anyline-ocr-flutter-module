@@ -71,7 +71,7 @@ class CompositeResultDisplay extends StatelessWidget {
           title: FittedBox(
               fit: BoxFit.fitWidth,
               child: Text(
-                '${result.scanMode.label}',
+                result.scanMode.label,
                 style: GoogleFonts.montserrat(fontWeight: FontWeight.w400),
               )),
         ),
@@ -134,12 +134,12 @@ class ResultDetails extends StatelessWidget {
     });
 
     actualResultMap.forEach((key, value) {
-      var encoder = new JsonEncoder.withIndent(' ' * 2);
+      var encoder = JsonEncoder.withIndent(' ' * 2);
       var prettyJSON = encoder.convert(value);
       orderedJson!.insert(0, {key: prettyJSON});
     });
 
-    if (nativeBarcodesDetected != null && nativeBarcodesDetected!.length > 0) {
+    if (nativeBarcodesDetected != null && nativeBarcodesDetected!.isNotEmpty) {
       orderedJson!.add({'nativeBarcodesDetected': nativeBarcodesDetected});
     }
 
@@ -182,7 +182,7 @@ class ResultDetails extends StatelessWidget {
                 Map<String, dynamic> resultMap = orderedJson![index];
                 var title = resultMap.keys.first.toString();
                 var subTitle = resultMap.values.first.toString();
-                return new ListTile(
+                return ListTile(
                   title: Text(title),
                   subtitle: Text(
                     subTitle,

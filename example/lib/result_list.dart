@@ -20,7 +20,7 @@ class ResultList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: results.length > 0
+      child: results.isNotEmpty
           ? ListView.builder(
               padding: EdgeInsets.all(10),
               itemCount: results.length,

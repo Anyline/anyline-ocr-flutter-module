@@ -1,6 +1,5 @@
 package io.anyline.flutter;
 
-import android.content.Context;
 import android.graphics.Color;
 
 import org.json.JSONArray;
@@ -11,6 +10,10 @@ import java.util.ArrayList;
 
 public class AnylineUIConfig {
 
+    public static final String TOOLBAR_TITLE = "toolbarTitle";
+    public final boolean hasToolbarTitle;
+    private String toolbarTitle = null;
+
     public static final String SEGMENT = "segmentConfig";
     public static final String SEGMENT_TITLES = "titles";
     public static final String SEGMENT_VIEWCONFIGS = "viewConfigs";
@@ -19,7 +22,7 @@ public class AnylineUIConfig {
     public static final String SEGMENT_X = "x";
     public static final String SEGMENT_Y = "y";
 
-    public boolean hasSegmentConfig = false;
+    public final boolean hasSegmentConfig;
     private ArrayList<String> titles = null;
     private ArrayList<String> viewConfigs = null;
 
@@ -31,13 +34,16 @@ public class AnylineUIConfig {
     /**
      * Create config from the given json object.
      *
-     * @param jsonObject the json object with the settings
+     * @param json the json object with the settings
      */
-    public AnylineUIConfig(JSONObject jsonObject) {
-        initFromJsonObject(jsonObject);
-    }
+    public AnylineUIConfig(JSONObject json) {
+        if (json.has(TOOLBAR_TITLE)) {
+            hasToolbarTitle = true;
+            toolbarTitle = json.optString(TOOLBAR_TITLE);
+        } else {
+            hasToolbarTitle = false;
+        }
 
-    private void initFromJsonObject(JSONObject json) {
         JSONObject segment = json.optJSONObject(SEGMENT);
 
         if (segment != null) {
@@ -64,7 +70,13 @@ public class AnylineUIConfig {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+            hasSegmentConfig = false;
         }
+    }
+
+    public String getToolbarTitle() {
+        return toolbarTitle;
     }
 
     public ArrayList<String> getTitles() {

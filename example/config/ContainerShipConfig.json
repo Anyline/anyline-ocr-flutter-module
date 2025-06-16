@@ -1,8 +1,6 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -88
-        }
+        "toolbarTitle": "Horizontal Container"
     },
     "cameraConfig": {
         "captureResolution": "1080p",

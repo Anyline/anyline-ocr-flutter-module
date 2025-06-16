@@ -15,8 +15,8 @@ void main() {
 }
 
 /// This is just a minimal example function to show how to use our plugin as
-/// fast as possible. For the code of our Flutter example app check out the
-/// [anyline_demo] module.
+/// fast as possible. For the complete example app implementation, please refer to
+/// the Flutter example app in the documentation.
 void scanWithAnyline() async {
   /// Instantiate the plugin.
   var anylinePlugin = AnylinePlugin();

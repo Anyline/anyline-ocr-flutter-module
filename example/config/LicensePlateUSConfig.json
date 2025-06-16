@@ -1,27 +1,32 @@
 {
     "options": {
-        "toolbarTitle": "Serial Number"
+        "toolbarTitle": "License Plate US",
+        "segmentConfig": {
+            "titles": ["EU", "US", "Canada", "Africa"],
+            "viewConfigs": ["LicensePlateConfig.json", "LicensePlateUSConfig.json", "LicensePlateCanadaConfig.json", "LicensePlateAfricaConfig.json"],
+            "offset.y": -24,
+            "tintColor": "0099ff"
+        }
     },
     "cameraConfig": {
-        "captureResolution": "1080p",
-        "pictureResolution": "1080p",
-        "zoomGesture": true
+        "captureResolution": "1080p"
     },
     "flashConfig": {
         "mode": "manual",
-        "alignment": "top_right"
+        "alignment": "top_left"
     },
     "viewPluginConfig": {
         "pluginConfig": {
-            "id": "universal_serial_number",
-            "ocrConfig": {
-                "scanMode": "auto"
+            "id": "license_plate",
+            "licensePlateConfig": {
+                "scanMode": "unitedstates"
             },
             "cancelOnResult": true
         },
         "cutoutConfig": {
             "animation": "none",
             "maxWidthPercent": "80%",
+            "maxHeightPercent": "80%",
             "alignment": "top_half",
             "ratioFromSize": {
                 "width": 2,
@@ -29,32 +34,33 @@
             },
             "offset": {
                 "x": 0,
-                "y": -15
-            },
-            "cropOffset": {
-                "x": 0,
                 "y": 0
             },
             "cropPadding": {
                 "x": 0,
                 "y": 0
             },
+            "cropOffset": {
+                "x": 0,
+                "y": 0
+            },
             "cornerRadius": 4,
             "strokeColor": "0099ff",
             "strokeWidth": 2,
+            "feedbackStrokeColor": "0099ff",
             "outerColor": "000000",
-            "feedbackStrokeColor": "0099FF",
             "outerAlpha": 0.3
         },
         "scanFeedbackConfig": {
             "style": "rect",
             "strokeWidth": 2,
-            "cornerRadius": 2,
-            "strokeColor": "0099FF",
-            "fillColor": "330099FF",
+            "animationDuration": 0,
+            "strokeColor": "0099ff",
+            "cornerRadius": 0,
+            "fillColor": "330099ff",
             "beepOnResult": true,
             "vibrateOnResult": true,
-            "blinkAnimationOnResult": false
+            "blinkAnimationOnResult": true
         }
     }
 }

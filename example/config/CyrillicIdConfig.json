@@ -1,8 +1,6 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -88
-        }
+        "toolbarTitle": "Cyrillic ID"
     },
     "cameraConfig": {
         "captureResolution": "1080p"

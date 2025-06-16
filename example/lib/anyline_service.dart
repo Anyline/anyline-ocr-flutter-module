@@ -32,7 +32,7 @@ class AnylineServiceImpl implements AnylineService {
   late String? _cachePath;
 
   late AnylinePlugin anylinePlugin;
-  LicenseState licenseState = new LicenseState(false, 'Sdk not initialised');
+  LicenseState licenseState = LicenseState(false, 'Sdk not initialised');
   List<Result> _results = [];
   String? _sdkVersion = 'Unknown';
   String? _pluginVersion = 'Unknown';
@@ -40,14 +40,15 @@ class AnylineServiceImpl implements AnylineService {
   Future<LicenseState> _initSdk(String licenseKey) async {
     try {
       await anylinePlugin.initSdk(licenseKey);
-      licenseState = new LicenseState(true, '');
+      licenseState = LicenseState(true, '');
     } catch (anylineException) {
-      licenseState = new LicenseState(false, anylineException.toString());
+      licenseState = LicenseState(false, anylineException.toString());
       rethrow;
     }
     return licenseState;
   }
 
+  @override
   Future<Result?> scan(ScanMode mode) async {
     Result? result = await _callAnyline(mode);
     if (result == null) {
@@ -57,14 +58,17 @@ class AnylineServiceImpl implements AnylineService {
     return result;
   }
 
+  @override
   List<Result> getResultList() {
     return _results;
   }
 
+  @override
   String? getSdkVersion() {
     return _sdkVersion;
   }
 
+  @override
   String? getPluginVersion() {
     return _pluginVersion;
   }

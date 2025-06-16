@@ -1,6 +1,8 @@
 #import "ALJSONUIConfiguration.h"
 #import <Anyline/Anyline.h>
 
+NSString * const TOOLBAR_TITLE = @"toolbarTitle";
+
 NSString * const DONE_BUTTON = @"doneButtonConfig";
 NSString * const DONE_BUTTON_TITLE = @"title";
 NSString * const DONE_BUTTON_COLOR = @"textColor";
@@ -12,6 +14,10 @@ NSString * const DONE_BUTTON_Y_ALIGNMENT = @"positionYAlignment";
 NSString * const DONE_BUTTON_BACKGROUND_COLOR = @"backgroundColor";
 NSString * const DONE_BUTTON_TYPE = @"type";
 NSString * const DONE_BUTTON_CORNER_RADIUS = @"cornerRadius";
+
+NSString * const DEFAULT_ORIENTATION = @"defaultOrientation";
+NSString * const ROTATE_BUTTON = @"rotateButton";
+NSString * const ROTATE_BUTTON_ALIGNMENT = @"alignment";
 
 NSString * const SEGMENT = @"segmentConfig";
 NSString * const SEGMENT_TITLES = @"titles";
@@ -37,6 +43,10 @@ NSString * const ENABLE_NATIVE_BARCODE = @"nativeBarcodeScanningFormats";
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     if (self = [super init]) {
+        
+        if ([dictionary valueForKey:TOOLBAR_TITLE]) {
+            _toolbarTitle = [dictionary valueForKey:TOOLBAR_TITLE];
+        }
 
         _buttonDoneFontName = @"Avenir Next"; // @"HelveticaNeue";
         _buttonDoneTextColor = [UIColor whiteColor];
@@ -75,6 +85,7 @@ NSString * const ENABLE_NATIVE_BARCODE = @"nativeBarcodeScanningFormats";
         }
         
         if ([dictionary valueForKey:DONE_BUTTON]) {
+            _shouldUseDoneButton = YES;
             NSDictionary *btnDict = [dictionary valueForKey:DONE_BUTTON];
             
             if ([btnDict valueForKey:DONE_BUTTON_FONT_NAME]) {
@@ -124,6 +135,35 @@ NSString * const ENABLE_NATIVE_BARCODE = @"nativeBarcodeScanningFormats";
             if ([btnDict valueForKey:DONE_BUTTON_CORNER_RADIUS]) {
                 _buttonDoneCornerRadius = [[btnDict valueForKeyPath:DONE_BUTTON_CORNER_RADIUS] floatValue];
             }
+        }
+
+        _defaultOrientation = UIInterfaceOrientationPortrait; // Default to portrait
+        if ([dictionary valueForKey:DEFAULT_ORIENTATION]) {
+            NSString *orientation = [dictionary valueForKey:DEFAULT_ORIENTATION];
+            if ([orientation isEqualToString:@"landscape"]) {
+                _defaultOrientation = UIInterfaceOrientationLandscapeRight;
+            }
+        }
+
+        if ([dictionary valueForKey:ROTATE_BUTTON]) {
+            NSDictionary *btnDict = [dictionary valueForKey:ROTATE_BUTTON];
+            _shouldUseButtonRotate = YES;
+
+            if ([btnDict valueForKey:ROTATE_BUTTON_ALIGNMENT]) {
+                NSString *buttonRotateAlignment = [btnDict valueForKeyPath:ROTATE_BUTTON_ALIGNMENT];
+                NSArray *buttonRotateAlignmentComponents = [buttonRotateAlignment componentsSeparatedByString:@"_"];
+
+                _buttonRotateYAlignment = [ALJSONUIConfiguration stringToButtonYAlignment:buttonRotateAlignmentComponents[0]];
+                _buttonRotateXAlignment = [ALJSONUIConfiguration stringToButtonXAlignment:buttonRotateAlignmentComponents[1]];
+            }
+
+            if ([btnDict valueForKeyPath:OFFSET_X]) {
+                _buttonRotateXPositionOffset = [[btnDict valueForKeyPath:OFFSET_X] floatValue];
+            }
+            
+            if ([btnDict valueForKeyPath:OFFSET_Y]) {
+                _buttonRotateYPositionOffset = [[btnDict valueForKeyPath:OFFSET_Y] floatValue];
+            }            
         }
         
         if ([dictionary valueForKey:SEGMENT]) {

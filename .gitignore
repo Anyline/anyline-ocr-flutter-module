@@ -21,3 +21,10 @@ doc/api/
 
 # For Obsidian Markdown Editing
 .obsidian/
+
+# Generally ignore all .env files
+*.env
+gitignored/
+
+# ignore Flutter ephemeral files
+example/ios/Flutter/ephemeral/

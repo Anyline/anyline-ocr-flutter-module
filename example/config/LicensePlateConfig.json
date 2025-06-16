@@ -1,11 +1,9 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -96
-        },
+        "toolbarTitle": "License Plate EU",
         "segmentConfig": {
-            "titles": ["Auto", "US", "Africa"],
-            "viewConfigs": ["LicensePlateConfig.json", "LicensePlateConfigUS.json", "LicensePlateConfigAfrica.json"],
+            "titles": ["EU", "US", "Canada", "Africa"],
+            "viewConfigs": ["LicensePlateConfig.json", "LicensePlateUSConfig.json", "LicensePlateCanadaConfig.json", "LicensePlateAfricaConfig.json"],
             "offset.y": -24,
             "tintColor": "0099ff"
         }

@@ -1,8 +1,6 @@
 ﻿{
   "options": {
-    "doneButtonConfig": {
-      "offset.y": -96
-    }
+    "toolbarTitle": "Japanese Landing Permission"
   },
   "cameraConfig": {
     "captureResolution": "1080p",

@@ -1,22 +1,12 @@
 {
     "options": {
+        "toolbarTitle": "Arabic ID",
         "labelConfig": {
             "text": "Scan your Arabic ID",
             "size": 16,
             "offset.x": 0,
             "offset.y": -5
-        },
-        "doneButtonConfig": {
-            "title": "تمام",
-            "fontSize": 36,
-            "fontName": "Avenir",
-            "positionXAlignment": "RIGHT",
-            "positionYAlignment": "BOTTOM",
-            "type": "rect",
-            "offset.x": -20,
-            "offset.y": -80
         }
-
     },
     "cameraConfig": {
         "captureResolution": "1080p"

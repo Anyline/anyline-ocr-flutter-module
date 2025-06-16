@@ -35,6 +35,8 @@
 
 @property (nonatomic, strong) NSString *initializationParamsStr;
 
+@property (nonatomic, assign) UIInterfaceOrientation requiredOrientation;
+
 @end
 
 
@@ -79,30 +81,47 @@
         self.scanViewError = error;
         return;
     }
-        self.scanView = [ALScanViewFactory withJSONDictionary:self.config
-                                         initializationParams:initializationParams
-                                                     delegate:self
-                                                        error:&error];
 
+    // Set default orientation from config
+    self.requiredOrientation = self.uiConfig.defaultOrientation;
+
+    if (self.uiConfig.toolbarTitle) {
+        //If toolbarTitle is defined, toolbar will be shown with back button and the text value of toolbarTitle.
+        self.toolbar = [ALPluginHelper createToolbarForViewController:self config:self.uiConfig];
+    }
+
+    self.scanView = [ALScanViewFactory withJSONDictionary:self.config
+                                     initializationParams:initializationParams
+                                                 delegate:self
+                                                    error:&error];
     
     if ([self showErrorAlertIfNeeded:error]) {
         self.scanViewError = error;
         return;
     }
-    
+
     [self.view addSubview:self.scanView];
     
     self.scanView.translatesAutoresizingMaskIntoConstraints = false;
+    if (self.toolbar) {
+        // Update scanView top constraint to be below toolbar
+        [self.scanView.topAnchor constraintEqualToAnchor:self.toolbar.bottomAnchor].active = YES;
+    } else {
+        [self.scanView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor].active = YES;
+    }
+    [self.scanView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
     [self.scanView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
     [self.scanView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
-    [self.scanView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor].active = YES;
-    [self.scanView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
     
     self.scanView.supportedNativeBarcodeFormats = self.uiConfig.nativeBarcodeFormats;
     self.scanView.delegate = self;
     self.detectedBarcodes = [NSMutableArray array];
-    
-    self.doneButton = [ALPluginHelper createButtonForViewController:self config:self.uiConfig];
+
+    if (!self.uiConfig.toolbarTitle || self.uiConfig.shouldUseDoneButton) {
+        //If neither toolbarTitle nor doneButtonConfig are defined, the default doneButton will be shown
+        self.doneButton = [ALPluginHelper createButtonForViewController:self
+                           config:self.uiConfig refView:self.scanView];
+    }
     
     self.scannedLabel = [ALPluginHelper createLabelForView:self.view];
     
@@ -113,7 +132,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
+    if (self.uiConfig.shouldUseButtonRotate) {
+        [self setupFlipOrientationButton];
+    }
+
     [self.scanView startCamera];
+
+    [self setOrientation:self.requiredOrientation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -139,8 +165,146 @@
     [super viewDidDisappear:animated];
 }
 
+- (void)flipOrientationPressed:(id)sender {
+    // Toggle between portrait and landscape
+    UIInterfaceOrientation newOrientation = (self.requiredOrientation == UIInterfaceOrientationPortrait) ?
+        UIInterfaceOrientationLandscapeRight : UIInterfaceOrientationPortrait;
+
+    self.requiredOrientation = newOrientation;
+
+    [self setOrientation:newOrientation];
+}
+
+- (void)setOrientation:(UIInterfaceOrientation)orientation {
+    // Store the desired orientation
+    self.requiredOrientation = orientation;
+    
+    // Request the desired orientation using proper APIs
+    if (@available(iOS 16.0, *)) {
+        [self setNeedsUpdateOfSupportedInterfaceOrientations];
+        UIWindowScene *windowScene = self.view.window.windowScene;
+        if (windowScene) {
+            UIWindowSceneGeometryPreferencesIOS *preferences = [[UIWindowSceneGeometryPreferencesIOS alloc]
+                initWithInterfaceOrientations:(orientation == UIInterfaceOrientationLandscapeRight) ?
+                    UIInterfaceOrientationMaskLandscapeRight : UIInterfaceOrientationMaskPortrait];
+            [windowScene requestGeometryUpdateWithPreferences:preferences errorHandler:^(NSError * _Nonnull error) {
+                NSLog(@"Failed to update orientation: %@", error);
+            }];
+        }
+    } else {
+        // For older iOS versions
+        UIDeviceOrientation deviceOrientation;
+        
+        // Convert interface orientation to device orientation
+        switch (orientation) {
+            case UIInterfaceOrientationLandscapeRight:
+                deviceOrientation = UIDeviceOrientationLandscapeLeft;
+                break;
+            case UIInterfaceOrientationLandscapeLeft:
+                deviceOrientation = UIDeviceOrientationLandscapeRight;
+                break;
+            case UIInterfaceOrientationPortraitUpsideDown:
+                deviceOrientation = UIDeviceOrientationPortraitUpsideDown;
+                break;
+            case UIInterfaceOrientationPortrait:
+            default:
+                deviceOrientation = UIDeviceOrientationPortrait;
+                break;
+        }
+        
+        // Set the device orientation
+        if ([[UIDevice currentDevice] orientation] != deviceOrientation) {
+            [[UIDevice currentDevice] setValue:@(deviceOrientation) forKey:@"orientation"];
+        }
+        
+        // Force update
+        [UIViewController attemptRotationToDeviceOrientation];
+    }
+
+    // Update button image based on new orientation
+    NSString *imageName = (orientation == UIInterfaceOrientationPortrait) ? @"rotate.right" : @"rotate.left";
+    [self.flipOrientationButton setImage:[UIImage systemImageNamed:imageName] forState:UIControlStateNormal];
+}
+
 - (BOOL)shouldAutorotate {
-    return NO;
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    // Only allow the specific orientation we want
+    return (self.requiredOrientation == UIInterfaceOrientationLandscapeRight) ?
+        UIInterfaceOrientationMaskLandscapeRight : UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return self.requiredOrientation;
+}
+
+- (void)setupFlipOrientationButton {
+    UIButton *flipOrientationBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    if (flipOrientationBtn) {
+        [flipOrientationBtn addTarget:self
+                                       action:@selector(flipOrientationPressed:)
+                             forControlEvents:UIControlEventTouchUpInside];
+
+        flipOrientationBtn.frame = CGRectMake(0, 0, 50, 50);
+        UIImage *buttonImage = [UIImage systemImageNamed:@"rotate.right"];
+        [flipOrientationBtn setImage:buttonImage forState:UIControlStateNormal];
+        flipOrientationBtn.imageView.tintColor = UIColor.whiteColor;
+        [flipOrientationBtn setImageEdgeInsets:UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0)];
+        flipOrientationBtn.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        flipOrientationBtn.adjustsImageWhenDisabled = NO;
+
+        [flipOrientationBtn setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addSubview:flipOrientationBtn];
+        flipOrientationBtn.layer.cornerRadius = 25;
+        flipOrientationBtn.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.85];
+        
+        // We add a default offset to ensure the behavior is similar to Android
+        CGFloat buttonXPositionOffset = self.uiConfig.buttonRotateXPositionOffset;
+        CGFloat buttonYPositionOffset = self.uiConfig.buttonRotateYPositionOffset;
+        static const CGFloat kDefaultButtonEdgeInset = 10.0f;
+
+        // Add constraints with 10-pixel offset from edges
+        switch (self.uiConfig.buttonRotateXAlignment) {
+            case ALButtonXAlignmentLeft:
+                buttonXPositionOffset = buttonXPositionOffset + kDefaultButtonEdgeInset;
+                break;
+            case ALButtonXAlignmentRight:
+                buttonXPositionOffset = buttonXPositionOffset - kDefaultButtonEdgeInset;
+                break;
+            case ALButtonXAlignmentCenter:
+                break;
+        }
+
+        switch (self.uiConfig.buttonRotateYAlignment) {
+            case ALButtonYAlignmentTop:
+                buttonYPositionOffset = buttonYPositionOffset + kDefaultButtonEdgeInset;
+                break;
+            case ALButtonYAlignmentBottom:
+                buttonYPositionOffset = buttonYPositionOffset - kDefaultButtonEdgeInset;
+                break;
+            case ALButtonYAlignmentCenter:
+                break;
+        }
+
+        [ALPluginHelper updateButtonPosition:flipOrientationBtn
+                                  xAlignment:self.uiConfig.buttonRotateXAlignment
+                                  yAlignment:self.uiConfig.buttonRotateYAlignment
+                             xPositionOffset:buttonXPositionOffset
+                             yPositionOffset:buttonYPositionOffset
+                               containerView:self.view
+                                     refView:self.scanView];
+
+        NSArray *flipSizeConstraints = @[[flipOrientationBtn.widthAnchor constraintEqualToConstant:50],
+                                     [flipOrientationBtn.heightAnchor constraintEqualToConstant:50]];
+
+        [self.view addConstraints:flipSizeConstraints];
+        [NSLayoutConstraint activateConstraints:flipSizeConstraints];
+
+        
+        self.flipOrientationButton = flipOrientationBtn;
+    }
 }
 
 /// The segment control contains a list of scan modes each of which, when selected, reloads the scan view with
@@ -163,7 +327,7 @@
     self.segment.hidden = NO;
     self.segment.translatesAutoresizingMaskIntoConstraints = NO;
     [self.segment.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-    [self.segment.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor
+    [self.segment.bottomAnchor constraintEqualToAnchor:self.scanView.safeAreaLayoutGuide.bottomAnchor
                                               constant:self.uiConfig.segmentYPositionOffset].active = YES;
     
     // NOTE: uncomment this to show the segment full width
@@ -304,7 +468,7 @@
 
 // MARK: - Handle scan mode switching
 
-- (ALViewPluginConfig *)scanViewPluginConfigFromFileName:(NSString *)filename error:(NSError **)error {
+- (ALScanViewConfig *)scanViewConfigFromFileName:(NSString *)filename error:(NSError **)error {
     NSObject<FlutterPluginRegistrar> *registrar = [AnylinePlugin sharedInstance].registrar;
     
     NSString *extension = filename.pathExtension;
@@ -363,13 +527,21 @@
         return nil;
     }
     
-    return newScanViewConfig.viewPluginConfig;
+    return newScanViewConfig;
 }
 
 - (void)updateViewConfig:(NSString *)filename {
     
     NSError *error;
-    ALViewPluginConfig *newViewPluginConfig = [self scanViewPluginConfigFromFileName:filename error:&error];
+    ALScanViewConfig *newScanViewConfig = [self scanViewConfigFromFileName:filename error:&error];
+    if (!newScanViewConfig) {
+        if([self showErrorAlertIfNeeded:error]){
+            [self dismissOnError: error];
+        }
+        return;
+    }
+
+    ALViewPluginConfig *newViewPluginConfig = newScanViewConfig.viewPluginConfig;
     if (!newViewPluginConfig) {
         if([self showErrorAlertIfNeeded:error]){
             [self dismissOnError: error];
@@ -391,6 +563,27 @@
             [self dismissOnError: error];
         }
         return;
+    }
+
+    _config = [newScanViewConfig.asJSONString toJSONObject:&error];
+    
+    NSDictionary *optionsDict = [_config objectForKey:@"options"];
+    _uiConfig = [[ALJSONUIConfiguration alloc] initWithDictionary:optionsDict];
+    
+    if (_toolbar && _uiConfig.toolbarTitle) {
+        if (_toolbar.items.count > 1) {
+            UIBarButtonItem *barButtonItem = _toolbar.items[1];
+            if (@available(iOS 13.0, *)) {
+                // For iOS 13+, we need to update the custom button's title
+                UIButton *customButton = (UIButton *)barButtonItem.customView;
+                if ([customButton isKindOfClass:[UIButton class]]) {
+                    [customButton setTitle:_uiConfig.toolbarTitle forState:UIControlStateNormal];
+                }
+            } else {
+                // For pre-iOS 13, we can update the bar button item directly
+                barButtonItem.title = [NSString stringWithFormat:@"← %@", _uiConfig.toolbarTitle];
+            }
+        }
     }
 }
 
