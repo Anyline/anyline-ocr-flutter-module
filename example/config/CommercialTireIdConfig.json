@@ -1,8 +1,14 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -88
-        }
+        "toolbarTitle": "Commercial Tire",
+        "rotateButton": {
+            "alignment": "top_right",
+            "offset": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "defaultOrientation": "landscape"
     },
     "cameraConfig": {
         "captureResolution": "1080p",

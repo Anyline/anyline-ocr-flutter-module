@@ -21,3 +21,12 @@ doc/api/
 
 # For Obsidian Markdown Editing
 .obsidian/
+
+
+# Generally ignore all .env files
+*.env
+gitignored/
+!example/ADD YOUR LICENSE KEY AND RENAME THIS FILE TO .env
+
+# ignore Flutter ephemeral files
+example/ios/Flutter/ephemeral/

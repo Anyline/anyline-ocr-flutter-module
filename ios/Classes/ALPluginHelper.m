@@ -84,6 +84,63 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
     return scannedLabel;
 }
 
++ (UIToolbar *)createToolbarForViewController:(UIViewController *)viewController
+                                     config:(ALJSONUIConfiguration *)config {
+    UIToolbar *toolbar = [[UIToolbar alloc] init];
+    toolbar.translucent = YES;
+    toolbar.backgroundColor = [UIColor clearColor];
+    
+    // Create a back button with arrow icon
+    UIBarButtonItem *backButton;
+    if (@available(iOS 13.0, *)) {
+        // Create a custom view that combines the image and text
+        UIButton *customButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [customButton setImage:[UIImage systemImageNamed:@"chevron.left"] forState:UIControlStateNormal];
+        [customButton setTitle:config.toolbarTitle forState:UIControlStateNormal];
+        
+        // Configure content alignment
+        customButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        
+        // Add some spacing between the image and text
+        customButton.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 0);
+        customButton.titleEdgeInsets = UIEdgeInsetsMake(0, -4, 0, 0);
+        
+        // Set a fixed width to prevent title changes from affecting alignment
+        [customButton.widthAnchor constraintGreaterThanOrEqualToConstant:120].active = YES;
+        
+        [customButton addTarget:viewController 
+                       action:@selector(doneButtonPressed:)
+             forControlEvents:UIControlEventTouchUpInside];
+        
+        backButton = [[UIBarButtonItem alloc] initWithCustomView:customButton];
+    } else {
+        // For older iOS versions, use the built-in back button style
+        backButton = [[UIBarButtonItem alloc] initWithTitle:[NSString stringWithFormat:@"← %@", config.toolbarTitle]
+                                                     style:UIBarButtonItemStylePlain
+                                                    target:viewController
+                                                    action:@selector(doneButtonPressed:)];
+    }
+    
+    // Add a fixed space item to ensure consistent left alignment
+    UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    fixedSpace.width = 16.0; // Adjust this value as needed for desired spacing
+    
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                  target:nil
+                                                                                  action:nil];
+    
+    toolbar.items = @[fixedSpace, backButton, flexibleSpace];
+    toolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [viewController.view addSubview:toolbar];
+    
+    [toolbar.leftAnchor constraintEqualToAnchor:viewController.view.leftAnchor].active = YES;
+    [toolbar.rightAnchor constraintEqualToAnchor:viewController.view.rightAnchor].active = YES;
+    [toolbar.topAnchor constraintEqualToAnchor:viewController.view.safeAreaLayoutGuide.topAnchor].active = YES;
+    
+    return toolbar;
+}
+
 + (UISegmentedControl *)createSegmentForViewController:(UIViewController *)viewController
                                                 config:(ALJSONUIConfiguration *)config {
     UISegmentedControl *segment = [[UISegmentedControl alloc] initWithItems:config.segmentTitles];
@@ -110,7 +167,8 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
 }
 
 + (UIButton *)createButtonForViewController:(UIViewController *)viewController
-                                     config:(ALJSONUIConfiguration *)config {
+                                     config:(ALJSONUIConfiguration *)config
+                                    refView:(UIView *)refView {
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [doneButton setTitle:config.buttonDoneTitle forState:UIControlStateNormal];
@@ -122,10 +180,17 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
     
     [viewController.view addSubview:doneButton];
     
+    [ALPluginHelper updateButtonAppearance:doneButton
+                         withConfiguration:config
+                                    onView:viewController.view];
+
     [ALPluginHelper updateButtonPosition:doneButton
-                       withConfiguration:config
-                                  onView:viewController.view];
-    
+                              xAlignment:config.buttonDoneXAlignment
+                              yAlignment:config.buttonDoneYAlignment
+                         xPositionOffset:config.buttonDoneXPositionOffset
+                         yPositionOffset:config.buttonDoneYPositionOffset
+                           containerView:viewController.view
+                                 refView:refView];
     return doneButton;
 }
 
@@ -138,8 +203,9 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
     return roundedView;
 }
 
-+ (void)updateButtonPosition:(UIButton *)button withConfiguration:(ALJSONUIConfiguration *)config
-                      onView:(UIView *)view {
++ (void)updateButtonAppearance:(UIButton *)button
+             withConfiguration:(ALJSONUIConfiguration *)config
+                        onView:(UIView *)view {
     
     button.titleLabel.font = [UIFont fontWithName:config.buttonDoneFontName size:config.buttonDoneFontSize];
     [button setTitleColor:config.buttonDoneTextColor forState:UIControlStateNormal];
@@ -166,66 +232,77 @@ NSErrorDomain const ALFlutterDomain = @"ALFlutterDomain";
         default:
             break;
     }
+}
+
++ (void)updateButtonPosition:(UIButton *)button
+                  xAlignment:(ALButtonXAlignment)buttonXAlignment
+                  yAlignment:(ALButtonYAlignment)buttonYAlignment
+             xPositionOffset:(CGFloat)buttonXPositionOffset
+             yPositionOffset:(CGFloat)buttonYPositionOffset
+               containerView:(UIView *)containerView
+                     refView:(UIView *)refView {
+
+
     
-    switch (config.buttonDoneXAlignment) {
+    switch (buttonXAlignment) {
         case ALButtonXAlignmentCenter:
-            [view addConstraint:[NSLayoutConstraint constraintWithItem:button
+            [containerView addConstraint:[NSLayoutConstraint constraintWithItem:button
                                                              attribute:NSLayoutAttributeCenterX
                                                              relatedBy:NSLayoutRelationEqual
-                                                                toItem:view
+                                                                toItem:refView
                                                              attribute:NSLayoutAttributeCenterX
                                                             multiplier:1.0
-                                                              constant:config.buttonDoneXPositionOffset]];
+                                                              constant:buttonXPositionOffset]];
             break;
         case ALButtonXAlignmentLeft:
-            [view addConstraint:[NSLayoutConstraint constraintWithItem:button
+            [containerView addConstraint:[NSLayoutConstraint constraintWithItem:button
                                                              attribute:NSLayoutAttributeLeft
                                                              relatedBy:NSLayoutRelationEqual
-                                                                toItem:view
+                                                                toItem:refView
                                                              attribute:NSLayoutAttributeLeft
                                                             multiplier:1.0
-                                                              constant:MAX(config.buttonDoneXPositionOffset, 0)]];
+                                                              constant:MAX(buttonXPositionOffset, 0)]];
             break;
         case ALButtonXAlignmentRight:
-            [view addConstraint:[NSLayoutConstraint constraintWithItem:button
+            [containerView addConstraint:[NSLayoutConstraint constraintWithItem:button
                                                              attribute:NSLayoutAttributeRight
                                                              relatedBy:NSLayoutRelationEqual
-                                                                toItem:view
+                                                                toItem:refView
                                                              attribute:NSLayoutAttributeRight
                                                             multiplier:1.0
-                                                              constant:MIN(config.buttonDoneXPositionOffset, 0)]];
+                                                              constant:MIN(buttonXPositionOffset, 0)]];
             break;
             
         default:
             break;
     }
     
-    switch (config.buttonDoneYAlignment) {
+    switch (buttonYAlignment) {
         case ALButtonYAlignmentTop:
             // Align Top
-            [view addConstraint:[NSLayoutConstraint constraintWithItem:button
+            [containerView addConstraint:[NSLayoutConstraint constraintWithItem:button
                                                              attribute:NSLayoutAttributeTop
                                                              relatedBy:NSLayoutRelationEqual
-                                                                toItem:view
+                                                                toItem:refView
                                                              attribute:NSLayoutAttributeTop
                                                             multiplier:1.0
-                                                              constant:MAX(config.buttonDoneYPositionOffset, 0)]];
+                                                              constant:MAX(buttonYPositionOffset, 0)]];
             break;
         case ALButtonYAlignmentBottom:
             // Align Bottom
-            [view addConstraint:[NSLayoutConstraint constraintWithItem:button
+            [containerView addConstraint:[NSLayoutConstraint constraintWithItem:button
                                                              attribute:NSLayoutAttributeBottom
                                                              relatedBy:NSLayoutRelationEqual
-                                                                toItem:view
+                                                                toItem:refView
                                                              attribute:NSLayoutAttributeBottom
                                                             multiplier:1.0
-                                                              constant:MIN(config.buttonDoneYPositionOffset, 0)]];
+                                                              constant:MIN(buttonYPositionOffset, 0)]];
             
             break;
         case ALButtonYAlignmentCenter:
             // Center vertically
-            [view addConstraint:
-                 [button.centerYAnchor constraintEqualToAnchor:view.centerYAnchor constant:config.buttonDoneYPositionOffset]
+            [containerView addConstraint:
+                 [button.centerYAnchor constraintEqualToAnchor:refView.centerYAnchor constant:buttonYPositionOffset]
             ];
             break;
             

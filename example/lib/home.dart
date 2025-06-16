@@ -6,6 +6,7 @@ import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:anyline_plugin_example/result_display.dart';
@@ -56,8 +57,25 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    // Lock to portrait orientation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     _anylineService = AnylineServiceImpl();
     _scanTab = _buildUseCases();
+  }
+
+  @override
+  void dispose() {
+    // Reset orientation when leaving home screen
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    super.dispose();
   }
 
   Future<void> scan(ScanMode mode) async {
@@ -205,9 +223,9 @@ class _HomeState extends State<Home> {
                           content: FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(
-                                  'SDK Version ${_anylineService.getSdkVersion()}' +
-                                      '\n' +
-                                      'Plugin Version ${_anylineService.getPluginVersion()}')),
+                                  'SDK Version ${_anylineService.getSdkVersion()}'
+                                  '\n'
+                                  'Plugin Version ${_anylineService.getPluginVersion()}')),
                         ));
               },
             ),

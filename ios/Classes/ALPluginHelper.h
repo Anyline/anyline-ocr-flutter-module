@@ -22,6 +22,10 @@ typedef void (^ALPluginCallback)(NSDictionary * _Nullable callbackObj, NSError *
 + (UILabel *)createLabelForView:(UIView *)view;
 
 + (UIButton *)createButtonForViewController:(UIViewController *)viewController
+                                     config:(ALJSONUIConfiguration *)config
+                                    refView:(UIView *)refView;
+
++ (UIToolbar *)createToolbarForViewController:(UIViewController *)viewController
                                      config:(ALJSONUIConfiguration *)config;
 
 + (ALRoundedView *)createRoundedViewForViewController:(UIViewController *)viewController;
@@ -30,6 +34,14 @@ typedef void (^ALPluginCallback)(NSDictionary * _Nullable callbackObj, NSError *
                                                           config:(ALJSONUIConfiguration *)config;
 
 
++ (void)updateButtonPosition:(UIButton *)button
+                  xAlignment:(ALButtonXAlignment)buttonXAlignment
+                  yAlignment:(ALButtonYAlignment)buttonYAlignment
+             xPositionOffset:(CGFloat)buttonXPositionOffset
+             yPositionOffset:(CGFloat)buttonYPositionOffset
+               containerView:(UIView *) containerView
+                     refView:(UIView *) refView;
+    
 + (void)showErrorAlertWithTitle:(NSString *)title
                         message:(NSString *)message
        presentingViewController:(UIViewController *)presentingViewController;

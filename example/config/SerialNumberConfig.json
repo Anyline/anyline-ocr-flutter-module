@@ -1,8 +1,6 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -88
-        }
+        "toolbarTitle": "Serial Number"
     },
     "cameraConfig": {
         "captureResolution": "1080p",

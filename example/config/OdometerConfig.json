@@ -1,4 +1,7 @@
 {
+    "options": {
+        "toolbarTitle": "Odometer"
+    },
     "cameraConfig": {
         "captureResolution": "1080p",
         "pictureResolution": "1080p",

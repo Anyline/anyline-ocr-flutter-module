@@ -1,8 +1,6 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -88
-        }
+        "toolbarTitle": "Parallel Meter/Barcode"
     },
     "viewPluginCompositeConfig": {
         "id": "parallel_meter_barcode",

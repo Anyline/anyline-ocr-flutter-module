@@ -1,8 +1,6 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -96
-        },
+        "toolbarTitle": "Analog/Digital Meter",
         "segmentConfig": {
             "titles": ["Analog/Digital", "Dial"],
             "viewConfigs": ["AnalogDigitalMeterConfig.json", "DialMeterConfig.json"],

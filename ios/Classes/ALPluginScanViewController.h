@@ -9,6 +9,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSUInteger quality;
 
+@property (nonatomic, strong) UIToolbar *toolbar;
+
+@property (nullable, nonatomic, strong) UIButton *flipOrientationButton;
+
 - (instancetype)initWithLicensekey:(NSString *)licenseKey
                      configuration:(NSDictionary *)config
                    uiConfiguration:(ALJSONUIConfiguration *)JSONUIConfig

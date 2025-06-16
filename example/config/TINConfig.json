@@ -1,8 +1,6 @@
 {
     "options": {
-        "doneButtonConfig": {
-            "offset.y": -96
-        },
+        "toolbarTitle": "Universal TIN",
         "rotateButton": {
             "alignment": "top_right",
             "offset": {
