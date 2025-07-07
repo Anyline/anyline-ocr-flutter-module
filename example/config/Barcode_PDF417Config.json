@@ -51,6 +51,7 @@
         }
     },
     "options": {
+        "toolbarTitle": "Barcode PDF417",
         "doneButtonConfig": {
             "title": "OK",
             "type": "rect",
