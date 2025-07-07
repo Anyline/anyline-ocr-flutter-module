@@ -50,21 +50,11 @@
             "blinkAnimationOnResult": false
         }
     },
+    "flashConfig": {
+        "mode": "manual_off",
+        "alignment": "top_left"
+    },
     "options": {
-        "doneButtonConfig": {
-            "title": "OK",
-            "type": "rect",
-            "cornerRadius": 0,
-            "textColor": "FFFFFF",
-            "textColorHighlighted": "CCCCCC",
-            "fontSize": 33,
-            "fontName": "HelveticaNeue",
-            "positionXAlignment": "center",
-            "positionYAlignment": "bottom",
-            "offset": {
-                "x": 0,
-                "y": -88
-            }
-        }
+        "toolbarTitle": "Barcode"
     }
 }
