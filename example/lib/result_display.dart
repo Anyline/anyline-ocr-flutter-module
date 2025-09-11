@@ -44,12 +44,13 @@ class CompositeResultDisplay extends StatelessWidget {
   const CompositeResultDisplay({Key? key}) : super(key: key);
 
   static const routeName = '/compositeResultDisplay';
+  static const displayResultMax = 10;
 
   @override
   Widget build(BuildContext context) {
     final Result result = ModalRoute.of(context)!.settings.arguments as Result;
 
-    var subResults = result.jsonMap!.values.take(3);
+    var subResults = result.jsonMap!.values.take(displayResultMax);
 
     List<Map<String, dynamic>> results = [
       for (final j in subResults) j as Map<String, dynamic>
@@ -87,7 +88,7 @@ class CompositeResultDisplay extends StatelessWidget {
 
   List<Tab> createResultTabs(List<Map<String, dynamic>> results) {
     List<Tab> resultTabs = [];
-    for (var i = 1; (i <= results.length) && (i <= 3); i++) {
+    for (var i = 1; (i <= results.length) && (i <= displayResultMax); i++) {
       resultTabs.add(Tab(
         text: 'Result $i',
       ));
@@ -97,7 +98,7 @@ class CompositeResultDisplay extends StatelessWidget {
 
   List<ResultDetails> createResultTabViews(List<Map<String, dynamic>> results) {
     List<ResultDetails> resultTabViews = [];
-    for (var i = 0; (i < results.length) && (i < 3); i++) {
+    for (var i = 0; (i < results.length) && (i < displayResultMax); i++) {
       resultTabViews.add(ResultDetails(results[i]));
     }
     return resultTabViews;

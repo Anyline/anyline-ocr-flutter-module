@@ -124,7 +124,7 @@ class _HomeState extends State<Home> {
   void _openResultDisplay(Result result) {
     Navigator.pushNamed(
         context,
-        result.scanMode.isCompositeScan()
+        (result.scanMode.isCompositeScan() || result.scanMode.isContinuous())
             ? CompositeResultDisplay.routeName
             : ResultDisplay.routeName,
         arguments: result);
@@ -290,7 +290,10 @@ class _HomeState extends State<Home> {
                     text: 'Barcode',
                     image: AssetImage('assets/Barcode.png'),
                     onPressed: () {
-                      scan(ScanMode.Barcode);
+                      setState(() {
+                        _scanTab = _buildBarcode();
+                        _scanTabBackButtonVisible = true;
+                      });
                     },
                   ),
                 ],
@@ -394,6 +397,36 @@ class _HomeState extends State<Home> {
               text: 'Japanese Landing Permission',
               onPressed: () {
                 scan(ScanMode.JapaneseLandingPermission);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBarcode() {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            ScanButton(
+              text: 'Barcode',
+              onPressed: () {
+                scan(ScanMode.Barcode);
+              },
+            ),
+            ScanButton(
+              text: 'Barcode (Continuous)',
+              onPressed: () {
+                scan(ScanMode.BarcodeContinuous);
+              },
+            ),
+            ScanButton(
+              text: 'PDF 417 (AAMVA)',
+              onPressed: () {
+                scan(ScanMode.Barcode_PDF417);
               },
             ),
           ],

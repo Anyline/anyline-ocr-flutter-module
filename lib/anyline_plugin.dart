@@ -9,7 +9,9 @@ import 'package:pubspec_parse/pubspec_parse.dart';
 
 /// Entrypoint for performing any scans using the Anyline OCR library.
 class AnylinePlugin {
-  AnylinePlugin();
+  AnylinePlugin() {
+    setupWrapperSession();
+  }
   static const MethodChannel _channel = MethodChannel('anyline_plugin');
 
   /// Returns the Anyline SDK version the plugin currently is powered by.
@@ -25,6 +27,13 @@ class AnylinePlugin {
         await rootBundle.loadString('packages/anyline_plugin/pubspec.yaml');
     final pubspec = Pubspec.parse(fileContent);
     return pubspec.version?.toString() ?? '';
+  }
+
+  void setupWrapperSession() async {
+    final Map<String, String?> params = {
+      Constants.EXTRA_PLUGIN_VERSION: await pluginVersion
+    };
+    _channel.invokeMethod(Constants.METHOD_SETUP_WRAPPER_SESSION, params);
   }
 
   void setCustomModelsPath(String customModelsPath) {
@@ -70,14 +79,15 @@ class AnylinePlugin {
   ///
   /// Uses the third-party-package `permission_handler` to request camera permissions.
   Future<String?> startScanning(String configJson,
-      [String? initializationParams]) async {
+      [String? initializationParams, String? callbackConfig]) async {
     final Map<String, String?> config = {
       Constants.EXTRA_CONFIG_JSON: configJson,
-      Constants.EXTRA_INITIALIZATION_PARAMETERS: initializationParams
+      Constants.EXTRA_INITIALIZATION_PARAMETERS: initializationParams,
+      Constants.EXTRA_SCAN_CALLBACK_CONFIG: callbackConfig
     };
     try {
       final String? result =
-      await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
+          await _channel.invokeMethod(Constants.METHOD_START_ANYLINE, config);
       return result;
     } on PlatformException catch (e) {
       if (kDebugMode) {
@@ -85,16 +95,13 @@ class AnylinePlugin {
       }
       throw AnylineException.parse(e);
     }
-    return null;
   }
 
-  /// Decodes the license and returns the expiration date.
-  ///
-  /// Can be provided with a full configJson string or with just the license string.
-  static String? getLicenseExpiryDate(String base64License) {
-    Map<String, dynamic> licenseMap =
-        _decodeBase64LicenseToJsonMap(base64License)!;
-    return licenseMap['valid'] as String?;
+  void tryStopScan([String? scanStopRequestParams]) {
+    final Map<String, String?> params = {
+      Constants.EXTRA_STOP_CONFIG: scanStopRequestParams
+    };
+    _channel.invokeMethod(Constants.METHOD_STOP_ANYLINE, params);
   }
 
   // Export all cached events and return the created zip file path.
@@ -115,15 +122,27 @@ class AnylinePlugin {
     }
   }
 
-  static Map<String, dynamic>? _decodeBase64LicenseToJsonMap(
-      String base64License) {
-    Codec<String, String> base64ToString = ascii.fuse(base64);
-    String licenseString = base64ToString.decode(base64License);
-    String licenseJson = _extractJsonFromLicenseString(licenseString);
-    return jsonDecode(licenseJson) as Map<String, dynamic>?;
-  }
+  /// Converts the original JSON string based on its structure and the number of scan results.
+  /// - If the decoded JSON is a List and has more than one item, it wraps each item in a key like "result3", "result4", etc.,
+  ///   starting from [initialOrdinalResultIndex].
+  /// - If it's already a Map or a single-item List, it returns the original string unchanged.
+  String convertResultsWithImagePathString(
+    String originalResultsWithImagePathString,
+    int initialOrdinalResultIndex,
+  ) {
+    final decodedJson = json.decode(originalResultsWithImagePathString);
 
-  static String _extractJsonFromLicenseString(String licenseJson) {
-    return licenseJson.substring(0, licenseJson.lastIndexOf('}') + 1);
+    if (decodedJson is List && decodedJson.length > 1) {
+      final Map<String, dynamic> jsonResultObject = {};
+
+      for (int i = 0; i < decodedJson.length; i++) {
+        jsonResultObject['result${initialOrdinalResultIndex + i}'] =
+            decodedJson[i];
+      }
+
+      return json.encode(jsonResultObject);
+    } else {
+      return '"result$initialOrdinalResultIndex": $originalResultsWithImagePathString';
+    }
   }
 }

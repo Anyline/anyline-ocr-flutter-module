@@ -3,6 +3,7 @@ enum ScanMode {
   ArabicId,
   Barcode_PDF417,
   Barcode,
+  BarcodeContinuous,
   CommercialTireId,
   ContainerShip,
   CyrillicId,
@@ -66,6 +67,8 @@ extension ScanModeInfo on ScanMode {
         return 'Vertical Container';
       case ScanMode.Barcode:
         return 'Barcode';
+      case ScanMode.BarcodeContinuous:
+        return 'Barcode (Continuous)';
       case ScanMode.ParallelScanning:
         return 'Parallel Scanning (Meter/USRN)';
       case ScanMode.ParallelFirstScanning:
@@ -87,5 +90,9 @@ extension ScanModeInfo on ScanMode {
     return this == ScanMode.ParallelScanning ||
         this == ScanMode.ParallelFirstScanning ||
         this == ScanMode.SerialScanning;
+  }
+
+  bool isContinuous() {
+    return this == ScanMode.BarcodeContinuous;
   }
 }
