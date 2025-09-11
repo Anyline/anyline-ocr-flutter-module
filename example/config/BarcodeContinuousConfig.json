@@ -9,7 +9,8 @@
                     "ALL"
                 ]
             },
-            "cancelOnResult": true,
+            "consecutiveEqualResultFilter": -1,
+            "cancelOnResult": false,
             "startScanDelay": 1000
         },
         "cutoutConfig": {
@@ -48,6 +49,19 @@
             "beepOnResult": false,
             "vibrateOnResult": false,
             "blinkAnimationOnResult": false
+        },
+        "uiFeedbackConfig": {
+            "presets": [
+                {
+                    "presetName": "simple_instruction_label",
+                    "presetAttributes": [
+                        {
+                            "attributeName": "instruction_text",
+                            "attributeValue": "Scanning will stop after the first ten different barcodes."
+                        }
+                    ]
+                }
+            ]
         }
     },
     "flashConfig": {

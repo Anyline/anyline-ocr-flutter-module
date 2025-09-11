@@ -32,7 +32,8 @@ class ResultList extends StatelessWidget {
                         ? 'Yesterday, ${time.format(timestamp)}'
                         : fullDate.format(timestamp);
 
-                return results[index].scanMode.isCompositeScan()
+                return (results[index].scanMode.isCompositeScan() ||
+                        results[index].scanMode.isContinuous())
                     ? CompositeResultListItem(results[index], timestampString)
                     : ResultListItem(results[index], timestampString);
               })

@@ -4,7 +4,7 @@ version '1.0'
 
 buildscript {
     ext {
-        anyline_sdk_version = '55.2.1'
+        anyline_sdk_version = '55.5.0'
         kotlin_version = "1.8.0"
     }
     repositories {
@@ -48,14 +48,11 @@ android {
 
     dependencies {
         api "io.anyline:anylinesdk:$anyline_sdk_version"
-        implementation 'com.google.android.material:material:1.4.0-rc01'
     }
 }
 
 dependencies {
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {

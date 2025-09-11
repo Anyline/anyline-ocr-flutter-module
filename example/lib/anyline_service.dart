@@ -29,6 +29,12 @@ class AnylineServiceImpl implements AnylineService {
 
   static const MethodChannel _channel = MethodChannel('anyline_plugin');
 
+  static const String NATIVE_METHOD_ON_RESULT_EVENT =
+      'NATIVE_METHOD_ON_RESULT_EVENT';
+  static const String NATIVE_METHOD_ON_UI_ELEMENT_CLICKED =
+      'NATIVE_METHOD_ON_UI_ELEMENT_CLICKED';
+  static const maxContinuousResultCount = 10;
+
   late String? _cachePath;
 
   late AnylinePlugin anylinePlugin;
@@ -36,6 +42,9 @@ class AnylineServiceImpl implements AnylineService {
   List<Result> _results = [];
   String? _sdkVersion = 'Unknown';
   String? _pluginVersion = 'Unknown';
+
+  var _continuousResults = '';
+  int _continuousCount = 0;
 
   Future<LicenseState> _initSdk(String licenseKey) async {
     try {
@@ -143,7 +152,45 @@ class AnylineServiceImpl implements AnylineService {
 
     String configJson = await _getConfigJson(mode);
 
-    String? stringResult = await anylinePlugin.startScanning(configJson);
+    String? stringResult;
+    if (mode.isContinuous()) {
+      _continuousResults = '';
+      _continuousCount = 0;
+
+      _channel.setMethodCallHandler((MethodCall methodCall) async {
+        switch (methodCall.method) {
+          case NATIVE_METHOD_ON_RESULT_EVENT:
+            if (_continuousResults.isNotEmpty) {
+              _continuousResults += ', ';
+            }
+
+            _continuousResults +=
+                anylinePlugin.convertResultsWithImagePathString(
+                    methodCall.arguments.toString(), _continuousCount);
+
+            _continuousCount++;
+            if (_continuousCount > maxContinuousResultCount) {
+              anylinePlugin.tryStopScan(null);
+            }
+            break;
+          case NATIVE_METHOD_ON_UI_ELEMENT_CLICKED:
+            // clicked UI elements clicked events can be handled here
+            break;
+        }
+      });
+
+      String callbackConfigString =
+          '{ "onResultEventName": "$NATIVE_METHOD_ON_RESULT_EVENT" }';
+
+      await anylinePlugin.startScanning(configJson, null, callbackConfigString);
+      if (_continuousResults.isEmpty) {
+        stringResult = 'Canceled';
+      } else {
+        stringResult = '{$_continuousResults}';
+      }
+    } else {
+      stringResult = await anylinePlugin.startScanning(configJson);
+    }
 
     if (kDebugMode) {
       print(stringResult);
