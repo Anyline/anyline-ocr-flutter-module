@@ -1,6 +1,6 @@
 PODS:
   - Anyline (55.5.0)
-  - anyline_plugin (55.5.0):
+  - anyline_plugin (55.5.1):
     - Anyline (= 55.5.0)
     - Flutter
   - Flutter (1.0.0)
@@ -33,7 +33,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Anyline: ea65320b206ef4e8f4ef4429ad524d371184eb8c
-  anyline_plugin: bb430535e236051e4fd1a5026591393cab18289f
+  anyline_plugin: 7b98296f01eed9f86d9119f45ef0a113f4a83b21
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
