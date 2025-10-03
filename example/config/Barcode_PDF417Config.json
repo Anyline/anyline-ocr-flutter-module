@@ -54,7 +54,7 @@
         "toolbarTitle": "Barcode PDF417",
         "doneButtonConfig": {
             "title": "OK",
-            "type": "rect",
+            "fillType": "rect",
             "cornerRadius": 0,
             "textColor": "FFFFFF",
             "textColorHighlighted": "CCCCCC",
