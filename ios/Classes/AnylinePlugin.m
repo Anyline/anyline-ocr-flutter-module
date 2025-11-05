@@ -188,7 +188,7 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
 
 - (void)onSdkInitializationResponse:(nonnull ALWrapperSessionSDKInitializationResponse *)initializationResponse {
     if (_initSdkMethodResult) {
-        if (initializationResponse.initialized) {
+        if ([initializationResponse.initialized isEqualToNumber:@YES]) {
             _initSdkMethodResult(@(YES));
         } else {
             _initSdkMethodResult([FlutterError errorWithCode:@"AnylineLicenseException"
