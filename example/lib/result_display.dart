@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
 
 import 'package:anyline_plugin_example/scan_modes.dart';
@@ -25,7 +24,7 @@ class ResultDisplay extends StatelessWidget {
         centerTitle: true,
         title: Text(
           '${result.scanMode.label} Result',
-          style: GoogleFonts.montserrat(fontWeight: FontWeight.w400),
+          style: TextStyle(fontWeight: FontWeight.w400),
         ),
         elevation: 0,
       ),
@@ -67,13 +66,12 @@ class CompositeResultDisplay extends StatelessWidget {
             tabs: createResultTabs(results),
             indicatorSize: TabBarIndicatorSize.label,
             indicatorColor: Styles.anylineBlue,
-            labelStyle: GoogleFonts.montserrat(),
           ),
           title: FittedBox(
               fit: BoxFit.fitWidth,
               child: Text(
                 result.scanMode.label,
-                style: GoogleFonts.montserrat(fontWeight: FontWeight.w400),
+                style: TextStyle(fontWeight: FontWeight.w400),
               )),
         ),
         body: ClipRRect(
