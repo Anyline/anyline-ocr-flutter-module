@@ -7,7 +7,6 @@ import 'package:anyline_plugin_example/styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:anyline_plugin_example/result_display.dart';
 import 'package:anyline_plugin_example/result_list.dart';
@@ -29,7 +28,6 @@ class AnylineDemoApp extends StatelessWidget {
       home: Home(),
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: Styles.backgroundBlack,
-        textTheme: GoogleFonts.montserratTextTheme(),
         colorScheme: ColorScheme.fromSwatch()
             .copyWith(secondary: Styles.backgroundBlack),
       ),
@@ -85,12 +83,30 @@ class _HomeState extends State<Home> {
         _openResultDisplay(result);
       }
     } catch (e) {
-      var message = '${(e as AnylineException).message}';
+      String message;
+
+      // Print debug information
+      if (kDebugMode) {
+        print('[ERROR] Caught exception type: ${e.runtimeType}');
+        print('[ERROR] Exception details: $e');
+      }
+
+      // Handle different exception types
       if (e is AnylineLicenseException) {
         message = LicenseState.LicenseKeyEmptyErrorMessage;
+      } else if (e is AnylineException) {
+        message = e.message ?? 'Unknown Anyline error';
+      } else if (e is AssertionError) {
+        message = 'Initialization error: ${e.message ?? e.toString()}';
+        if (kDebugMode) {
+          print('[ERROR] AssertionError message: ${e.message}');
+        }
+      } else {
+        message = 'Unexpected error: ${e.toString()}';
       }
+
       if (kDebugMode) {
-        print(message);
+        print('[ERROR] Final error message: $message');
       }
 
       showDialog<void>(
