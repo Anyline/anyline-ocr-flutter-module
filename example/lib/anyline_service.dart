@@ -12,6 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as path;
 
 abstract class AnylineService {
+  MethodChannel getChannel();
+
+  Future<LicenseState> ensureSdkIsInitialized();
+
+  Future<void> setDefaultScanStartPlatformOptions(String? scanStartPlatformOptionsString);
+
   Future<Result?> scan(ScanMode mode);
 
   List<Result> getResultList();
@@ -19,12 +25,26 @@ abstract class AnylineService {
   String? getSdkVersion();
 
   String? getPluginVersion();
+
+  Future<String> getConfigJson(ScanMode mode);
+
+  AnylinePlugin getAnylinePlugin();
 }
 
 class AnylineServiceImpl implements AnylineService {
+
+  AnylineServiceImpl.skipInit();
+
   AnylineServiceImpl() {
     _initAnylinePlugin();
     _initResultListFromSharedPreferences();
+  }
+
+  static Future<AnylineServiceImpl> create() async {
+    var instance = AnylineServiceImpl.skipInit();
+    await instance._initAnylinePlugin();
+    await instance._initResultListFromSharedPreferences();
+    return instance;
   }
 
   static const MethodChannel _channel = MethodChannel('anyline_plugin');
@@ -46,6 +66,26 @@ class AnylineServiceImpl implements AnylineService {
   var _continuousResults = '';
   int _continuousCount = 0;
 
+  @override
+  Future<LicenseState> ensureSdkIsInitialized() async {
+    if (!licenseState.initialized) {
+      String externalLicenseKey = await _getExternalLicenseKey();
+      return _initSdk(externalLicenseKey);
+    } else {
+      return LicenseState(true, '');
+    }
+  }
+
+  @override
+  MethodChannel getChannel() {
+    return _channel;
+  }
+
+  @override
+  AnylinePlugin getAnylinePlugin() {
+    return anylinePlugin;
+  }
+
   Future<LicenseState> _initSdk(String licenseKey) async {
     try {
       await anylinePlugin.initSdk(licenseKey);
@@ -55,6 +95,12 @@ class AnylineServiceImpl implements AnylineService {
       rethrow;
     }
     return licenseState;
+  }
+
+  // This method can be used to provide platform-specific options to be used during scan process
+  @override
+  Future<void> setDefaultScanStartPlatformOptions(String? scanStartPlatformOptionsString) async {
+    return anylinePlugin.setDefaultScanStartPlatformOptions(scanStartPlatformOptionsString);
   }
 
   @override
@@ -82,7 +128,7 @@ class AnylineServiceImpl implements AnylineService {
     return _pluginVersion;
   }
 
-  void _initAnylinePlugin() async {
+  Future<void> _initAnylinePlugin() async {
     String? sdkVersion;
     try {
       sdkVersion = await AnylinePlugin.sdkVersion;
@@ -97,7 +143,7 @@ class AnylineServiceImpl implements AnylineService {
     anylinePlugin.setViewConfigsPath('flutter_assets/config');
   }
 
-  void _initResultListFromSharedPreferences() async {
+  Future<void> _initResultListFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> list = prefs.getStringList('results') ?? [];
 
@@ -145,12 +191,9 @@ class AnylineServiceImpl implements AnylineService {
   }
 
   Future<Result?> _callAnyline(ScanMode mode) async {
-    if (!licenseState.initialized) {
-      String externalLicenseKey = await _getExternalLicenseKey();
-      await _initSdk(externalLicenseKey);
-    }
+    ensureSdkIsInitialized();
 
-    String configJson = await _getConfigJson(mode);
+    String configJson = await getConfigJson(mode);
 
     String? stringResult;
     if (mode.isContinuous()) {
@@ -217,7 +260,8 @@ class AnylineServiceImpl implements AnylineService {
 
   /// Returns the config string for a given scan mode in JSON format, reading the
   /// associated file from the config folder.
-  Future<String> _getConfigJson(ScanMode mode) async {
+  @override
+  Future<String> getConfigJson(ScanMode mode) async {
     String configJson = await _loadJsonConfigFromFile(mode.key);
     return configJson;
   }

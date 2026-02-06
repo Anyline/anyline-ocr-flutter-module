@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:anyline_plugin/exceptions.dart';
 import 'package:anyline_plugin_example/anyline_service.dart';
+import 'package:anyline_plugin_example/native_view_scan.dart';
 import 'package:anyline_plugin_example/result.dart';
 import 'package:anyline_plugin_example/styles.dart';
 import 'package:flutter/foundation.dart';
@@ -24,6 +25,7 @@ class AnylineDemoApp extends StatelessWidget {
         ResultDisplay.routeName: (context) => ResultDisplay(),
         FullScreenImage.routeName: (context) => FullScreenImage(),
         CompositeResultDisplay.routeName: (context) => CompositeResultDisplay(),
+        NativeViewScan.routeName: (context) => const NativeViewScan(),
       },
       home: Home(),
       theme: ThemeData.light().copyWith(
@@ -61,7 +63,21 @@ class _HomeState extends State<Home> {
       DeviceOrientation.portraitUp,
     ]);
 
-    _anylineService = AnylineServiceImpl();
+    Future(() async {
+      try {
+        _anylineService = await AnylineServiceImpl.create();
+      } catch (e) {
+        String errorMessage;
+        if (e is AnylineException) {
+          errorMessage = e.message ?? '';
+        } else {
+          errorMessage = e.toString();
+        }
+        if (mounted) {
+          _showErrorDialog(context, errorMessage);
+        }
+      }
+    });
     _scanTab = _buildUseCases();
   }
 
@@ -79,7 +95,7 @@ class _HomeState extends State<Home> {
   Future<void> scan(ScanMode mode) async {
     try {
       Result? result = await _anylineService.scan(mode);
-      if (result != null) {
+      if (result != null && mounted) {
         _openResultDisplay(result);
       }
     } catch (e) {
@@ -109,32 +125,38 @@ class _HomeState extends State<Home> {
         print('[ERROR] Final error message: $message');
       }
 
-      showDialog<void>(
-          context: context,
-          builder: (_) => AlertDialog(
-                elevation: 0,
-                title: const Text(
-                  'Error',
-                  style: TextStyle(
-                      fontFamily: 'Roboto', fontWeight: FontWeight.bold),
-                ),
-                content: Text(
-                  message,
-                  style: TextStyle(fontFamily: 'Roboto'),
-                  textAlign: TextAlign.start,
-                ),
-                actions: [
-                  TextButton(
-                    child: Text('OK',
-                        style: TextStyle(
-                            fontFamily: 'Roboto', fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ));
+      if (mounted) {
+        _showErrorDialog(context, message);
+      }
     }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog<void>(
+        context: context,
+        builder: (_) => AlertDialog(
+              elevation: 0,
+              title: const Text(
+                'Error',
+                style: TextStyle(
+                    fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+              ),
+              content: Text(
+                message,
+                style: TextStyle(fontFamily: 'Roboto'),
+                textAlign: TextAlign.start,
+              ),
+              actions: [
+                TextButton(
+                  child: Text('OK',
+                      style: TextStyle(
+                          fontFamily: 'Roboto', fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
   }
 
   void _openResultDisplay(Result result) {
@@ -362,6 +384,22 @@ class _HomeState extends State<Home> {
                         _scanTab = _buildOther();
                         _scanTabBackButtonVisible = true;
                       });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  UseCaseButton(
+                    text: 'Native View Scan',
+                    image: const AssetImage('assets/Other.png'),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context,
+                          NativeViewScan.routeName,
+                          arguments: _anylineService);
                     },
                   ),
                 ],

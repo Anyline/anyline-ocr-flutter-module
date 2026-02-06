@@ -23,7 +23,10 @@ enum ScanMode {
   VerticalContainer,
   VIN,
   VRC,
-  CowTag
+  CowTag,
+  NativeViewBarcode,
+  NativeViewDrivingLicense,
+  NativeViewVIN
 }
 
 extension ScanModeInfo on ScanMode {
@@ -79,6 +82,12 @@ extension ScanModeInfo on ScanMode {
         return 'Vehicle Registration Certificate';
       case ScanMode.CowTag:
         return 'Cow Tag';
+      case ScanMode.NativeViewBarcode:
+        return 'Barcode';
+      case ScanMode.NativeViewDrivingLicense:
+        return 'Driving License';
+      case ScanMode.NativeViewVIN:
+        return 'Vehicle Identification Number';
     }
   }
 

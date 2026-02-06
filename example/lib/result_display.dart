@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:anyline_plugin_example/result.dart';
@@ -32,7 +31,7 @@ class ResultDisplay extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20)),
         child: Container(
           color: Colors.white,
-          child: ResultDetails(result.jsonMap),
+          child: ResultDetails(ResultInfo(result.jsonMap)),
         ),
       ),
     );
@@ -97,67 +96,29 @@ class CompositeResultDisplay extends StatelessWidget {
   List<ResultDetails> createResultTabViews(List<Map<String, dynamic>> results) {
     List<ResultDetails> resultTabViews = [];
     for (var i = 0; (i < results.length) && (i < displayResultMax); i++) {
-      resultTabViews.add(ResultDetails(results[i]));
+      resultTabViews.add(ResultDetails(ResultInfo(results[i])));
     }
     return resultTabViews;
   }
 }
 
 class ResultDetails extends StatelessWidget {
-  ResultDetails(Map<String, dynamic>? json, {Key? key})
-      : json = json,
-        super(key: key) {
-    orderedJson = [];
-    imageMap = Map<String, dynamic>();
-    nativeBarcodesDetected = [];
+  const ResultDetails(this.resultInfo, {Key? key})
+      : super(key: key);
 
-    var actualResultMap = Map<String, dynamic>();
-
-    // NOTE: keep xxxResult on top, nativeBarcodesDetected, imagePath and fullImagePath at the bottom
-    json?.forEach((key, value) {
-      if (key.toLowerCase().endsWith('imagepath')) {
-        imageMap![key] = value;
-        return;
-      }
-      if (key.toLowerCase().endsWith('result')) {
-        // but not native barcode results
-        actualResultMap[key] = value;
-        return;
-      }
-      if (key.toLowerCase() == 'nativebarcodesdetected') {
-        nativeBarcodesDetected?.add(value);
-        return;
-      }
-
-      orderedJson!.add({key: value});
-    });
-
-    actualResultMap.forEach((key, value) {
-      var encoder = JsonEncoder.withIndent(' ' * 2);
-      var prettyJSON = encoder.convert(value);
-      orderedJson!.insert(0, {key: prettyJSON});
-    });
-
-    if (nativeBarcodesDetected != null && nativeBarcodesDetected!.isNotEmpty) {
-      orderedJson!.add({'nativeBarcodesDetected': nativeBarcodesDetected});
-    }
-
-    dynamic imagePath;
-
-    imagePath = imageMap?['imagePath'];
-    if (imagePath != null && imagePath.toString().isNotEmpty) {
-      orderedJson!.add({'imagePath': imagePath});
-    }
-
-    imagePath = imageMap?['fullImagePath'];
-    if (imagePath != null && imagePath.toString().isNotEmpty) {
-      orderedJson!.add({'fullImagePath': imagePath});
-    }
+  final ResultInfo resultInfo;
+  Map<String, dynamic>? get json {
+    return resultInfo.json;
   }
-  final Map<String, dynamic>? json;
-  late final Map<String, dynamic>? imageMap;
-  late final List<Map<String, dynamic>>? orderedJson;
-  late final List<dynamic>? nativeBarcodesDetected;
+  Map<String, dynamic>? get imageMap {
+    return resultInfo.imageMap;
+  }
+  List<Map<String, dynamic>>? get orderedJson {
+    return resultInfo.orderedJson;
+  }
+  List<dynamic>? get nativeBarcodesDetected {
+    return resultInfo.nativeBarcodesDetected;
+  }
 
   @override
   Widget build(BuildContext context) {

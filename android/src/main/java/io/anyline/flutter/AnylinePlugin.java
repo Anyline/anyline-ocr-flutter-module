@@ -1,8 +1,10 @@
 package io.anyline.flutter;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -10,6 +12,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import io.anyline.flutter.nativeview.NativeFragmentContainerFactory;
+import io.anyline.flutter.nativeview.NativeViewRegistry;
 import io.anyline.plugin.config.UIFeedbackElementConfig;
 import io.anyline.plugin.result.ExportedScanResult;
 import io.anyline.wrapper.config.WrapperSessionExportCachedEventsResponse;
@@ -73,6 +77,8 @@ public class AnylinePlugin implements
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
+        flutterPluginBinding.getPlatformViewRegistry().registerViewFactory(
+                Constants.ANYLINE_NATIVE_VIEW_FACTORY_ID, new NativeFragmentContainerFactory());
     }
 
     private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
@@ -103,6 +109,8 @@ public class AnylinePlugin implements
                     call.argument(Constants.EXTRA_LICENSE_KEY),
                     customModelsPath,
                     Boolean.TRUE.equals(call.argument(Constants.EXTRA_ENABLE_OFFLINE_CACHE)));
+        } else if (call.method.equals(Constants.METHOD_SET_DEFAULT_SCAN_START_PLATFORM_OPTIONS)) {
+            setDefaultScanStartPlatformOptions(call.argument(Constants.EXTRA_DEFAULT_SCAN_START_PLATFORM_OPTIONS), result);
         } else if (call.method.equals(Constants.METHOD_START_ANYLINE)) {
             startScanMethodResult =  result;
             routeScanMode(
@@ -110,6 +118,9 @@ public class AnylinePlugin implements
                     call.argument(Constants.EXTRA_INITIALIZATION_PARAMETERS),
                     viewConfigsPath,
                     call.argument(Constants.EXTRA_SCAN_CALLBACK_CONFIG));
+        } else if (call.method.equals(Constants.METHOD_REPLACE_ANYLINE)) {
+            requestScanSwitchWithScanViewConfigContentString(
+                    call.argument(Constants.EXTRA_CONFIG_JSON));
         } else if (call.method.equals(Constants.METHOD_STOP_ANYLINE)) {
             tryStopScan(call.argument(Constants.EXTRA_STOP_CONFIG));
         } else if (call.method.equals(Constants.METHOD_EXPORT_CACHED_EVENTS)) {
@@ -133,6 +144,11 @@ public class AnylinePlugin implements
     @Override
     public @NotNull Context getContext() {
         return this.context;
+    }
+
+    @Override
+    public @Nullable ViewGroup getContainerView() {
+        return (ViewGroup) NativeViewRegistry.getLastOrNull();
     }
 
     private void initSdk(String sdkLicenseKey,
@@ -163,6 +179,15 @@ public class AnylinePlugin implements
         }
     }
 
+    private void setDefaultScanStartPlatformOptions(final String scanStartPlatformOptionsString, @NonNull Result resultListener) {
+        try {
+            WrapperSessionProvider.setDefaultScanStartPlatformOptions(scanStartPlatformOptionsString);
+            returnSuccess(resultListener, "");
+        } catch (Exception e) {
+            returnDefaultError(resultListener, e.getMessage());
+        }
+    }
+
     private void routeScanMode(
             String scanViewConfigContent,
             String scanViewInitializationParametersString,
@@ -190,6 +215,10 @@ public class AnylinePlugin implements
         WrapperSessionProvider.requestScanStart(wrapperSessionScanStartRequestJson.toString());
 
         ResultReporter.setListener(this);
+    }
+
+    private void requestScanSwitchWithScanViewConfigContentString(String scanViewConfigContent) {
+        WrapperSessionProvider.requestScanSwitchWithScanViewConfigContentString(scanViewConfigContent);
     }
 
     @Override

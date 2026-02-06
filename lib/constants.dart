@@ -8,7 +8,10 @@ abstract class Constants {
   static const String METHOD_SET_VIEW_CONFIGS_PATH =
       'METHOD_SET_VIEW_CONFIGS_PATH';
   static const String METHOD_SET_LICENSE_KEY = 'METHOD_SET_LICENSE_KEY';
+  static const String METHOD_SET_DEFAULT_SCAN_START_PLATFORM_OPTIONS =
+      'METHOD_SET_DEFAULT_SCAN_START_PLATFORM_OPTIONS';
   static const String METHOD_START_ANYLINE = 'METHOD_START_ANYLINE';
+  static const String METHOD_REPLACE_ANYLINE = 'METHOD_REPLACE_ANYLINE';
   static const String METHOD_GET_APPLICATION_CACHE_PATH =
       'METHOD_GET_APPLICATION_CACHE_PATH';
   static const String METHOD_STOP_ANYLINE = 'METHOD_STOP_ANYLINE';
@@ -24,6 +27,8 @@ abstract class Constants {
   static const String EXTRA_PLUGIN_VERSION = 'EXTRA_PLUGIN_VERSION';
   static const String EXTRA_CUSTOM_MODELS_PATH = 'EXTRA_CUSTOM_MODELS_PATH';
   static const String EXTRA_VIEW_CONFIGS_PATH = 'EXTRA_VIEW_CONFIGS_PATH';
+  static const String EXTRA_DEFAULT_SCAN_START_PLATFORM_OPTIONS =
+      'EXTRA_DEFAULT_SCAN_START_PLATFORM_OPTIONS';
   static const String EXTRA_SCAN_CALLBACK_CONFIG = 'EXTRA_SCAN_CALLBACK_CONFIG';
   static const String EXTRA_STOP_CONFIG = 'EXTRA_STOP_CONFIG';
   static const String EXTRA_REPORT_UCR_BLOBKEY = 'EXTRA_REPORT_UCR_BLOBKEY';
@@ -36,4 +41,6 @@ abstract class Constants {
   static const String EXCEPTION_NO_CAMERA_PERMISSION =
       'AnylineCameraPermissionException';
   static const String EXCEPTION_CORE = 'AnylineCoreException';
+
+  static const String ANYLINE_NATIVE_VIEW_FACTORY_ID = 'AnylineNativeView';
 }
