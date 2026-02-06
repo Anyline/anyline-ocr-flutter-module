@@ -1,4 +1,6 @@
 #import "AnylinePlugin.h"
+#import "NativeView/NativeViewContainerFactory.h"
+#import "NativeView/NativeViewRegistry.h"
 
 // Static instance to retain the ALWrapperSessionProvider instance
 static ALWrapperSessionProvider *_wrapperSessionProvider;
@@ -33,6 +35,9 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
     
     [registrar addMethodCallDelegate:instance channel:channel];
     instance.registrar = registrar;
+
+    NativeViewContainerFactory *factory = [[NativeViewContainerFactory alloc] init];
+    [registrar registerViewFactory:factory withId:@"AnylineNativeView"];
 }
 
 -(NSString * _Nullable)getStringFromArgument:(id) argument {
@@ -65,6 +70,9 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
         BOOL enableOfflineCache = [call.arguments[@"EXTRA_ENABLE_OFFLINE_CACHE"] boolValue] == true;
         
         [self initSdkWithLicenseKey:licenseKey sdkAssetsFolder:self.customModelsPath enableOfflineCache:enableOfflineCache];
+    } else if ([@"METHOD_SET_DEFAULT_SCAN_START_PLATFORM_OPTIONS" isEqualToString:call.method]) {
+        [self setDefaultScanStartPlatformOptions:call.arguments[@"EXTRA_DEFAULT_SCAN_START_PLATFORM_OPTIONS"]
+                                  resultListener:result];
     } else if ([@"METHOD_START_ANYLINE" isEqualToString:call.method]) {
         _startScanMethodResult = result;
 
@@ -72,6 +80,8 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
                  scanViewInitializationParametersString:[self getStringFromArgument:call.arguments[@"EXTRA_INITIALIZATION_PARAMETERS"]]
                                      scanViewConfigPath:_viewConfigsPath
                                scanCallbackConfigString:[self getStringFromArgument:call.arguments[@"EXTRA_SCAN_CALLBACK_CONFIG"]]];
+    } else if ([@"METHOD_REPLACE_ANYLINE" isEqualToString:call.method]) {
+        [self requestScanSwitchWithScanViewConfigContentString:call.arguments[@"EXTRA_CONFIG_JSON"]];
     } else if ([@"METHOD_STOP_ANYLINE" isEqualToString:call.method]) {
         [self tryStopScan:[self getStringFromArgument:call.arguments[@"EXTRA_STOP_CONFIG"]]];
     } else if ([@"METHOD_GET_APPLICATION_CACHE_PATH" isEqualToString:call.method]) {
@@ -146,6 +156,17 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
             requestSdkInitializationWithInitializationRequestParamsString:[wrapperSessionSdkInitializationRequestJson asJSONString]];
 }
 
+- (void)setDefaultScanStartPlatformOptions:(nullable NSString *)scanStartPlatformOptionsString
+                            resultListener:(FlutterResult)resultListener {
+    @try {
+        [ALWrapperSessionProvider setDefaultScanStartPlatformOptionsWithString:scanStartPlatformOptionsString];
+        resultListener(@"");
+    }
+    @catch (NSException *exception) {
+        resultListener(exception);
+    }
+}
+
 - (void)requestScanStartWithScanViewConfigContent:(NSString *)scanViewConfigContent
            scanViewInitializationParametersString:(NSString * _Nullable)scanViewInitializationParametersString
                                scanViewConfigPath:(NSString * _Nullable)scanViewConfigPath
@@ -172,6 +193,10 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
     }
 }
 
+- (void)requestScanSwitchWithScanViewConfigContentString:(NSString *)scanViewConfigContent {
+    [ALWrapperSessionProvider requestScanSwitchWithScanViewConfigContentString:scanViewConfigContent];
+}
+
 - (void)tryStopScan:(NSString * _Nullable)scanStopRequestParams {
     [ALWrapperSessionProvider requestScanStopWithScanStopRequestParamsString:scanStopRequestParams];
 }
@@ -184,6 +209,10 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
 
 - (nullable UIViewController *)getTopViewController {
     return nil;
+}
+
+- (nullable UIView *)getContainerView {
+    return [[NativeViewRegistry shared] getLastOrNull];
 }
 
 - (void)onSdkInitializationResponse:(nonnull ALWrapperSessionSDKInitializationResponse *)initializationResponse {

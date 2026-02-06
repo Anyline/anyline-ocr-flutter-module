@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:anyline_plugin_example/scan_modes.dart';
 
 class Result {
@@ -6,12 +8,17 @@ class Result {
             DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
         scanMode = ScanMode.values
             .firstWhere((element) => element.key == json['scanMode']),
-        jsonMap = json['jsonMap'] as Map<String, dynamic>;
+        jsonMap = json['jsonMap'] as Map<String, dynamic>,
+        resultInfo = ResultInfo(json['jsonMap'] as Map<String, dynamic>);
 
-  Result(this.jsonMap, this.scanMode, this.timestamp);
+  Result(this.jsonMap, this.scanMode, this.timestamp) {
+    resultInfo = ResultInfo(jsonMap);
+  }
+
   DateTime timestamp;
   ScanMode scanMode;
   Map<String, dynamic>? jsonMap;
+  late ResultInfo resultInfo;
 
   int get length {
     return jsonMap!.length;
@@ -30,4 +37,59 @@ class Result {
         'scanMode': scanMode.key,
         'jsonMap': jsonMap,
       };
+}
+
+class ResultInfo {
+  ResultInfo(this.json) {
+    orderedJson = [];
+    imageMap = <String, dynamic>{};
+    nativeBarcodesDetected = [];
+
+    var actualResultMap = <String, dynamic>{};
+
+    // NOTE: keep xxxResult on top, nativeBarcodesDetected, imagePath and fullImagePath at the bottom
+    json?.forEach((key, value) {
+      if (key.toLowerCase().endsWith('imagepath')) {
+        imageMap![key] = value;
+        return;
+      }
+      if (key.toLowerCase().endsWith('result')) {
+        // but not native barcode results
+        actualResultMap[key] = value;
+        return;
+      }
+      if (key.toLowerCase() == 'nativebarcodesdetected') {
+        nativeBarcodesDetected?.add(value);
+        return;
+      }
+
+      orderedJson!.add({key: value});
+    });
+
+    actualResultMap.forEach((key, value) {
+      var encoder = JsonEncoder.withIndent(' ' * 2);
+      var prettyJSON = encoder.convert(value);
+      orderedJson!.insert(0, {key: prettyJSON});
+    });
+
+    if (nativeBarcodesDetected != null && nativeBarcodesDetected!.isNotEmpty) {
+      orderedJson!.add({'nativeBarcodesDetected': nativeBarcodesDetected});
+    }
+
+    dynamic imagePath;
+
+    imagePath = imageMap?['imagePath'];
+    if (imagePath != null && imagePath.toString().isNotEmpty) {
+      orderedJson!.add({'imagePath': imagePath});
+    }
+
+    imagePath = imageMap?['fullImagePath'];
+    if (imagePath != null && imagePath.toString().isNotEmpty) {
+      orderedJson!.add({'fullImagePath': imagePath});
+    }
+  }
+  final Map<String, dynamic>? json;
+  late final Map<String, dynamic>? imageMap;
+  late final List<Map<String, dynamic>>? orderedJson;
+  late final List<dynamic>? nativeBarcodesDetected;
 }

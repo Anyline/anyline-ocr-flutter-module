@@ -71,6 +71,20 @@ class AnylinePlugin {
     }
   }
 
+  Future<void> setDefaultScanStartPlatformOptions(
+      String? scanStartPlatformOptionsString) async {
+    try {
+      final Map<String, String?> params = {
+        Constants.EXTRA_DEFAULT_SCAN_START_PLATFORM_OPTIONS:
+            scanStartPlatformOptionsString
+      };
+      await _channel.invokeMethod(
+          Constants.METHOD_SET_DEFAULT_SCAN_START_PLATFORM_OPTIONS, params);
+    } on PlatformException catch (e) {
+      throw AnylineException.parse(e);
+    }
+  }
+
   /// Starts the Anyline SDK and invokes the scanning process with the given [configJson].
   ///
   /// Returns the result as a JSON string which can be parsed into an object of
@@ -95,6 +109,13 @@ class AnylinePlugin {
       }
       throw AnylineException.parse(e);
     }
+  }
+
+  void trySwitchScan(String configJson) {
+    final Map<String, String?> params = {
+      Constants.EXTRA_CONFIG_JSON: configJson
+    };
+    _channel.invokeMethod(Constants.METHOD_REPLACE_ANYLINE, params);
   }
 
   void tryStopScan([String? scanStopRequestParams]) {

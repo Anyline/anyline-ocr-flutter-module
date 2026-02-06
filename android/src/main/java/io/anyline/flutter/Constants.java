@@ -7,7 +7,9 @@ public class Constants {
     public static final String METHOD_SET_CUSTOM_MODELS_PATH = "METHOD_SET_CUSTOM_MODELS_PATH";
     public static final String METHOD_SET_VIEW_CONFIGS_PATH = "METHOD_SET_VIEW_CONFIGS_PATH";
     public static final String METHOD_SET_LICENSE_KEY = "METHOD_SET_LICENSE_KEY";
+    public static final String METHOD_SET_DEFAULT_SCAN_START_PLATFORM_OPTIONS = "METHOD_SET_DEFAULT_SCAN_START_PLATFORM_OPTIONS";
     public static final String METHOD_START_ANYLINE = "METHOD_START_ANYLINE";
+    public static final String METHOD_REPLACE_ANYLINE = "METHOD_REPLACE_ANYLINE";
     public static final String METHOD_STOP_ANYLINE = "METHOD_STOP_ANYLINE";
     public static final String METHOD_EXPORT_CACHED_EVENTS = "METHOD_EXPORT_CACHED_EVENTS";
     public static final String METHOD_REPORT_UCR = "METHOD_REPORT_UCR";
@@ -19,6 +21,7 @@ public class Constants {
     public static final String EXTRA_PLUGIN_VERSION = "EXTRA_PLUGIN_VERSION";
     public static final String EXTRA_CUSTOM_MODELS_PATH = "EXTRA_CUSTOM_MODELS_PATH";
     public static final String EXTRA_VIEW_CONFIGS_PATH = "EXTRA_VIEW_CONFIGS_PATH";
+    public static final String EXTRA_DEFAULT_SCAN_START_PLATFORM_OPTIONS = "EXTRA_DEFAULT_SCAN_START_PLATFORM_OPTIONS";
     public static final String EXTRA_SCAN_CALLBACK_CONFIG = "EXTRA_SCAN_CALLBACK_CONFIG";
     public static final String EXTRA_STOP_CONFIG = "EXTRA_STOP_CONFIG";
     public static final String EXTRA_REPORT_UCR_BLOBKEY = "EXTRA_REPORT_UCR_BLOBKEY";
@@ -32,4 +35,6 @@ public class Constants {
     public static final int RESULT_CANCELLED = 0;
     public static final int RESULT_OK = 1;
     public static final int RESULT_ERROR = 2;
+
+    public static final String ANYLINE_NATIVE_VIEW_FACTORY_ID = "AnylineNativeView";
 }
