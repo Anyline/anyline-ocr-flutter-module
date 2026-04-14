@@ -1,4 +1,5 @@
 /// Needed for communication with the native SDK.
+@Deprecated('')
 abstract class Constants {
   static const String METHOD_GET_SDK_VERSION = 'METHOD_GET_SDK_VERSION';
   static const String METHOD_SETUP_WRAPPER_SESSION =

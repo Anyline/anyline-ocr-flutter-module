@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:anyline_plugin_example/home.dart';
+import 'package:anyline_plugin_example/legacy/home.dart';
 
 void main() {
   EnvInfo.initialize();
@@ -23,7 +23,7 @@ void scanWithAnyline() async {
 
   /// Load the config file which also includes the license key (for more info
   /// visit documentation.anyline.com).
-  var config = await rootBundle.loadString('config/AnalogMeterConfig.json');
+  var config = await rootBundle.loadString('anyline_assets/config/legacy/AnalogDigitalMeterConfig.json');
 
   /// Start the scanning process.
   var stringResult =

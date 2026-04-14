@@ -8,6 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:pubspec_parse/pubspec_parse.dart';
 
 /// Entrypoint for performing any scans using the Anyline OCR library.
+///
+/// @deprecated Use [AnylineInfinityPlugin] instead.
+@Deprecated('Use AnylineInfinityPlugin instead.')
 class AnylinePlugin {
   AnylinePlugin() {
     setupWrapperSession();

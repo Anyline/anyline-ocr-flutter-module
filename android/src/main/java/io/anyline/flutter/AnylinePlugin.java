@@ -47,7 +47,10 @@ import io.flutter.plugin.common.PluginRegistry;
 
 /**
  * AnylinePlugin
+ *
+ * @deprecated Use {@link AnylineInfinityPlugin} instead.
  */
+@Deprecated
 public class AnylinePlugin implements
         FlutterPlugin,
         MethodCallHandler,
@@ -137,7 +140,7 @@ public class AnylinePlugin implements
     }
 
     private void setupWrapperSession(final String pluginVersion) {
-        WrapperInfo wrapperInfo = new WrapperInfo(WrapperInfo.WrapperType.Flutter, pluginVersion);
+        WrapperInfo wrapperInfo = new WrapperInfo(WrapperInfo.WrapperType.Flutter, pluginVersion, WrapperInfo.WrapperCodename.Legacy);
         WrapperSessionProvider.setupWrapperSession(wrapperInfo,this);
     }
 
