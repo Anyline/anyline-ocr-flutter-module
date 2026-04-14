@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 
 /// Custom exception including parser to correctly interpret and propagate errors
 /// coming from the native SDK.
+/// @deprecated
+@Deprecated('')
 class AnylineException implements Exception {
   const AnylineException(this.message);
   final String? message;

@@ -1,10 +1,13 @@
 PODS:
-  - Anyline (55.9.0)
-  - anyline_plugin (55.9.0):
-    - Anyline (= 55.9.0)
+  - Anyline (56.0.0)
+  - anyline_plugin (56.0.0):
+    - Anyline (= 56.0.0)
     - Flutter
   - Flutter (1.0.0)
   - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
 
@@ -12,6 +15,7 @@ DEPENDENCIES:
   - anyline_plugin (from `.symlinks/plugins/anyline_plugin/ios`)
   - Flutter (from `Flutter`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -24,12 +28,15 @@ EXTERNAL SOURCES:
     :path: Flutter
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  Anyline: 8c190d726cc22d5596f9fd271b557962a9ac720b
-  anyline_plugin: cb72085001f724c319de8b15aa865a92c0e1f393
+  Anyline: 9a6f3c0940bb58eddb1dab3dbe9f6402d1997a73
+  anyline_plugin: 94b3d0bc7c6b576f7f70177b6dbc0b55f46fca9c
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
 PODFILE CHECKSUM: 671363bdc9aa2edf5b2570c97641fabc41a23850
 

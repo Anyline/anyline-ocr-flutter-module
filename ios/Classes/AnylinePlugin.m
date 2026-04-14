@@ -137,8 +137,7 @@ static ALWrapperSessionProvider *_wrapperSessionProvider;
 }
 
 - (void)setupWrapperSessionWithPluginVersion:(NSString *)pluginVersion {
-    // Setup wrapper session with this view controller as delegate
-    ALWrapperConfig *wrapperConfig = [ALWrapperConfig flutter:pluginVersion];
+    ALWrapperConfig *wrapperConfig = [ALWrapperConfig flutter:pluginVersion codename:ALWrapperCodenameLegacy];
     [ALWrapperSessionProvider setupWrapperSessionWithWrapperInfo:wrapperConfig
                                             wrapperSessionClient:self];
 }
