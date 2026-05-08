@@ -1,7 +1,7 @@
 PODS:
-  - Anyline (56.0.0)
-  - anyline_plugin (56.0.0):
-    - Anyline (= 56.0.0)
+  - Anyline (56.0.1)
+  - anyline_plugin (56.0.2):
+    - Anyline (= 56.0.1)
     - Flutter
   - Flutter (1.0.0)
   - shared_preferences_foundation (0.0.1):
@@ -32,8 +32,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  Anyline: 9a6f3c0940bb58eddb1dab3dbe9f6402d1997a73
-  anyline_plugin: 94b3d0bc7c6b576f7f70177b6dbc0b55f46fca9c
+  Anyline: 20eb9b9e12cc57b5f9737fc15b273c0d4fc306f8
+  anyline_plugin: c2dd7799a1a72c5aa95f0fb8f57c6aaea39f2043
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
