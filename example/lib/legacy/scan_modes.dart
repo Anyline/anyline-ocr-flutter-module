@@ -10,7 +10,6 @@ enum ScanMode {
   LicensePlate,
   JapaneseLandingPermission,
   MRZ,
-  Odometer,
   ParallelScanning,
   ParallelFirstScanning,
   SerialNumber,
@@ -50,8 +49,6 @@ extension ScanModeInfo on ScanMode {
         return 'License Plate';
       case ScanMode.JapaneseLandingPermission:
         return 'Japanese Landing Permission';
-      case ScanMode.Odometer:
-        return 'Odometer';
       case ScanMode.TIN:
         return 'TIN';
       case ScanMode.TINDOTWithUIFeedback:

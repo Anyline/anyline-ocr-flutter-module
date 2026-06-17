@@ -4,8 +4,8 @@ version '1.0'
 
 buildscript {
     ext {
-        anyline_sdk_version = '56.0.2'
-        kotlin_version = "1.8.0"
+        anyline_sdk_version = '56.1.0'
+        kotlin_version = "1.8.21"
     }
     repositories {
         google()
@@ -13,7 +13,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:8.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -33,7 +33,7 @@ apply plugin: 'kotlin-android' // When converting Java files to Kotlin, make sur
 
 android {
     namespace "io.anyline.flutter"
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdkVersion 21
