@@ -533,12 +533,6 @@ class _HomeState extends State<Home> {
               },
             ),
             ScanButton(
-              text: 'Odometer',
-              onPressed: () {
-                scan(ScanMode.Odometer);
-              },
-            ),
-            ScanButton(
               text: 'VIN',
               onPressed: () {
                 scan(ScanMode.VIN);
