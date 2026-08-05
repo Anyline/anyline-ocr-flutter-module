@@ -6,13 +6,7 @@
             "viewConfigs": ["AnalogDigitalMeterConfig.json", "DialMeterConfig.json"],
             "offset.y": -24,
             "tintColor": "0099ff"
-        },
-        "nativeBarcodeScanningFormats": [
-            "CODE_128",
-            "CODE_39",
-            "QR_CODE",
-            "PDF_417"
-        ]
+        }
     },
     "cameraConfig": {
         "captureResolution": "1080p",
