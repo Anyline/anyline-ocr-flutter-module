@@ -9,13 +9,17 @@ import 'package:flutter/foundation.dart';
 const String _channelName = 'anyline_infinity_plugin';
 
 const String _methodSetupWrapperSession = 'INFINITY_SETUP_WRAPPER_SESSION';
-const String _methodRequestSdkInitialization = 'INFINITY_REQUEST_SDK_INITIALIZATION';
+const String _methodRequestSdkInitialization =
+    'INFINITY_REQUEST_SDK_INITIALIZATION';
 const String _methodRequestScanStart = 'INFINITY_REQUEST_SCAN_START';
-const String _methodRequestScanSwitchWithScanStartRequestParams = 'INFINITY_REQUEST_SCAN_SWITCH_WITH_SCAN_START_REQUEST_PARAMS';
-const String _methodRequestScanSwitchWithScanViewConfigContentString = 'INFINITY_REQUEST_SCAN_SWITCH_WITH_SCAN_VIEW_CONFIG_CONTENT_STRING';
+const String _methodRequestScanSwitchWithScanStartRequestParams =
+    'INFINITY_REQUEST_SCAN_SWITCH_WITH_SCAN_START_REQUEST_PARAMS';
+const String _methodRequestScanSwitchWithScanViewConfigContentString =
+    'INFINITY_REQUEST_SCAN_SWITCH_WITH_SCAN_VIEW_CONFIG_CONTENT_STRING';
 const String _methodRequestScanStop = 'INFINITY_REQUEST_SCAN_STOP';
 const String _methodRequestUcrReport = 'INFINITY_REQUEST_UCR_REPORT';
-const String _methodRequestExportCachedEvents = 'INFINITY_REQUEST_EXPORT_CACHED_EVENTS';
+const String _methodRequestExportCachedEvents =
+    'INFINITY_REQUEST_EXPORT_CACHED_EVENTS';
 const String _methodGetSDKVersion = 'INFINITY_GET_SDK_VERSION';
 
 const String _eventOnScanResults = 'INFINITY_ON_SCAN_RESULTS';
@@ -32,7 +36,8 @@ const String _extraRequest = 'request';
 class AnylineInfinityPlugin {
   static const MethodChannel _channel = MethodChannel(_channelName);
 
-  final StreamController<WrapperSessionScanResultsResponse> _scanResultsController =
+  final StreamController<WrapperSessionScanResultsResponse>
+      _scanResultsController =
       StreamController<WrapperSessionScanResultsResponse>.broadcast();
 
   final StreamController<UiFeedbackElementConfig> _uiElementClickedController =
@@ -78,8 +83,8 @@ class AnylineInfinityPlugin {
   void _handleScanResults(dynamic arguments) {
     if (arguments is! String) return;
     try {
-      _scanResultsController.add(
-          WrapperSessionScanResultsResponse.fromRawJson(arguments));
+      _scanResultsController
+          .add(WrapperSessionScanResultsResponse.fromRawJson(arguments));
     } catch (e) {
       if (kDebugMode) {
         print('AnylineInfinityPlugin: failed to parse onScanResults: $e');
@@ -120,8 +125,7 @@ class AnylineInfinityPlugin {
       WrapperSessionSdkInitializationRequest request) async {
     await _wrapperSessionSetup;
     final String? resultJson = await _channel.invokeMethod(
-        _methodRequestSdkInitialization,
-        {_extraRequest: request.toRawJson()});
+        _methodRequestSdkInitialization, {_extraRequest: request.toRawJson()});
     return WrapperSessionSdkInitializationResponse.fromRawJson(resultJson!);
   }
 
@@ -166,15 +170,16 @@ class AnylineInfinityPlugin {
   Future<WrapperSessionUcrReportResponse> requestUCRReport(
       WrapperSessionUcrReportRequest request) async {
     await _wrapperSessionSetup;
-    final String? resultJson = await _channel
-        .invokeMethod(_methodRequestUcrReport, {_extraRequest: request.toRawJson()});
+    final String? resultJson = await _channel.invokeMethod(
+        _methodRequestUcrReport, {_extraRequest: request.toRawJson()});
     return WrapperSessionUcrReportResponse.fromRawJson(resultJson!);
   }
 
   /// Exports all cached scan events as a ZIP archive.
   ///
   /// Returns null if there are no cached events.
-  Future<WrapperSessionExportCachedEventsResponse> requestExportCachedEvents() async {
+  Future<WrapperSessionExportCachedEventsResponse>
+      requestExportCachedEvents() async {
     await _wrapperSessionSetup;
     final String? resultJson =
         await _channel.invokeMethod(_methodRequestExportCachedEvents);

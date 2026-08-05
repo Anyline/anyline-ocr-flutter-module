@@ -36,10 +36,11 @@ ScanGroup groupFromScanViewConfiguration(ScanViewConfiguration config) {
 }
 
 /// Returns the display label for a [ScanViewConfiguration].
-/// Prefers viewPluginCompositeConfig.id, then viewPluginConfig.pluginConfig.id,
-/// then falls back to the filename.
+/// Prefers scanViewConfigDescription, then viewPluginCompositeConfig.id,
+/// then viewPluginConfig.pluginConfig.id, then falls back to the filename.
 String labelFromScanViewConfiguration(ScanViewConfiguration config, String filename) {
-  return config.viewPluginCompositeConfig?.id
+  return config.scanViewConfigDescription
+      ?? config.viewPluginCompositeConfig?.id
       ?? config.viewPluginConfig?.pluginConfig?.id
       ?? filename;
 }

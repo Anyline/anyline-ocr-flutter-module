@@ -79,6 +79,11 @@ android {
 }
 
 dependencies {
+    // Google ML Kit is opt-in: the Anyline SDK declares it compileOnly and does not export it.
+    // Left commented to show integrators where the dependency goes without adding it. None of the
+    // example scan view configs set faceDetectionEnabled, so this app does not need ML Kit.
+    // Uncomment this line to enable face detection on Universal ID / MRZ.
+//    implementation 'com.google.mlkit:face-detection:16.1.7'    // for faceDetectionEnabled
 }
 
 flutter {

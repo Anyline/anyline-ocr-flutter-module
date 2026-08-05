@@ -35,3 +35,7 @@ Icon?
 
 /Flutter/Generated.xcconfig
 /Flutter/flutter_export_environment.sh
+
+# Vendored Anyline iOS SDK fetched at `pod install`
+Anyline.xcframework/
+Anyline.xcframework.zip
