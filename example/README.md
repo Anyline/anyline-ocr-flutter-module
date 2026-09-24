@@ -13,7 +13,7 @@ Before starting, check that your development environment is properly configured:
 ```
 
 This validates:
-- Flutter SDK (v1.20.0+), Dart SDK
+- Flutter SDK (v3.38.0+), Dart SDK
 - Android: Java, Gradle, Android SDK, Build Tools, NDK
 - iOS: Xcode, Command Line Tools, CocoaPods (macOS only)
 - ANYLINE_MOBILE_SDK_LICENSE_KEY in .env file

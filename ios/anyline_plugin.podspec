@@ -6,12 +6,12 @@
 # Single source of truth for the bundled Anyline iOS SDK. The checksum is the
 # SHA-256 of the xcframework archive, and matches the one published in the SDK's
 # Package.swift. prepare_release.sh bumps both lines together — keep adjacent.
-anyline_sdk_version  = '56.5.0'
-anyline_sdk_checksum = 'eb47507f4f3af71277214dd3a055f7bf5305d830b5b56fba526e83412b99366b'
+anyline_sdk_version  = '56.5.1'
+anyline_sdk_checksum = '4240919377aa7c432ae88648b506ca447e5aeb263a816b3c18e8c83c0e1e4acd'
 
 Pod::Spec.new do |s|
   s.name             = 'anyline_plugin'
-  s.version          = '56.5.0'
+  s.version          = '56.5.1'
   s.summary          = 'Anyline SDK'
   s.description      = <<-DESC
 Anyline OCR Module

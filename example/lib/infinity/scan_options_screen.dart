@@ -291,35 +291,26 @@ class _ScanResultConfigTabState extends State<_ScanResultConfigTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           _sectionHeader('Image Container'),
-          Row(
-            children: [
-              Radio<_ImageContainerMode>(
-                value: _ImageContainerMode.encoded,
-                groupValue: _mode,
-                onChanged: (v) {
-                  if (v != _mode) {
-                    setState(() {
-                      _mode = v!;
-                      _containerHeight = 120;
-                    });
-                  }
-                },
-              ),
-              const Text('Encoded (base64)'),
-              Radio<_ImageContainerMode>(
-                value: _ImageContainerMode.saved,
-                groupValue: _mode,
-                onChanged: (v) {
-                  if (v != _mode) {
-                    setState(() {
-                      _mode = v!;
-                      _containerHeight = 120;
-                    });
-                  }
-                },
-              ),
-              const Text('Saved (to path)'),
-            ],
+          RadioGroup<_ImageContainerMode>(
+            groupValue: _mode,
+            onChanged: (v) {
+              if (v != null && v != _mode) {
+                setState(() {
+                  _mode = v;
+                  _containerHeight = 120;
+                });
+              }
+            },
+            child: const Row(
+              children: [
+                Radio<_ImageContainerMode>(
+                  value: _ImageContainerMode.encoded,
+                ),
+                Text('Encoded (base64)'),
+                Radio<_ImageContainerMode>(value: _ImageContainerMode.saved),
+                Text('Saved (to path)'),
+              ],
+            ),
           ),
           SizedBox(
             height: _containerHeight,
