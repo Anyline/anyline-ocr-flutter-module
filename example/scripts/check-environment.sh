@@ -12,7 +12,7 @@
 #   ./scripts/check-environment.sh --help    # Show help
 #
 # This script checks for:
-#   - Flutter SDK (minimum version 1.20.0)
+#   - Flutter SDK (minimum version 3.38.0)
 #   - Dart SDK (bundled with Flutter)
 #   - Java (for Android builds)
 #   - Gradle (for Android builds)
@@ -48,7 +48,7 @@ Usage:
   ./scripts/check-environment.sh --help    # Show this help
 
 This script checks for:
-  - Flutter SDK (minimum version 1.20.0)
+  - Flutter SDK (minimum version 3.38.0)
   - Dart SDK (bundled with Flutter)
   - Java (for Android builds)
   - Gradle (for Android builds)
@@ -197,16 +197,16 @@ if command -v flutter &> /dev/null; then
         print_warning "Dart SDK not found in PATH (should be bundled with Flutter)"
     fi
 
-    # Validate minimum Flutter version (1.20.0)
+    # Validate minimum Flutter version (3.38.0, for the iOS host's scene template)
     FLUTTER_MAJOR=$(echo "$FLUTTER_VERSION" | cut -d. -f1)
     FLUTTER_MINOR=$(echo "$FLUTTER_VERSION" | cut -d. -f2)
 
-    if [[ "$FLUTTER_MAJOR" -lt 1 ]] || [[ "$FLUTTER_MAJOR" -eq 1 && "$FLUTTER_MINOR" -lt 20 ]]; then
-        print_error "Flutter version must be 1.20.0 or higher (found: $FLUTTER_VERSION)"
+    if [[ "$FLUTTER_MAJOR" -lt 3 ]] || [[ "$FLUTTER_MAJOR" -eq 3 && "$FLUTTER_MINOR" -lt 38 ]]; then
+        print_error "Flutter version must be 3.38.0 or higher (found: $FLUTTER_VERSION)"
         print_fix "Update Flutter: flutter upgrade"
         HAS_ERRORS=true
     else
-        print_success "Flutter version meets minimum requirement (>=1.20.0)"
+        print_success "Flutter version meets minimum requirement (>=3.38.0)"
     fi
 
     # Check if flutter doctor has any critical issues (optional)
