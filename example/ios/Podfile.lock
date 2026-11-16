@@ -1,5 +1,5 @@
 PODS:
-  - anyline_plugin (56.6.0):
+  - anyline_plugin (56.7.0):
     - Flutter
   - Flutter (1.0.0)
 
@@ -14,7 +14,7 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  anyline_plugin: b17121143126789008ed7c34a3aa4ebf87a88ca3
+  anyline_plugin: 775046e841e9a35f3c6e83e29e7610041b28bca9
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
 
 PODFILE CHECKSUM: 2bb62333b0a3fe5bf0924516ee75a9ce89332b19
